@@ -6,4 +6,8 @@
 
 Papier opisujący podstawowe założenia naszego projektu.
 
+## Bazy wektorowe
 
+[Embenddigs](https://www.youtube.com/watch?v=viZrOnJclY0)
+
+[Bazy wektorowe i ich użycie](https://www.youtube.com/watch?v=L8U-pm-vZ4c&t=511s)
