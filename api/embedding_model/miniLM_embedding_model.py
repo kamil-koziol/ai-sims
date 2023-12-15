@@ -23,10 +23,13 @@ class MiniLMEmbeddingModel(EmbeddingModel):
         sentence_embeddings = self._mean_pooling(model_output, encoded_input['attention_mask'])
 
         # Normalize embeddings
-        sentence_embeddings = torch.nn.functional.normalize(sentence_embeddings, p=2, dim=1)
+        sentence_embeddings = torch.nn.functional.normalize(sentence_embeddings, p=2, dim=1).flatten().tolist()
 
-        print(sentence_embeddings)
-        return EmbeddingResult("Embedded")
+        return EmbeddingResult(
+            sentences=sentences,
+            embedding=sentence_embeddings,
+            dimensions=len(sentence_embeddings)
+        )
     
     def _mean_pooling(self, model_output, attention_mask):
         token_embeddings = model_output[0] #First element of model_output contains all token embeddings

@@ -1,9 +1,12 @@
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass
+from typing import List
 
 @dataclass
 class EmbeddingResult:
-    text: str
+    sentences: str
+    embedding: List[float]
+    dimensions: int
 
 class EmbeddingModel(metaclass=ABCMeta):
     
