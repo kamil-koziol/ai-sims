@@ -3,7 +3,6 @@ from pydantic import BaseModel
 from gpt4all import GPT4All
 import os
 
-os.abc
 app = FastAPI()
 
 # tokenizer = AutoTokenizer.from_pretrained("/home/kacper/git/phi-1_5")
