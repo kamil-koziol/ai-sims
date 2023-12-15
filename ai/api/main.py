@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from gpt4all import GPT4All
-import os
 
 app = FastAPI()
 

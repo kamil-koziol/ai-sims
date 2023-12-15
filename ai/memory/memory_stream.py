@@ -1,5 +1,5 @@
 from typing import List
-from memory_node import MemoryNode
+from memory_node import MemoryNode, MemoryNodeAttributes
 from datetime import datetime
 
 """
@@ -17,12 +17,22 @@ class MemoryStream():
     def add_chat(self, created: datetime, description: str, embeddings) -> None:
         # TODO: Agent
         node_id = len(self.memory) + 1
-        node_type = 'chat'
-        node = MemoryNode(node_id, node_type, created, description, embeddings)
+        attributes = MemoryNodeAttributes(
+            importance=importance,
+            created=created,
+            description=description,
+            node_type='chat'
+        )
+        node = MemoryNode(node_id, embeddings, attributes)
         self.memory.append(node)
 
     def add_thought(self, created: datetime, description: str, embeddings) -> None:
         node_id = len(self.memory) + 1
-        node_type = 'thought'
-        node = MemoryNode(node_id, node_type, created, description, embeddings)
+        attributes = MemoryNodeAttributes(
+            importance=importance,
+            created=created,
+            description=description,
+            node_type='thought'
+        )
+        node = MemoryNode(node_id, embeddings, attributes)
         self.memory.append(node)
