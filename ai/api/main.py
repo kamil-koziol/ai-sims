@@ -15,6 +15,15 @@ class GenerationBody(BaseModel):
     text: str
 
 
+class EmbendModel(BaseModel):
+    text: str
+
+
 @app.post('/generate')
-async def index(body: GenerationBody):
+async def generate(body: GenerationBody):
     return model.generate(body.text, max_tokens=200)  # [0]['generated_text']
+
+
+@app.post('/embend')
+async def embend(body: EmbendModel):
+    return [1, 2, 3]
