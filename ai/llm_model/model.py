@@ -1,5 +1,6 @@
 from typing import List
 import requests
+import json
 
 HOST = 'localhost'
 PORT = '8889'
@@ -20,6 +21,7 @@ class LLM_model:
     @staticmethod
     def generate_text(prompt: str) -> str:
         body = {"text": prompt}
+        body = json.dumps(body)
         response = requests.post(f'http://{HOST}:{PORT}/generate', data=body)
         return response
 
@@ -38,9 +40,10 @@ class EmbendingModel:
     @staticmethod
     def tokenize(text: str) -> List[float]:
         body = {"text": text}
-        response = requests.post(f'http://{HOST}:{PORT}/embed', data=body)  # TODO test things
+        body = json.dumps(body)
+        response = requests.post(f'http://{HOST}:{PORT}/embed', data=body)
         return response
 
 
 if __name__ == '__main__':
-    print(LLM_model().generate_text())
+    print(LLM_model().generate_text('Who is John Cena').content)

@@ -15,6 +15,7 @@ class MemoryStream():
         self.memory: List[MemoryNode] = []
 
     def add_chat(self, created: datetime, description: str, embeddings) -> None:
+        # TODO: Agent
         node_id = len(self.memory) + 1
         node_type = 'chat'
         node = MemoryNode(node_id, node_type, created, description, embeddings)
@@ -25,4 +26,3 @@ class MemoryStream():
         node_type = 'thought'
         node = MemoryNode(node_id, node_type, created, description, embeddings)
         self.memory.append(node)
-
