@@ -6,7 +6,7 @@ from generation_model import GenerationModel, MockModel, GPT4AllModel
 
 app = FastAPI()
 
-model: GenerationModel = MockModel()
+model: GenerationModel = GPT4AllModel() 
 embedding_model: EmbeddingModel = MiniLMEmbeddingModel()
 
 @app.get('/generate')

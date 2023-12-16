@@ -6,4 +6,4 @@ class MockEmbeddingModel(EmbeddingModel):
         pass
 
     def embed(self, sentences: str) -> EmbeddingResult:
-        return EmbeddingResult("Embedded")
+        return EmbeddingResult(sentences="Hello, World!", embedding=[0.1, 0.2, 0.3], dimensions=3)
