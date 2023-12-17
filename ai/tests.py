@@ -1,8 +1,8 @@
-from memory.memory_node import MemoryNode, MemoryNodeAttributes
+from agents.memory.memory_node import MemoryNode, MemoryNodeAttributes
 from datetime import datetime, timedelta
 from llm_model.model import MockedEmbeddingModel, MockedGenerationModel, GenerationModel, EmbeddingModel
 from colorama import Fore, Style
-from llm_model.model_manager import ModelManager
+from llm_model.model_service import ModelService
 import traceback
 
 
@@ -54,7 +54,7 @@ try:
         node_type='chat',
         embeddings=embed_model.embed('something')
     )
-    memory_node = MemoryNode(1, embed_model, attributes)
+    memory_node = MemoryNode(attributes)
 
     relevance_score = memory_node.calculate_relevance_score('something')
 
@@ -78,7 +78,7 @@ else:
 
 # TEST Model Manager
 try:
-    importance_score = ModelManager().calculate_importance_score('', 'description')
+    importance_score = ModelService().calculate_importance_score('', 'description')
 
     if DEBUG_MODE:
         print(importance_score)

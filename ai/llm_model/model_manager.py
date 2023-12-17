@@ -3,7 +3,7 @@ from llm_model.model import GenerationModel, EmbeddingModel, MockedEmbeddingMode
 from utils.utils import Singleton
 
 
-class ModelManager(metaclass=Singleton):
+class ModelService(metaclass=Singleton):
     def __init__(self) -> None:
         _MOCKED = True
         _GENERATION_URL = 'localhost:8888/generate'
