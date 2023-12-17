@@ -2,7 +2,7 @@ from __future__ import annotations
 from datetime import datetime
 from numpy import dot
 from numpy.linalg import norm
-from llm_model.model import EmbeddingModel
+from llm_model.model_manager import ModelManager
 from dataclasses import dataclass
 from typing import List
 
@@ -28,18 +28,17 @@ class MemoryNodeAttributes():
 
 
 class MemoryNode():
-    def __init__(self, node_id: int, embedding_model, attributes: MemoryNodeAttributes) -> None:
+    def __init__(self, attributes: MemoryNodeAttributes) -> None:
         self.DECAY_FACTOR = 0.99
-        self.node_id: int = node_id
-        self.embedding_model: EmbeddingModel = embedding_model
         self.attributes: MemoryNodeAttributes = attributes
+        self.id: int = 0
 
     def calculate_overall_compare_score(self, description: str) -> float:
         weights = [1, 1, 1]
         date_to_compere = datetime.now()
 
         relevance_score = weights[0] * self.calculate_relevance_score(description)
-        importance_score = weights[1] * self.get_importance_score()
+        importance_score = weights[1] * self.attributes.importance
         recency_score = weights[2] * self.calculate_recency_score(date_to_compere)
 
         overall_score = importance_score + relevance_score + recency_score
@@ -47,7 +46,7 @@ class MemoryNode():
 
     def calculate_relevance_score(self, description: str) -> float:
         MAX_SCORE = 10
-        description_embeddings = self.embedding_model.embed(description)
+        description_embeddings = ModelManager().get_embeddings(text=description)
         similarity = MemoryNode.__cos_sim(self.attributes.embeddings, description_embeddings)
         score = MAX_SCORE * similarity
         return score
@@ -59,9 +58,6 @@ class MemoryNode():
         diff_in_hours = diff.total_seconds() / SECS_IN_HOUR
         score = MAX_SCORE * self.DECAY_FACTOR ** diff_in_hours
         return score
-
-    def get_importance_score(self) -> float:
-        return self.attributes.importance
 
     @staticmethod
     def __cos_sim(a, b) -> float:

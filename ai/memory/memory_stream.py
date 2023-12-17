@@ -14,25 +14,34 @@ class MemoryStream():
     def __init__(self, save_file) -> None:
         self.memory: List[MemoryNode] = []
 
-    def add_chat(self, created: datetime, description: str, embeddings) -> None:
-        # TODO: Agent
-        node_id = len(self.memory) + 1
-        attributes = MemoryNodeAttributes(
-            importance=importance,
-            created=created,
-            description=description,
-            node_type='chat'
-        )
-        node = MemoryNode(node_id, embeddings, attributes)
-        self.memory.append(node)
+    def retrive(self, embeddings) -> List[MemoryNode]:
+        pass
 
-    def add_thought(self, created: datetime, description: str, embeddings) -> None:
-        node_id = len(self.memory) + 1
-        attributes = MemoryNodeAttributes(
-            importance=importance,
-            created=created,
-            description=description,
-            node_type='thought'
-        )
-        node = MemoryNode(node_id, embeddings, attributes)
-        self.memory.append(node)
+    def add_memory_node(self, memory_node: MemoryNode) -> None:
+        memory_node.id = len(self.memory) + 1
+        self.memory.append(memory_node)
+
+    # def add_chat(self, created: datetime, description: str, embeddings) -> None:
+    #     # TODO: Agent
+    #     node_id = len(self.memory) + 1
+    #     attributes = MemoryNodeAttributes(
+    #         importance=importance,
+    #         created=created,
+    #         description=description,
+    #         node_type='chat',
+    #         embeddings=embeddings
+    #     )
+    #     node = MemoryNode(node_id, embeddings, attributes)
+    #     self.memory.append(node)
+    #
+    # def add_thought(self, created: datetime, description: str, embeddings) -> None:
+    #     node_id = len(self.memory) + 1
+    #     attributes = MemoryNodeAttributes(
+    #         importance=importance,
+    #         created=created,
+    #         description=description,
+    #         node_type='thought',
+    #         embeddings=embeddings
+    #     )
+    #     node = MemoryNode(node_id, embeddings, attributes)
+    #     self.memory.append(node)

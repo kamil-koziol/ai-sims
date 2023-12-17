@@ -2,6 +2,7 @@ from memory.memory_node import MemoryNode, MemoryNodeAttributes
 from datetime import datetime, timedelta
 from llm_model.model import MockedEmbeddingModel, MockedGenerationModel, GenerationModel, EmbeddingModel
 from colorama import Fore, Style
+from llm_model.model_manager import ModelManager
 import traceback
 
 
@@ -72,4 +73,20 @@ except Exception:
     print(Style.RESET_ALL)
 else:
     print('Memory node test: ' + Fore.GREEN + '\u2713')
+    print(Style.RESET_ALL)
+
+
+# TEST Model Manager
+try:
+    importance_score = ModelManager().calculate_importance_score('', 'description')
+
+    if DEBUG_MODE:
+        print(importance_score)
+
+except Exception:
+    print('Model manager test: ' + Fore.RED + '\u2717')
+    if DEBUG_MODE: print(traceback.format_exc()) # noqa
+    print(Style.RESET_ALL)
+else:
+    print('Model manager test: ' + Fore.GREEN + '\u2713')
     print(Style.RESET_ALL)
