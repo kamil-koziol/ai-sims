@@ -1,0 +1,2 @@
+def converse():
+    pass

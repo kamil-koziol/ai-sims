@@ -1,8 +1,9 @@
 from memory.memory_stream import MemoryStream
 from actions.plan import plan
-from actions.plan import plan
-from actions.plan import plan
-from actions.plan import plan
+from actions.retrieve import retrieve_relevant_memories
+from actions.converse import converse
+from actions.execute import execute
+from actions.reflect import reflect
 
 
 class Agent ():
@@ -14,13 +15,16 @@ class Agent ():
         pass
 
     def plan(self):
-        pass
+        plan()
 
     def retrive(self):
-        pass
+        retrieve_relevant_memories()
 
     def execute(self):
-        pass
+        execute()
+
+    def converse(self):
+        converse()
 
     def percive(self):
         pass

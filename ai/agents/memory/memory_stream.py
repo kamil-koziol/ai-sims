@@ -11,11 +11,8 @@ save_file: file where is saved t0 memory state
 
 class MemoryStream():
     def __init__(self, save_file) -> None:
-        self.memory: List[MemoryNode] = []
-
-    def retrive(self, embeddings) -> List[MemoryNode]:
-        pass
+        self.nodes: List[MemoryNode] = []
 
     def add_memory_node(self, memory_node: MemoryNode) -> None:
-        memory_node.id = len(self.memory) + 1
-        self.memory.append(memory_node)
+        memory_node.id = len(self.nodes) + 1
+        self.nodes.append(memory_node)
