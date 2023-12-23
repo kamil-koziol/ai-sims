@@ -1,49 +1,44 @@
 from typing import List
 import requests
 import json
-
-HOST = 'localhost'
-PORT = '8889'
+import numpy
 
 
-class LLM_model:
-    _self = None
-    model = None
+class GenerationModel:
+    def __init__(self, url) -> None:
+        self.url = url
 
-    def __new__(cls):
-        if cls._self is None:
-            cls._self = super().__new__(cls)
-        return cls._self
-
-    def __init__(self) -> None:
-        pass
-
-    @staticmethod
-    def generate_text(prompt: str) -> str:
+    def generate_text(self, prompt: str) -> str:
         body = {"text": prompt}
         body = json.dumps(body)
-        response = requests.post(f'http://{HOST}:{PORT}/generate', data=body)
+        response = requests.post(self.url, data=body)
         return response
 
 
-class EmbendingModel:
-    _self = None
+class MockedGenerationModel(GenerationModel):
+    def __init__(self, url):
+        super().__init__(url)
 
-    def __new__(cls):
-        if cls._self is None:
-            cls._self = super().__new__(cls)
-        return cls._self
+    def generate_text(self, prompt: str) -> str:
+        response = f'Mocked response for {prompt}'
+        return response
 
-    def __init__(self) -> None:
-        pass
 
-    @staticmethod
-    def tokenize(text: str) -> List[float]:
+class EmbeddingModel:
+    def __init__(self, url) -> None:
+        self.url = url
+
+    def embed(self, text: str) -> List[float]:
         body = {"text": text}
         body = json.dumps(body)
-        response = requests.post(f'http://{HOST}:{PORT}/embed', data=body)
+        response = requests.post(self.url, data=body)
         return response
 
 
-if __name__ == '__main__':
-    print(LLM_model().generate_text('Who is John Cena').content)
+class MockedEmbeddingModel(EmbeddingModel):
+    def __init__(self, url):
+        super().__init__(url)
+
+    def embed(self, text: str) -> List[float]:
+        response = numpy.random.rand(100).tolist()
+        return response
