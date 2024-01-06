@@ -1,0 +1,18 @@
+Variables:
+!<INPUT 0>! -- init_persona_name
+!<INPUT 1>! -- target_persona_name
+
+!<INPUT 2>! -- init_persona curr action description
+!<INPUT 3>! -- target_persona curr action description
+
+!<INPUT 4>! -- curr_location
+
+<commentblockmarker>###</commentblockmarker>
+Context: 
+There are 2 people: !<INPUT 0>! and !<INPUT 1>!.
+!<INPUT 0>! is currently !<INPUT 2>!.
+!<INPUT 1>! is currently !<INPUT 3>!.
+
+!<INPUT 0>! and !<INPUT 1>! met at !<INPUT 4>!. Here is their conversation.
+
+!<INPUT 0>!: "

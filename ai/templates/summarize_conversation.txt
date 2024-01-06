@@ -1,0 +1,11 @@
+Variables:
+!<INPUT 0>! -- conversation
+!<INPUT 1>! -- init_persona_name
+!<INPUT 2>! -- init_persona_name
+
+<commentblockmarker>###</commentblockmarker>
+Conversation:
+!<INPUT 0>!
+
+Summarize the conversation above in one sentence:
+!<INPUT 1>! and !<INPUT 2>! had a conversation about
