@@ -4,11 +4,12 @@ from actions.retrieve import retrieve_relevant_memories
 from actions.converse import converse
 from actions.execute import execute
 from actions.reflect import reflect
+from memory.stm import STM, STM_attribiutes
 
 
 class Agent ():
-    def __init__(self, name: str, save_file: str) -> None:
-        self.name = name
+    def __init__(self, init_parameters: STM_attribiutes, save_file: str) -> None:
+        self.stm = STM(init_parameters)
         self.memory_stream = MemoryStream(save_file)
 
     def reflect(self):
