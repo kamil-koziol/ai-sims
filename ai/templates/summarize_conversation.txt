@@ -1,7 +1,7 @@
 Variables:
 !<INPUT 0>! -- conversation
-!<INPUT 1>! -- init_persona_name
-!<INPUT 2>! -- init_persona_name
+!<INPUT 1>! -- init agent name
+!<INPUT 2>! -- target agent name
 
 <commentblockmarker>###</commentblockmarker>
 Conversation:
