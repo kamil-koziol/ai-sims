@@ -6,7 +6,7 @@ from llm_model.model_service import ModelService
 import traceback
 
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 # TEST models
 
