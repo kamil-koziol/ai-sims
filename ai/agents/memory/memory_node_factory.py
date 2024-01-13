@@ -1,5 +1,5 @@
-from memory_node import MemoryNode, MemoryNodeAttributes
-from llm_model.model_manager import ModelService
+from agents.memory.memory_node import MemoryNode, MemoryNodeAttributes
+from llm_model.model_service import ModelService
 from datetime import datetime
 
 
