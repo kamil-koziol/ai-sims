@@ -2,12 +2,15 @@ from fastapi import FastAPI
 
 from embedding_model import EmbeddingModel, MockEmbeddingModel
 from embedding_model.miniLM_embedding_model import MiniLMEmbeddingModel
-from generation_model import GenerationModel, MockModel, GPT4AllModel
+from generation_model import GenerationModel, MockModel
+from generation_model.llama2_7b_chat import Llama2
+
 
 app = FastAPI()
 
-model: GenerationModel = GPT4AllModel() 
+model: GenerationModel = Llama2()
 embedding_model: EmbeddingModel = MiniLMEmbeddingModel()
+
 
 @app.get('/generate')
 async def generate(text: str, context: str):
