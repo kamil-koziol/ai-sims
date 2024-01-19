@@ -1,7 +1,8 @@
 from dataclasses import dataclass
-from ai.agents.agent import Agent
-from ai.agents.memory.stm import Action
-from ai.llm_model.model_service import ModelService
+from agents.agent import Agent
+from agents.memory.stm import Action
+from agents.actions.reflect import generate_thought_importance
+from llm_model.model_service import ModelService
 
 
 @dataclass
@@ -20,12 +21,17 @@ class SummarizeConversationVariables:
     init_agent_name: str
     target_agent_name: str
 
+@dataclass
+class MemoryOnConversationVariables:
+    conversation: str
+    agent_name: str
+
 
 def converse(init_agent: Agent, target_agent: Agent):
     convo = generate_conversation(init_agent, target_agent)
-    convo_summary = generate_conversation_summary(init_agent, target_agent, convo)
-    # TODO insert act into memory stream
-    inserted_act = convo_summary
+    # convo_summary = generate_conversation_summary(init_agent, target_agent, convo)
+    insert_convo_memory_into_mem_stream(init_agent, convo)
+    insert_convo_memory_into_mem_stream(target_agent, convo)
     init_agent.stm.action = Action.CONVERSING
     target_agent.stm.action = Action.CONVERSING
 
@@ -48,7 +54,21 @@ def generate_conversation_summary(init_agent: Agent, target_agent: Agent, convo:
     prompt_variables = SummarizeConversationVariables(
         conversation=convo,
         init_agent_name=init_agent.stm.name,
-        target_agent_name=target_agent.stm.name,
+        target_agent_name=target_agent.stm.name
     )
     output = ModelService().generate_response(prompt_variables, prompt_template_file)
     return output
+
+def generate_memory_on_conversation(agent: Agent, convo: str) -> str:
+    prompt_template_file = "memo_on_convo.txt"
+    prompt_variables = MemoryOnConversationVariables(
+        conversation=convo,
+        agent_name=agent.stm.name
+    )
+    output = ModelService().generate_response(prompt_variables, prompt_template_file)
+    return output
+
+def insert_convo_memory_into_mem_stream(agent: Agent, convo: str) -> None:
+    memory = generate_memory_on_conversation(agent, convo)
+    importance_score = generate_thought_importance(agent, memory)
+    # TODO insert convo memory into memory stream

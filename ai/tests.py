@@ -79,9 +79,11 @@ else:
 # TEST Model Manager
 try:
     importance_score = ModelService().calculate_importance_score('', 'description')
+    prompt = ModelService().prepare_prompt(['this is a convo', 'name1', 'name2'], "summarize_conversation.txt")
 
     if DEBUG_MODE:
         print(importance_score)
+        print(prompt)
 
 except Exception:
     print('Model manager test: ' + Fore.RED + '\u2717')
