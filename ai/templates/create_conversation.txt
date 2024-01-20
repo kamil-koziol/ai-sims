@@ -10,12 +10,20 @@ Variables:
 
 !<INPUT 6>! -- curr location
 
+!<INPUT 7>! -- init agent memories of target agent
+!<INPUT 8>! -- target agent memories of init agent
+
 <commentblockmarker>###</commentblockmarker>
-Context: 
-!<INPUT 2>!
+Context:
 !<INPUT 0>! is currently !<INPUT 4>!.
-!<INPUT 3>!
+!<INPUT 2>!
+!<INPUT 0>! has the following memories of !<INPUT 1>!:
+!<INPUT 7>!
+
 !<INPUT 1>! is currently !<INPUT 5>!.
+!<INPUT 3>!
+!<INPUT 1>! has the following memories of !<INPUT 0>!:
+!<INPUT 8>!
 
 !<INPUT 0>! and !<INPUT 1>! met at !<INPUT 6>!. Here is their conversation.
 
