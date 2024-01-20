@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Constants;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class AgentMovement : MonoBehaviour
 {
-    [SerializeField] private Transform targets;
+    [SerializeField] private Transform regions;
     private Transform currentMovingTarget;
     private NavMeshAgent agent;
     private readonly double MOVEMENT_ESTIMATION_ERROR = 0.1;
@@ -18,40 +19,58 @@ public class AgentMovement : MonoBehaviour
         agent.updateUpAxis = false;
     }
 
-    // Start is called before the first frame update
     void Start()
     {
-        changeDestination(targets.GetChild(0));
+
+        //Demo intialization
+        Transform grassTransform = regions.transform.Find(Constants.Constants.grassObjectName);
+
+        if (grassTransform == null)
+        {
+            Debug.Log("Failed to load initial move position");
+
+        }
+        changeDestination(grassTransform.GetChild(0).GetChild(0));
     }
 
-    // Update is called once per frame
-    void Update() {
+    void Update()
+    {
         demoMovement();
-        agent.SetDestination(new Vector3(currentMovingTarget.position.x, currentMovingTarget.position.y, transform.position.z));
+        updateAgentPosition();
     }
-
 
     public void changeDestination(Transform target)
     {
         currentMovingTarget = target;
     }
-    
+
+    public void updateAgentPosition()
+    {
+        agent.SetDestination(new Vector3(currentMovingTarget.position.x, currentMovingTarget.position.y, transform.position.z));
+    }
+
+    private bool isOnCurrentTargetPosition()
+    {
+        Vector3 agentPosition = new Vector3(agent.transform.position.x, agent.transform.position.y, transform.position.z);
+        return Mathf.Abs(agentPosition.x - currentMovingTarget.position.x + agentPosition.y - currentMovingTarget.position.y) < MOVEMENT_ESTIMATION_ERROR;
+    }
 
     //Demo
-    void demoMovement() {
-        Vector3 agentPosition = new Vector3(agent.transform.position.x, agent.transform.position.y, transform.position.z);
-
-        //Due to nature of NavMeshAgent we have to calculate his position with error
-        if (Mathf.Abs(agentPosition.x - currentMovingTarget.position.x + agentPosition.y - currentMovingTarget.position.y) < MOVEMENT_ESTIMATION_ERROR)
+    public void demoMovement()
+    {
+        if (isOnCurrentTargetPosition())
         {
+            Transform houseTransform = regions.transform.Find(Constants.Constants.houseObjectName);
+            Transform grassTransform = regions.transform.Find(Constants.Constants.grassObjectName);
+
             Transform targetToChange;
-            if (currentMovingTarget == targets.GetChild(0))
+            if (currentMovingTarget == houseTransform.GetChild(0).GetChild(0))
             {
-                targetToChange = targets.GetChild(1);
+                targetToChange = grassTransform.GetChild(0).GetChild(0);
             }
             else
             {
-                targetToChange = targets.GetChild(0);
+                targetToChange = houseTransform.GetChild(0).GetChild(0);
             }
 
 
