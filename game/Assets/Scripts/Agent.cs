@@ -11,6 +11,14 @@ public class Agent : MonoBehaviour {
 
     private void Awake() {
 
+        //For now it throws exception, talk about it
+        if (agentMovement != null)
+        {
+            Debug.Log("AgentMovement works");
+        } else
+        {
+            throw new Exception("AgentMovement is null");
+        }
     }
 
     private void Start() {
@@ -36,6 +44,7 @@ public class Agent : MonoBehaviour {
         }
         
         if(!update) return;
-
+        //TODO: Talk about it
+        //agentMovement.updateAgentPosition();
     }
 }
