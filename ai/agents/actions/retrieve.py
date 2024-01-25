@@ -1,12 +1,16 @@
-from typing import List
+from __future__ import annotations
+from typing import List, TYPE_CHECKING
 from llm_model.model_service import ModelService
 from agents.memory.memory_node import MemoryNode
 from datetime import datetime
 from numpy import dot
 from numpy.linalg import norm
 
+if TYPE_CHECKING:
+    from agents import Agent
 
-def retrieve_relevant_memories(agent, percived: str) -> List[MemoryNode]:
+
+def retrieve_relevant_memories(agent: Agent, percived: str) -> List[MemoryNode]:
     nodes_to_retrive: int = 5
     score_list: List[dict] = []
     for node in agent.memory_stream.nodes:
