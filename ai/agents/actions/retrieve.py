@@ -1,6 +1,6 @@
 from typing import List
 from llm_model.model_service import ModelService
-from memory.memory_node import MemoryNode
+from agents.memory.memory_node import MemoryNode
 from agents.agent import Agent
 from datetime import datetime
 from numpy import dot
