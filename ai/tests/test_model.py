@@ -1,4 +1,4 @@
-import pytest # noqa
+import pytest
 from llm_model.model import MockedEmbeddingModel, MockedGenerationModel, GenerationModel, EmbeddingModel
 
 
