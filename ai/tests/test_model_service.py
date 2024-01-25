@@ -1,3 +1,4 @@
+import pytest
 from llm_model.model_service import ModelService
 
 

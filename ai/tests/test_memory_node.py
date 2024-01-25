@@ -1,4 +1,4 @@
-import pytest # noqa
+import pytest
 from llm_model.model import MockedEmbeddingModel
 from agents.memory.memory_node import MemoryNode, MemoryNodeAttributes
 from datetime import datetime
@@ -16,3 +16,4 @@ class TestModel:
             embeddings=embed_model.embed('something')
         )
         self.memory_node = MemoryNode(attributes)
+        assert True

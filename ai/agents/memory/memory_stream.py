@@ -1,5 +1,5 @@
 from typing import List
-from memory_node import MemoryNode
+from agents.memory import MemoryNode
 
 """
 Class for memory stream. Memory stream is responsible for storing memories nodes, adding new nodes based on thoughts or chats
