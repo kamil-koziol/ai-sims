@@ -1,13 +1,12 @@
 from typing import List
 from llm_model.model_service import ModelService
 from agents.memory.memory_node import MemoryNode
-from agents.agent import Agent
 from datetime import datetime
 from numpy import dot
 from numpy.linalg import norm
 
 
-def retrieve_relevant_memories(agent: Agent, percived: str) -> List[MemoryNode]:
+def retrieve_relevant_memories(agent, percived: str) -> List[MemoryNode]:
     nodes_to_retrive: int = 5
     score_list: List[dict] = []
     for node in agent.memory_stream.nodes:

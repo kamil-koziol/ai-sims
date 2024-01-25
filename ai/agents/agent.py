@@ -1,10 +1,5 @@
-from agents.memory.memory_stream import MemoryStream
-from agents.actions.plan import plan
-from agents.actions.retrieve import retrieve_relevant_memories
-from agents.actions.converse import converse
-from agents.actions.execute import execute
-from agents.actions.reflect import reflect
-from agents.memory.stm import STM, STM_attribiutes
+from agents.actions import plan, retrieve_relevant_memories, converse, execute, reflect
+from agents.memory import STM, STM_attribiutes, MemoryStream
 
 
 class Agent ():
