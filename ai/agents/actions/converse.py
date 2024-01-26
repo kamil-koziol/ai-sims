@@ -1,10 +1,13 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from agents.agent import Agent
 from agents.memory.stm import Action
 from agents.memory.memory_node_factory import MemoryNodeFactory
 from agents.actions.retrieve import retrieve_relevant_memories
 from llm_model.model_service import ModelService
 
+if TYPE_CHECKING:
+    from agents import Agent
 
 @dataclass
 class ConversationVariables:
@@ -51,7 +54,7 @@ def generate_conversation(init_agent: Agent, target_agent: Agent) -> str:
         target_agent_description=target_agent.stm.description,
         init_agent_action=init_agent.stm.action.value,
         target_agent_action=target_agent.stm.action.value,
-        location=init_agent.stm.location,
+        location=init_agent.stm.curr_location,
         init_agent_memories=init_agent_memories,
         target_agent_memories=target_agent_memories
     )
@@ -60,8 +63,8 @@ def generate_conversation(init_agent: Agent, target_agent: Agent) -> str:
 
 def get_memories(agent: Agent, subject: str) -> str:
     retrieved_nodes = retrieve_relevant_memories(agent, subject)
-    info = '\n'.join(node.attributes.description for node in retrieved_nodes)
-    return info
+    memories = '\n'.join(node.attributes.description for node in retrieved_nodes)
+    return memories
 
 def generate_conversation_summary(init_agent: Agent, target_agent: Agent, convo: str) -> str:
     prompt_template_file = "summarize_conversation.txt"

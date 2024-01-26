@@ -21,8 +21,9 @@ class STM:
     def __init__(self, init_parameters: STM_attribiutes):
 
         self._name: str = init_parameters.name
-        self._first_name: str = init_parameters.name.split(' ')[0]
-        self._last_name: str = init_parameters.name.split(' ')[1]
+        if ' ' in init_parameters.name:
+            self._first_name: str = init_parameters.name.split(' ')[0]
+            self._last_name: str = init_parameters.name.split(' ')[1]
         self._description: str = init_parameters.description
         self._age: int = init_parameters.age
         self._curr_location: str = init_parameters.curr_location
@@ -49,8 +50,9 @@ class STM:
     @name.setter
     def name(self, value: str):
         self._name = value
-        self._first_name = value.split(' ')[0]
-        self._last_name = value.split(' ')[1]
+        if ' ' in value:
+            self._first_name = value.split(' ')[0]
+            self._last_name = value.split(' ')[1]
 
     @property
     def description(self):

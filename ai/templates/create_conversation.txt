@@ -25,6 +25,6 @@ Context:
 !<INPUT 1>! has the following memories of !<INPUT 0>!:
 !<INPUT 8>!
 
-!<INPUT 0>! and !<INPUT 1>! met at !<INPUT 6>!. Here is their conversation.
+!<INPUT 0>! and !<INPUT 1>! met at a !<INPUT 6>!. Here is their conversation.
 
 !<INPUT 0>!: "
