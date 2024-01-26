@@ -1,11 +1,5 @@
-from __future__ import annotations
-from memory.memory_stream import MemoryStream
-from actions.plan import plan
-from actions.retrieve import retrieve_relevant_memories
-from actions.converse import converse
-from actions.execute import execute
-from actions.reflect import reflect
-from memory.stm import STM, STM_attribiutes
+from agents.actions import plan, retrieve_relevant_memories, converse, execute, reflect
+from agents.memory import STM, STM_attribiutes, MemoryStream
 
 
 class Agent:
