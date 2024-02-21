@@ -1,17 +1,16 @@
-import pytest
-from agents.memory import MemoryNodeFactory, STM_attribiutes
-from agents import Agent
+from unittest.mock import Mock
+from agents.memory import MemoryNodeFactory
 
 
 class TestModel:
     def test_create_observation(self):
-        stm = STM_attribiutes('John', "Bakery", 27)
-        agent = Agent(stm, 'john')
-        MemoryNodeFactory().create_observation('something', agent)
+        MemoryNodeFactory().create_observation('something', Mock())
         assert True
 
     def test_create_dialog(self):
-        stm = STM_attribiutes('John', "Bakery", 27)
-        agent = Agent(stm, 'john')
-        MemoryNodeFactory().create_observation('something', agent)
+        MemoryNodeFactory().create_observation('something', Mock())
+        assert True
+
+    def test_create_thought(self):
+        MemoryNodeFactory().create_thought('something', Mock())
         assert True
