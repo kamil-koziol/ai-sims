@@ -1,3 +1,4 @@
+import pytest
 from llm_model.model import MockedEmbeddingModel
 from agents.memory.memory_node import MemoryNode, MemoryNodeAttributes
 from datetime import datetime
@@ -5,7 +6,7 @@ from datetime import datetime
 
 class TestModel:
 
-    def test_setup_method(self):
+    def setup_method(self, method):
         embed_model = MockedEmbeddingModel('')
         attributes = MemoryNodeAttributes(
             importance=4,

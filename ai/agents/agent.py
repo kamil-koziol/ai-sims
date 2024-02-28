@@ -1,9 +1,8 @@
-from __future__ import annotations
 from agents.actions import plan, retrieve_relevant_memories, converse, execute, reflect
 from agents.memory import STM, STM_attribiutes, MemoryStream
 
 
-class Agent:
+class Agent ():
     def __init__(self, init_parameters: STM_attribiutes, save_file: str) -> None:
         self.stm = STM(init_parameters)
         self.memory_stream = MemoryStream(save_file)
@@ -14,14 +13,14 @@ class Agent:
     def plan(self):
         plan()
 
-    def retrive(self, perceived: str):
-        retrieve_relevant_memories(self, perceived)
+    def retrive(self):
+        retrieve_relevant_memories()
 
     def execute(self):
         execute()
 
-    def converse(self, target_agent: Agent):
-        converse(self, target_agent)
+    def converse(self):
+        converse()
 
     def percive(self):
         pass
