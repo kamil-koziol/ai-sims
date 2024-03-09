@@ -1,7 +1,7 @@
 from dataclasses import asdict, is_dataclass
 from typing import List
 from llm_model.model import GenerationModel, EmbeddingModel, MockedEmbeddingModel, MockedGenerationModel
-from utils.utils import Singleton
+from utils import Singleton
 import os
 
 

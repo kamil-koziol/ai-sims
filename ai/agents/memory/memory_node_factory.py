@@ -1,6 +1,6 @@
 from __future__ import annotations
-from agents.memory.memory_node import MemoryNode, MemoryNodeAttributes
-from llm_model.model_service import ModelService
+from agents.memory import MemoryNode, MemoryNodeAttributes
+from llm_model import ModelService
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:

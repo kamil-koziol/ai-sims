@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import pytest
-from llm_model.model_service import ModelService
+from llm_model import ModelService
 
 
 @dataclass

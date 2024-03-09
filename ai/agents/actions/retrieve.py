@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import List, TYPE_CHECKING
-from llm_model.model_service import ModelService
-from agents.memory.memory_node import MemoryNode
+from llm_model import ModelService
+from agents.memory import MemoryNode
 from datetime import datetime
 from numpy import dot
 from numpy.linalg import norm
@@ -19,6 +19,12 @@ def retrieve_relevant_memories(agent: Agent, percived: str) -> List[MemoryNode]:
     top_nodes_ids = score_list[:nodes_to_retrive]
     top_nodes = list(filter(lambda x: x.id in top_nodes_ids, agent.memory_stream.nodes))
     return top_nodes
+
+
+def get_string_memories(agent: Agent, subject: str) -> str:
+    retrieved_nodes = retrieve_relevant_memories(agent, subject)
+    memories = '\n'.join(node.attributes.description for node in retrieved_nodes)
+    return memories
 
 
 def _calculate_overall_compare_score(node: MemoryNode, percived: str) -> float:

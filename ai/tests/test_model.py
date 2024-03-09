@@ -1,5 +1,4 @@
-import pytest
-from llm_model.model import MockedEmbeddingModel, MockedGenerationModel, GenerationModel, EmbeddingModel
+from llm_model import MockedEmbeddingModel, MockedGenerationModel, GenerationModel, EmbeddingModel
 
 
 class TestModel:
