@@ -1,5 +1,5 @@
-from llm_model.model import MockedEmbeddingModel
-from agents.memory.memory_node import MemoryNode, MemoryNodeAttributes
+from llm_model import MockedEmbeddingModel
+from agents.memory import MemoryNode, MemoryNodeAttributes
 from datetime import datetime
 
 

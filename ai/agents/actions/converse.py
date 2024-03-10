@@ -1,13 +1,13 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from agents.memory.stm import Action
-from agents.memory.memory_node_factory import MemoryNodeFactory
-from agents.actions.retrieve import retrieve_relevant_memories
-from llm_model.model_service import ModelService
+from agents.memory import Action, MemoryNodeFactory
+from agents.actions.retrieve import get_string_memories
+from llm_model import ModelService
 
 if TYPE_CHECKING:
     from agents import Agent
+
 
 @dataclass
 class ConversationVariables:
@@ -43,10 +43,11 @@ def converse(init_agent: Agent, target_agent: Agent):
     init_agent.stm.action = Action.CONVERSING
     target_agent.stm.action = Action.CONVERSING
 
+
 def generate_conversation(init_agent: Agent, target_agent: Agent) -> str:
     prompt_template_file = "create_conversation.txt"
-    init_agent_memories = get_memories(init_agent, target_agent.stm.name)
-    target_agent_memories = get_memories(target_agent, init_agent.stm.name)
+    init_agent_memories = get_string_memories(init_agent, target_agent.stm.name)
+    target_agent_memories = get_string_memories(target_agent, init_agent.stm.name)
     prompt_variables = ConversationVariables(
         init_agent_name=init_agent.stm.name,
         target_agent_name=target_agent.stm.name,
@@ -61,10 +62,6 @@ def generate_conversation(init_agent: Agent, target_agent: Agent) -> str:
     output = ModelService().generate_response(prompt_variables, prompt_template_file)
     return output
 
-def get_memories(agent: Agent, subject: str) -> str:
-    retrieved_nodes = retrieve_relevant_memories(agent, subject)
-    memories = '\n'.join(node.attributes.description for node in retrieved_nodes)
-    return memories
 
 def generate_conversation_summary(init_agent: Agent, target_agent: Agent, convo: str) -> str:
     prompt_template_file = "summarize_conversation.txt"
@@ -76,6 +73,7 @@ def generate_conversation_summary(init_agent: Agent, target_agent: Agent, convo:
     output = ModelService().generate_response(prompt_variables, prompt_template_file)
     return output
 
+
 def generate_memory_on_conversation(agent: Agent, convo: str) -> str:
     prompt_template_file = "memo_on_convo.txt"
     prompt_variables = MemoryOnConversationVariables(
@@ -84,6 +82,7 @@ def generate_memory_on_conversation(agent: Agent, convo: str) -> str:
     )
     output = ModelService().generate_response(prompt_variables, prompt_template_file)
     return output
+
 
 def insert_convo_into_mem_stream(agent: Agent, convo: str, summary: str) -> None:
     dialog_node = MemoryNodeFactory.create_dialog(summary, agent)
