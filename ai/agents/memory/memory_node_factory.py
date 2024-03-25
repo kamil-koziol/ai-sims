@@ -8,8 +8,21 @@ if TYPE_CHECKING:
 
 
 class MemoryNodeFactory:
+    """
+    Factory for MemoryNode class.
+    """
     @staticmethod
     def create_observation(description: str, agent: Agent) -> MemoryNode:
+        """
+        Create memory node of observation performed by agent.
+
+        Args:
+            description (str): Description of observation.
+            agent (Agent): Agent for whom calculate importance score.
+
+        Returns:
+            MemoryNode: Created memory node.
+        """
         importance_score = ModelService().calculate_importance_score(agent=agent, memory_description=description)
         embeddings = ModelService().get_embeddings(text=description)
         attributes = MemoryNodeAttributes(
@@ -24,6 +37,16 @@ class MemoryNodeFactory:
 
     @staticmethod
     def create_dialog(description: str, agent: Agent) -> MemoryNode:
+        """
+        Create memory node of dialog.
+
+        Args:
+            description (str): Text of dialog.
+            agent (Agent): Agent for whom calculate importance score.
+
+        Returns:
+            MemoryNode: Created memory node.
+        """
         importance_score = ModelService().calculate_importance_score(agent=agent, memory_description=description)
         embeddings = ModelService().get_embeddings(text=description)
         attributes = MemoryNodeAttributes(
@@ -38,6 +61,16 @@ class MemoryNodeFactory:
 
     @staticmethod
     def create_thought(description: str, agent: Agent) -> MemoryNode:
+        """
+        Create memory node of thought.
+
+        Args:
+            description (str): Description of thought.
+            agent (Agent): Agent for whom calculate importance score.
+
+        Returns:
+            MemoryNode: Created memory node.
+        """
         importance_score = ModelService().calculate_importance_score(agent=agent, memory_description=description)
         embeddings = ModelService().get_embeddings(text=description)
         attributes = MemoryNodeAttributes(

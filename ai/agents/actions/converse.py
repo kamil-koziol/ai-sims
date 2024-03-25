@@ -11,6 +11,9 @@ if TYPE_CHECKING:
 
 @dataclass
 class ConversationVariables:
+    """
+    Variables necessary for creating a conversation templates.
+    """
     init_agent_name: str
     target_agent_name: str
     init_agent_description: str
@@ -23,17 +26,30 @@ class ConversationVariables:
 
 @dataclass
 class SummarizeConversationVariables:
+    """
+    Variables necessary for creating a summarization templates.
+    """
     conversation: str
     init_agent_name: str
     target_agent_name: str
 
 @dataclass
 class MemoryOnConversationVariables:
+    """
+    Variables necessary for creating a memory out of conversation.
+    """
     conversation: str
     agent_name: str
 
 
 def converse(init_agent: Agent, target_agent: Agent):
+    """
+    Create a memory node of conversation between init agent and target agent and add it to memory stream.
+
+    Args:
+        init_agent (Agent): The agent who initialized a conversation
+        target_agent (Agent): The target of initialized conversation
+    """
     convo = generate_conversation(init_agent, target_agent)
     convo_summary = generate_conversation_summary(init_agent, target_agent, convo)
 
@@ -45,6 +61,13 @@ def converse(init_agent: Agent, target_agent: Agent):
 
 
 def generate_conversation(init_agent: Agent, target_agent: Agent) -> str:
+    """
+    Create a text of conversation between agents.
+
+    Args:
+        init_agent (Agent): The agent who initialized a conversation
+        target_agent (Agent): The target of initialized conversation
+    """
     prompt_template_file = "create_conversation.txt"
     init_agent_memories = get_string_memories(init_agent, target_agent.stm.name)
     target_agent_memories = get_string_memories(target_agent, init_agent.stm.name)
@@ -64,6 +87,17 @@ def generate_conversation(init_agent: Agent, target_agent: Agent) -> str:
 
 
 def generate_conversation_summary(init_agent: Agent, target_agent: Agent, convo: str) -> str:
+    """
+    _summary_
+
+    Args:
+        init_agent (Agent): _description_
+        target_agent (Agent): _description_
+        convo (str): _description_
+
+    Returns:
+        str: 
+    """
     prompt_template_file = "summarize_conversation.txt"
     prompt_variables = SummarizeConversationVariables(
         conversation=convo,
@@ -75,6 +109,16 @@ def generate_conversation_summary(init_agent: Agent, target_agent: Agent, convo:
 
 
 def generate_memory_on_conversation(agent: Agent, convo: str) -> str:
+    """
+    Create a memory node for an agent.
+
+    Args:
+        agent (Agent): Agent for memory node.
+        convo (str): Text of the conversation.
+
+    Returns:
+        str: Description of the memory
+    """
     prompt_template_file = "memo_on_convo.txt"
     prompt_variables = MemoryOnConversationVariables(
         conversation=convo,
@@ -85,6 +129,14 @@ def generate_memory_on_conversation(agent: Agent, convo: str) -> str:
 
 
 def insert_convo_into_mem_stream(agent: Agent, convo: str, summary: str) -> None:
+    """
+    Add a memory into agent's memory stream.
+
+    Args:
+        agent (Agent): Agent to add a memory.
+        convo (str): Description of conversation.
+        summary (str): Summary of conversation.
+    """
     dialog_node = MemoryNodeFactory.create_dialog(summary, agent)
     agent.memory_stream.add_memory_node(dialog_node)
 

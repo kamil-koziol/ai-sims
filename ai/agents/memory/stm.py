@@ -5,20 +5,48 @@ from datetime import datetime
 
 @dataclass
 class STM_attributes:
+    """
+    Short memory attributes.
+    """
+
     name: str
+    """
+    Name of the agent. If name contains a space (' '). Name is splitted into first and last name.
+    """
     description: str
+    """
+    Description of character for example what is his role in society etc.
+    """
     age: int
+    """
+    Age of agent.
+    """
     curr_location: str
+    """
+    Name of current place where agent is currently standing.
+    """
 
 
 class Action(Enum):
+    """
+    Enum for describing agent's current state.
+    """
     NOTHING = "doing nothing"
     WALKING = "walking"
     CONVERSING = "conversing"
 
 
 class STM:
+    """
+    Short term memory. Memory used for storing recent actions of agent, name, last name and other basic information.
+    """
     def __init__(self, init_parameters: STM_attributes):
+        """
+        Create short memory object.
+
+        Args:
+            init_parameters (STM_attributes): Attributes to initialize memory with.
+        """
 
         self._name: str = init_parameters.name
         if ' ' in init_parameters.name:
