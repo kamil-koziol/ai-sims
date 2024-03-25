@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 @dataclass
-class STM_attribiutes:
+class STM_attributes:
     name: str
     description: str
     age: int
@@ -18,7 +18,7 @@ class Action(Enum):
 
 
 class STM:
-    def __init__(self, init_parameters: STM_attribiutes):
+    def __init__(self, init_parameters: STM_attributes):
 
         self._name: str = init_parameters.name
         if ' ' in init_parameters.name:

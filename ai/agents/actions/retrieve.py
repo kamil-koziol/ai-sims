@@ -10,13 +10,13 @@ if TYPE_CHECKING:
     from agents import Agent
 
 
-def retrieve_relevant_memories(agent: Agent, percived: str) -> List[MemoryNode]:
-    nodes_to_retrive: int = 5
+def retrieve_relevant_memories(agent: Agent, perceived: str) -> List[MemoryNode]:
+    nodes_to_retrieve: int = 5
     score_list: List[dict] = []
     for node in agent.memory_stream.nodes:
-        score_list.append({'id': node.id, 'score': _calculate_overall_compare_score(node, percived)})
+        score_list.append({'id': node.id, 'score': _calculate_overall_compare_score(node, perceived)})
     score_list = sorted(score_list, key=lambda x: x['score'])
-    top_nodes_ids = score_list[:nodes_to_retrive]
+    top_nodes_ids = score_list[:nodes_to_retrieve]
     top_nodes = list(filter(lambda x: x.id in top_nodes_ids, agent.memory_stream.nodes))
     return top_nodes
 
@@ -27,11 +27,11 @@ def get_string_memories(agent: Agent, subject: str) -> str:
     return memories
 
 
-def _calculate_overall_compare_score(node: MemoryNode, percived: str) -> float:
+def _calculate_overall_compare_score(node: MemoryNode, perceived: str) -> float:
     weights = [1, 1, 1]
     date_to_compere = datetime.now()
 
-    relevance_score = weights[0] * _calculate_relevance_score(node, percived)
+    relevance_score = weights[0] * _calculate_relevance_score(node, perceived)
     importance_score = weights[1] * node.attributes.importance
     recency_score = weights[2] * _calculate_recency_score(node, date_to_compere)
 
@@ -39,9 +39,9 @@ def _calculate_overall_compare_score(node: MemoryNode, percived: str) -> float:
     return overall_score
 
 
-def _calculate_relevance_score(node: MemoryNode, percived: str) -> float:
+def _calculate_relevance_score(node: MemoryNode, perceived: str) -> float:
     MAX_SCORE = 10
-    description_embeddings = ModelService().get_embeddings(text=percived)
+    description_embeddings = ModelService().get_embeddings(text=perceived)
     similarity = _cos_sim(node.attributes.embeddings, description_embeddings)
     score = MAX_SCORE * similarity
     return score
@@ -65,6 +65,6 @@ def _cos_sim(a, b) -> float:
             a: 1-D array object
             b: 1-D array object
         OUT:
-            A scalar repesenting the cosine similarity
+            A scalar representing the cosine similarity
     """
     return dot(a, b) / norm(a) * norm(b)
