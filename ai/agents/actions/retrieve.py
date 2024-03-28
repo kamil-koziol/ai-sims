@@ -10,28 +10,64 @@ if TYPE_CHECKING:
     from agents import Agent
 
 
-def retrieve_relevant_memories(agent: Agent, percived: str) -> List[MemoryNode]:
-    nodes_to_retrive: int = 5
+def retrieve_relevant_memories(agent: Agent, perceived: str) -> List[MemoryNode]:
+    """
+    Retrieve relevant memories of agent according to description of perceived events.
+
+    Args:
+        agent (Agent): Owner of memories.
+        perceived (str): Description of events.
+
+    Returns:
+        List[MemoryNode]: List of relevant memories.
+    """
+    nodes_to_retrieve: int = 5
     score_list: List[dict] = []
     for node in agent.memory_stream.nodes:
-        score_list.append({'id': node.id, 'score': _calculate_overall_compare_score(node, percived)})
+        score_list.append(
+            {
+                'id': node.id,
+                 'score': _calculate_overall_compare_score(node, perceived)
+            }
+        )
     score_list = sorted(score_list, key=lambda x: x['score'])
-    top_nodes_ids = score_list[:nodes_to_retrive]
+    top_nodes_ids = score_list[:nodes_to_retrieve]
     top_nodes = list(filter(lambda x: x.id in top_nodes_ids, agent.memory_stream.nodes))
     return top_nodes
 
 
 def get_string_memories(agent: Agent, subject: str) -> str:
+    """
+    Get relevant memories in string format.
+
+    Args:
+        agent (Agent): Owner of memories.
+        subject (str): Description of subject for retrieve.
+
+    Returns:
+        str: String representation of memories.
+    """
     retrieved_nodes = retrieve_relevant_memories(agent, subject)
     memories = '\n'.join(node.attributes.description for node in retrieved_nodes)
     return memories
 
 
-def _calculate_overall_compare_score(node: MemoryNode, percived: str) -> float:
+def _calculate_overall_compare_score(node: MemoryNode, perceived: str) -> float:
+    """
+    Get an overall score of relevancy for relevant memories and perceived event.
+    Score is based on passed time, relevancy to description and importance to agent
+
+    Args:
+        node (MemoryNode): A node to create score for.
+        perceived (str): Description of event.
+
+    Returns:
+        float: Score of overall relevancy.
+    """
     weights = [1, 1, 1]
     date_to_compere = datetime.now()
 
-    relevance_score = weights[0] * _calculate_relevance_score(node, percived)
+    relevance_score = weights[0] * _calculate_relevance_score(node, perceived)
     importance_score = weights[1] * node.attributes.importance
     recency_score = weights[2] * _calculate_recency_score(node, date_to_compere)
 
@@ -39,15 +75,35 @@ def _calculate_overall_compare_score(node: MemoryNode, percived: str) -> float:
     return overall_score
 
 
-def _calculate_relevance_score(node: MemoryNode, percived: str) -> float:
+def _calculate_relevance_score(node: MemoryNode, perceived: str) -> float:
+    """
+    Function that calculates the relevance score between memory node and perceived events.
+
+    Args:
+        node (MemoryNode): Memory node from agent's memory stream.
+        perceived (str): Description of perceived events.
+
+    Returns:
+        float: relevance score
+    """
     MAX_SCORE = 10
-    description_embeddings = ModelService().get_embeddings(text=percived)
+    description_embeddings = ModelService().get_embeddings(text=perceived)
     similarity = _cos_sim(node.attributes.embeddings, description_embeddings)
     score = MAX_SCORE * similarity
     return score
 
 
 def _calculate_recency_score(node: MemoryNode, date_to_compere: datetime) -> float:
+    """
+    Function that calculates the recency score based on time passed since memory creation.
+
+    Args:
+        node (MemoryNode): Memory node from agent's memory.
+        date_to_compere (datetime): Time to compere with.
+
+    Returns:
+        float: recency score
+    """
     SECS_IN_HOUR = 3600
     MAX_SCORE = 10
     DECAY_FACTOR = 0.99
@@ -61,10 +117,10 @@ def _cos_sim(a, b) -> float:
     """
     Function that calculates the cosine similarity between two vectors.
 
-        ARGS:
-            a: 1-D array object
-            b: 1-D array object
-        OUT:
-            A scalar repesenting the cosine similarity
+    Args:
+        a: 1-D array object
+        b: 1-D array object
+    Returns:
+        A scalar representing the cosine similarity
     """
     return dot(a, b) / norm(a) * norm(b)

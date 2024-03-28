@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 import pytest
-from agents.memory import MemoryStream, MemoryNodeFactory, Action, STM_attribiutes
+from agents.memory import MemoryStream, MemoryNodeFactory, Action, STM_attributes
 from llm_model import ModelService
 from agents import Agent
 from agents.actions import (
@@ -14,14 +14,14 @@ from agents.actions import (
 @pytest.fixture
 def init_agent():
     # Create and return an instance of the Agent class for testing
-    stm = STM_attribiutes('John Smith', "John's description", 27, 'cafe')
+    stm = STM_attributes('John Smith', "John's description", 27, 'cafe')
     agent = Agent(stm, 'save_file1.txt')
     return agent
 
 @pytest.fixture
 def target_agent():
     # Create and return an instance of the Agent class for testing
-    stm = STM_attribiutes('Emily Green', "Emily's description", 27, 'cafe')
+    stm = STM_attributes('Emily Green', "Emily's description", 27, 'cafe')
     agent = Agent(stm, 'save_file2.txt')
     return agent
 
