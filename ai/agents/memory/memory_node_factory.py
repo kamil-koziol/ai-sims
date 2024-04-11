@@ -2,10 +2,16 @@ from __future__ import annotations
 from agents.memory import MemoryNode, MemoryNodeAttributes
 from llm_model import ModelService
 from typing import TYPE_CHECKING
+from enum import Enum
 
 if TYPE_CHECKING:
     from agents import Agent
 
+
+class MemoryType(Enum):
+    CHAT = 'chat'
+    THOUGHT = 'thought'
+    OBSERVATION = 'observation'
 
 class MemoryNodeFactory:
     """
@@ -28,7 +34,7 @@ class MemoryNodeFactory:
         attributes = MemoryNodeAttributes(
             description=description,
             created=agent.stm.curr_time,
-            node_type='observation',
+            node_type=MemoryType.OBSERVATION,
             importance=importance_score,
             embeddings=embeddings
         )
@@ -36,7 +42,7 @@ class MemoryNodeFactory:
         return memory_node
 
     @staticmethod
-    def create_dialog(description: str, agent: Agent) -> MemoryNode:
+    def create_chat(description: str, agent: Agent) -> MemoryNode:
         """
         Create memory node of dialog.
 
@@ -52,7 +58,7 @@ class MemoryNodeFactory:
         attributes = MemoryNodeAttributes(
             description=description,
             created=agent.stm.curr_time,
-            node_type='dialog',
+            node_type=MemoryType.CHAT,
             importance=importance_score,
             embeddings=embeddings
         )
@@ -76,7 +82,7 @@ class MemoryNodeFactory:
         attributes = MemoryNodeAttributes(
             description=description,
             created=agent.stm.curr_time,
-            node_type='thought',
+            node_type=MemoryType.THOUGHT,
             importance=importance_score,
             embeddings=embeddings
         )

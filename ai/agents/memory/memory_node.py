@@ -2,6 +2,7 @@ from __future__ import annotations
 from datetime import datetime
 from dataclasses import dataclass
 from typing import List
+from memory_node_factory import MemoryType
 
 """
 Single memory node.
@@ -23,7 +24,7 @@ class MemoryNodeAttributes():
     importance: int
     created: datetime
     description: str
-    node_type: str
+    node_type: MemoryType
     embeddings: List[float]
 
 
