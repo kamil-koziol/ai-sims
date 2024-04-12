@@ -17,6 +17,9 @@ embeddings: embedded description
 
 @dataclass
 class MemoryNodeAttributes():
+    """
+    Attributes describing memory node.
+    """
     importance: int
     created: datetime
     description: str
@@ -25,6 +28,15 @@ class MemoryNodeAttributes():
 
 
 class MemoryNode():
+    """
+    Single memory.
+    """
     def __init__(self, attributes: MemoryNodeAttributes) -> None:
+        """
+        Create a memory node.
+
+        Args:
+            attributes (MemoryNodeAttributes): Attributes describing memory node.
+        """
         self.attributes: MemoryNodeAttributes = attributes
         self.id: int = 0
