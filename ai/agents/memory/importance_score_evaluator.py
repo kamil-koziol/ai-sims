@@ -1,8 +1,14 @@
-from .memory_node_factory import MemoryType
-from agents import Agent
+from __future__ import annotations
+from typing import TYPE_CHECKING
 from utils import Singleton
 from dataclasses import dataclass
 from llm_model import ModelService
+from .memory_type import MemoryType
+import sys
+
+if TYPE_CHECKING:
+    from agents import Agent
+
 
 @dataclass
 class CalculateImportanceScoreVariables:
@@ -17,19 +23,22 @@ class ImportanceEvaluator(metaclass=Singleton):
     """
     Singleton. Handles importance evaluation.
     """
-    def calculate_importance_score(self, agent: Agent, memory_description: str, type: MemoryType) -> int:
+    def __init__(self) -> None:
+        self._default_value = 3
+
+    def calculate_importance_score(self, agent: Agent, memory_description: str, memory_type: MemoryType) -> int:
         """
         Calculate importance that is value from 1 to 10 how much given memory is important to agent.
 
         Args:
             agent (Agent): Owner of a memory.
             memory_description (str): Description of a memory.
-            type (MemoryType): Type of memory. For example chat
+            memory_type (MemoryType): Type of memory. For example chat
 
         Returns:
             int: Score
         """
-        if type == MemoryType.CHAT:
+        if memory_type == MemoryType.CHAT:
             return self._calculate_importance_chat(agent=agent, memory_description=memory_description)
 
     def _calculate_importance_chat(self, agent: Agent, memory_description: str) -> int:
@@ -63,5 +72,8 @@ class ImportanceEvaluator(metaclass=Singleton):
         Returns:
             int: Converted string.
         """
-        return int(response)
-
+        try:
+            return int(response)
+        except ValueError as e:
+            print(f'Invalid model response! {e} cannot be converted to int. Returning default value.', file=sys.stderr)
+            return self._default_value

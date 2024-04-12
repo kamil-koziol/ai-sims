@@ -1,17 +1,14 @@
 from __future__ import annotations
 from agents.memory import MemoryNode, MemoryNodeAttributes
+from .memory_type import MemoryType
+from .importance_score_evaluator import ImportanceEvaluator
 from llm_model import ModelService
 from typing import TYPE_CHECKING
-from enum import Enum
 
 if TYPE_CHECKING:
     from agents import Agent
 
 
-class MemoryType(Enum):
-    CHAT = 'chat'
-    THOUGHT = 'thought'
-    OBSERVATION = 'observation'
 
 class MemoryNodeFactory:
     """
@@ -29,7 +26,11 @@ class MemoryNodeFactory:
         Returns:
             MemoryNode: Created memory node.
         """
-        importance_score = ModelService().calculate_importance_score(agent=agent, memory_description=description)
+        importance_score = ImportanceEvaluator().calculate_importance_score(
+            agent=agent,
+            memory_description=description,
+            memory_type=MemoryType.OBSERVATION
+        )
         embeddings = ModelService().get_embeddings(text=description)
         attributes = MemoryNodeAttributes(
             description=description,
@@ -53,7 +54,11 @@ class MemoryNodeFactory:
         Returns:
             MemoryNode: Created memory node.
         """
-        importance_score = ModelService().calculate_importance_score(agent=agent, memory_description=description)
+        importance_score = ImportanceEvaluator().calculate_importance_score(
+            agent=agent,
+            memory_description=description,
+            memory_type=MemoryType.CHAT
+        )
         embeddings = ModelService().get_embeddings(text=description)
         attributes = MemoryNodeAttributes(
             description=description,
@@ -77,7 +82,11 @@ class MemoryNodeFactory:
         Returns:
             MemoryNode: Created memory node.
         """
-        importance_score = ModelService().calculate_importance_score(agent=agent, memory_description=description)
+        importance_score = ImportanceEvaluator().calculate_importance_score(
+            agent=agent,
+            memory_description=description,
+            memory_type=MemoryType.THOUGHT
+        )
         embeddings = ModelService().get_embeddings(text=description)
         attributes = MemoryNodeAttributes(
             description=description,

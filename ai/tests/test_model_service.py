@@ -21,10 +21,6 @@ def model_service():
     return ModelService()
 
 class TestModelService:
-    def test_importance_score(self):
-        ModelService().calculate_importance_score('', 'description')
-        assert True
-
     def test_prepare_prompt(self):
         input_variables = ["name1", "name2", "description1", "description2", "doing nothing",
                            "conversing", "cafe", "memories1", "memories2"]

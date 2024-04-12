@@ -26,7 +26,7 @@ def target_agent():
     return agent
 
 
-def test_converse(mocker, init_agent, target_agent):
+def test_converse(mocker, init_agent: Agent, target_agent: Agent):
     # Mocking the dependent function
     mocker.patch("agents.actions.generate_conversation", return_value="Mocked Conversation")
     mocker.patch("agents.actions.generate_conversation_summary", return_value="Mocked Conversation Summary")
@@ -64,7 +64,7 @@ def test_generate_memory_on_conversation(mocker, init_agent):
 
 def test_insert_convo_into_mem_stream(mocker, init_agent):
     # Mocking the dependent functions
-    mocker.patch.object(MemoryNodeFactory, 'create_dialog', return_value=Mock())
+    mocker.patch.object(MemoryNodeFactory, 'create_chat', return_value=Mock())
     mocker.patch.object(MemoryNodeFactory, 'create_thought', return_value=Mock())
     mocker.patch.object(MemoryStream, 'add_memory_node')
     mocker.patch("agents.actions.generate_memory_on_conversation", return_value="Generated Memory")

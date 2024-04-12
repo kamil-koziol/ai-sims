@@ -1,8 +1,10 @@
 from __future__ import annotations
 from datetime import datetime
 from dataclasses import dataclass
-from typing import List
-from memory_node_factory import MemoryType
+from typing import List, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from agents.memory import MemoryType
 
 """
 Single memory node.
