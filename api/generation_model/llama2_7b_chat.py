@@ -9,9 +9,6 @@ class Llama2(GenerationModel):
 
     def __init__(self) -> None:
 
-        device = ['cuda:0', 'cuda:1']
-
-
         self.model_path = os.path.join(os.getcwd(), "assets", "models", "Llama-2-7b-chat-hf")
         self.tokenizer_path = os.path.join(os.getcwd(), "assets", "models", "Llama-2-7b-chat-hf")
         self.model = AutoModelForCausalLM.from_pretrained(self.model_path, device_map = 'auto')
