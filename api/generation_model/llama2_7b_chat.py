@@ -5,17 +5,14 @@ import torch
 
 
 class Llama2(GenerationModel):
-    model: AutoModelForCausalLM
-
     def __init__(self) -> None:
 
-        self.model_path = os.path.join(os.getcwd(), "assets", "models", "Llama-2-7b-chat-hf")
-        self.tokenizer_path = os.path.join(os.getcwd(), "assets", "models", "Llama-2-7b-chat-hf")
-        self.model = AutoModelForCausalLM.from_pretrained(self.model_path, device_map = 'auto')
-        self.tokenizer = AutoTokenizer.from_pretrained(self.tokenizer_path, device_map = 'auto')
+        model_path = '/home/macierz/s188864/smis/assets/models/Llama_2_7b_chat'
+        self.model = AutoModelForCausalLM.from_pretrained(model_path, device_map='auto')
+        self.tokenizer = AutoTokenizer.from_pretrained(model_path, device_map='auto')
 
-    def generate(self, text: str, context: str) -> GenerationModelResult:
-        inputs = self.tokenizer([text], return_tensors='pt')
+    def generate(self, prompt: str) -> GenerationModelResult:
+        inputs = self.tokenizer([prompt], return_tensors='pt')
         inputs = inputs.to('cuda')
         generated_ids = self.model.generate(**inputs, max_new_tokens=500)
         result = self.tokenizer.batch_decode(generated_ids)

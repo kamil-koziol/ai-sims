@@ -4,6 +4,7 @@ from embedding_model import EmbeddingModel, MockEmbeddingModel
 from embedding_model.miniLM_embedding_model import MiniLMEmbeddingModel
 from generation_model import GenerationModel, MockModel
 from generation_model.llama2_7b_chat import Llama2
+from pydantic import BaseModel
 
 
 app = FastAPI()
@@ -11,12 +12,18 @@ app = FastAPI()
 model: GenerationModel = Llama2()
 embedding_model: EmbeddingModel = MiniLMEmbeddingModel()
 
+class GenerateRequest(BaseModel):
+    prompt: str
 
-@app.get('/generate')
-async def generate(text: str, context: str):
-    return model.generate(text, context)
+class EmbedRequest(BaseModel):
+    sentence: str
 
 
-@app.get('/embed')
-async def embed(sentences: str):
-    return embedding_model.embed(sentences)
+@app.post('/generate')
+async def generate(request: GenerateRequest):
+    return model.generate(request.prompt)
+
+
+@app.post('/embed')
+async def embed(request: EmbedRequest):
+    return embedding_model.embed(request.sentence)

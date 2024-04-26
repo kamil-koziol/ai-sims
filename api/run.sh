@@ -23,5 +23,4 @@ if [[ "$DEVICES" == "" ]]; then
     exit
 fi
 
-CUDA_VISIBLE_DEVICES=$DEVICES
-uvicorn uvicorn main:app --reload
+CUDA_VISIBLE_DEVICES=$DEVICES uvicorn main:app --host 0.0.0.0 --reload
