@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from embedding_model import EmbeddingModel, MockEmbeddingModel
-from embedding_model.miniLM_embedding_model import MiniLMEmbeddingModel
+from embedding_model.mxbai_model import MxbaiModel
 from generation_model import GenerationModel, MockModel
 from generation_model.llama2_7b_chat import Llama2
 from pydantic import BaseModel
@@ -10,7 +10,7 @@ from pydantic import BaseModel
 app = FastAPI()
 
 model: GenerationModel = Llama2()
-embedding_model: EmbeddingModel = MiniLMEmbeddingModel()
+embedding_model: EmbeddingModel = MxbaiModel()
 
 class GenerateRequest(BaseModel):
     prompt: str

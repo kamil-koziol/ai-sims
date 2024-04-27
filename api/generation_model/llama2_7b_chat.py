@@ -7,7 +7,8 @@ import torch
 class Llama2(GenerationModel):
     def __init__(self) -> None:
 
-        model_path = '/home/macierz/s188864/smis/assets/models/Llama_2_7b_chat'
+        smis_folder = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+        model_path = os.path.join(smis_folder, 'assets/models/Llama_2_7b_chat')
         self.model = AutoModelForCausalLM.from_pretrained(model_path, device_map='auto')
         self.tokenizer = AutoTokenizer.from_pretrained(model_path, device_map='auto')
 

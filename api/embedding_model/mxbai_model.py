@@ -1,25 +1,18 @@
-from typing import Dict
-from transformers import AutoModel, AutoTokenizer
+import os
+from sentence_transformers import SentenceTransformer
 from .embedding_model import EmbeddingModel, EmbeddingResult
-import torch
 
 class MxbaiModel(EmbeddingModel):
     def __init__(self) -> None:
-        model_path = '/home/macierz/s188864/smis/assets/models/mxbai-embed-large-v1'
-        self.model = AutoModel.from_pretrained(model_path, device_map='auto')
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
+        smis_folder = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+        model_path = os.path.join(smis_folder, 'assets/models/mxbai-embed-large-v1')
+        self.model = SentenceTransformer(model_path)
 
-    def embed(self, text):
-        inputs = self.tokenizer(text, return_tensors='pt')
-        outputs = self.model(**inputs).last_hidden_state
-        embeddings = self._pooling(outputs=outputs, inputs=inputs)
+    def embed(self, sentence):
+        embeddings = self.model.encode(sentence)
+        print(type(embeddings))
         return EmbeddingResult(
-            sentences=text,
-            embedding=embeddings[0],
-            dimensions=len(embeddings[0])
+            sentences=sentence,
+            embedding=embeddings.tolist(),
+            dimensions=len(embeddings)
         )
-
-    def _pooling(self, outputs: torch.Tensor, inputs: Dict):
-        outputs = torch.sum(outputs * inputs['attention_mask'][:, :, None], dim=1) / torch.sum(inputs['attention_mask'])
-        return outputs.detach().cpu().numpy()
-    
