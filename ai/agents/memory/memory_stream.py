@@ -2,18 +2,13 @@ from typing import List
 from agents.memory import MemoryNode
 
 
-
-class MemoryStream():
+class MemoryStream:
     """
     Class for memory stream. Memory stream is responsible for storing memories nodes, adding new nodes.
     """
-    def __init__(self, save_file: str) -> None:
+    def __init__(self) -> None:
         """
         Initialize a memory stream
-
-        Args:
-            save_file (str): 
-
         """
         self.nodes: List[MemoryNode] = []
         """
