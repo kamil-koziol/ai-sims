@@ -77,18 +77,15 @@ class Agent:
     def move(self):
         pass
 
-    def save(self, save_file: str) -> None:
+    def save(self) -> None:
         """
         Save the agent to the file.
-
-        Args:
-            save_file (str): Name of the file which agent should be saved to.
         """
         curr_dir = os.path.dirname(__file__)
         storage_dir = os.path.join(curr_dir, '..', 'storage')
         if not os.path.exists(storage_dir):
             os.makedirs(storage_dir)
 
-        file_path = os.path.join(storage_dir, save_file)
+        file_path = os.path.join(storage_dir, self.save_file)
         with open(file_path, 'wb') as f:
             dill.dump(self, f)
