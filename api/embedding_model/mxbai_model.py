@@ -10,7 +10,6 @@ class MxbaiModel(EmbeddingModel):
 
     def embed(self, sentence):
         embeddings = self.model.encode(sentence)
-        print(type(embeddings))
         return EmbeddingResult(
             sentences=sentence,
             embedding=embeddings.tolist(),
