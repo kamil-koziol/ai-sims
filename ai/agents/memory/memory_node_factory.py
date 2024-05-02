@@ -1,10 +1,13 @@
 from __future__ import annotations
 from agents.memory import MemoryNode, MemoryNodeAttributes
+from .memory_type import MemoryType
+from .importance_score_evaluator import ImportanceEvaluator
 from llm_model import ModelService
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from agents import Agent
+
 
 
 class MemoryNodeFactory:
@@ -23,12 +26,16 @@ class MemoryNodeFactory:
         Returns:
             MemoryNode: Created memory node.
         """
-        importance_score = ModelService().calculate_importance_score(agent=agent, memory_description=description)
+        importance_score = ImportanceEvaluator().calculate_importance_score(
+            agent=agent,
+            memory_description=description,
+            memory_type=MemoryType.OBSERVATION
+        )
         embeddings = ModelService().get_embeddings(text=description)
         attributes = MemoryNodeAttributes(
             description=description,
             created=agent.stm.curr_time,
-            node_type='observation',
+            node_type=MemoryType.OBSERVATION,
             importance=importance_score,
             embeddings=embeddings
         )
@@ -36,7 +43,7 @@ class MemoryNodeFactory:
         return memory_node
 
     @staticmethod
-    def create_dialog(description: str, agent: Agent) -> MemoryNode:
+    def create_chat(description: str, agent: Agent) -> MemoryNode:
         """
         Create memory node of dialog.
 
@@ -47,12 +54,16 @@ class MemoryNodeFactory:
         Returns:
             MemoryNode: Created memory node.
         """
-        importance_score = ModelService().calculate_importance_score(agent=agent, memory_description=description)
+        importance_score = ImportanceEvaluator().calculate_importance_score(
+            agent=agent,
+            memory_description=description,
+            memory_type=MemoryType.CHAT
+        )
         embeddings = ModelService().get_embeddings(text=description)
         attributes = MemoryNodeAttributes(
             description=description,
             created=agent.stm.curr_time,
-            node_type='dialog',
+            node_type=MemoryType.CHAT,
             importance=importance_score,
             embeddings=embeddings
         )
@@ -71,12 +82,16 @@ class MemoryNodeFactory:
         Returns:
             MemoryNode: Created memory node.
         """
-        importance_score = ModelService().calculate_importance_score(agent=agent, memory_description=description)
+        importance_score = ImportanceEvaluator().calculate_importance_score(
+            agent=agent,
+            memory_description=description,
+            memory_type=MemoryType.THOUGHT
+        )
         embeddings = ModelService().get_embeddings(text=description)
         attributes = MemoryNodeAttributes(
             description=description,
             created=agent.stm.curr_time,
-            node_type='thought',
+            node_type=MemoryType.THOUGHT,
             importance=importance_score,
             embeddings=embeddings
         )
