@@ -1,12 +1,14 @@
-from llm_model import MockedEmbeddingModel, MockedGenerationModel, GenerationModel, EmbeddingModel
+from typing import List
+from llm_model import MockedEmbeddingModel, MockedGenerationModel, GenerationModel, EmbeddingModel, EmbedResponse, GenerationResponse
+import requests
 
 
 class TestModel:
 
     def setup_method(self, method):
-        MOCKED = True
-        embed_url = 'http://localhost:8888'
-        generation_url = 'http://localhost:8888'
+        MOCKED = False
+        embed_url = 'http://localhost:8888/embed'
+        generation_url = 'http://localhost:8888/generate'
 
         if MOCKED:
             self.embed_model = MockedEmbeddingModel(embed_url)
@@ -20,10 +22,15 @@ class TestModel:
 
     def test_generation(self):
         generation_prompt = 'something'
-        self.generation_model.generate_text(generation_prompt)
-        assert True
+        response: GenerationResponse = self.generation_model.generate_text(generation_prompt)
+        print(response.generated_text)
+        assert type(response.generated_text) == str
 
     def test_embedding(self):
         text_to_embed = 'something'
-        self.embed_model.embed(text_to_embed)
-        assert True
+        response: EmbedResponse = self.embed_model.embed(text_to_embed)
+        print(response.embedding)
+        assert type(response.embedding) == list
+        assert type(response.sentences) == str
+        assert type(response.dimensions) == int
+        

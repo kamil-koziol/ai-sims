@@ -14,7 +14,7 @@ class GenerationModelResult:
         >>> print(result)
         GenerationModelResult(text='This is a generated text.')
     """
-    text: str
+    generated_text: list
 
 class GenerationModel(metaclass=ABCMeta):
     """
