@@ -57,7 +57,7 @@ class EmbeddingModel:
     def __init__(self, url) -> None:
         self.url = url
 
-    def embed(self, text: str) -> List[float]:
+    def embed(self, text: str) -> EmbedResponse:
         """
         Create embeddings of text.
 
