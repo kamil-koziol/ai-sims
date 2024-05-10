@@ -46,7 +46,7 @@ class MockedGenerationModel(GenerationModel):
         Returns:
             str: Mocked response.
         """
-        response = f'Mocked response for {prompt}'
+        response = GenerationResponse(generated_text="Some mocked generated text")
         return response
 
 
@@ -79,5 +79,9 @@ class MockedEmbeddingModel(EmbeddingModel):
         super().__init__(url)
 
     def embed(self, text: str) -> List[float]:
-        response = numpy.random.rand(100).tolist()
+        response = EmbedResponse(
+            sentences=f'Some mocked embedding sentence for {text}',
+            embedding=numpy.random.rand(100).tolist(),
+            dimensions=100
+        )
         return response

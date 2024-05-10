@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import pytest
-from llm_model import ModelService
+from llm_model import ModelService, EmbedResponse, GenerationResponse
 
 
 @dataclass
@@ -42,7 +42,7 @@ class TestModelService:
     def test_generate_response(self, model_service, monkeypatch):
         # Mocking the generation model's generate_text method
         def mock_generate_text(prompt):
-            return "Mocked response"
+            return GenerationResponse(generated_text="Mocked response")
 
         monkeypatch.setattr(model_service._generation_model, 'generate_text', mock_generate_text)
 
@@ -61,7 +61,7 @@ class TestModelService:
         prompt_file_name = "create_conversation.txt"
 
         # Calling the function to test
-        result = model_service.generate_response(input_variables, prompt_file_name)
+        result = model_service.generate_text(input_variables, prompt_file_name)
 
         # Asserting the result
         assert result == "Mocked response"
