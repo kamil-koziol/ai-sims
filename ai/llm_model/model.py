@@ -1,4 +1,5 @@
 from typing import List
+from .model_response import *
 import requests
 import json
 import numpy
@@ -21,10 +22,11 @@ class GenerationModel:
         Returns:
             str: Generated response of model.
         """
-        body = {"text": prompt}
+        body = {"prompt": prompt}
         body = json.dumps(body)
         response = requests.post(self.url, data=body)
-        return response
+        generation_response = GenerationResponse(**(json.loads(response.text)))
+        return generation_response
 
 
 class MockedGenerationModel(GenerationModel):
@@ -65,10 +67,11 @@ class EmbeddingModel:
         Returns:
             List[float]: Embedding
         """
-        body = {"text": text}
+        body = {"sentence": text}
         body = json.dumps(body)
         response = requests.post(self.url, data=body)
-        return response
+        embed_response = EmbedResponse(**(json.loads(response.text)))
+        return embed_response
 
 
 class MockedEmbeddingModel(EmbeddingModel):

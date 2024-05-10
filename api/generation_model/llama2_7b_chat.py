@@ -17,4 +17,4 @@ class Llama2(GenerationModel):
         inputs = inputs.to('cuda')
         generated_ids = self.model.generate(**inputs, max_new_tokens=500)
         result = self.tokenizer.batch_decode(generated_ids)
-        return GenerationModelResult(result)
+        return GenerationModelResult(result[0])
