@@ -21,6 +21,15 @@ class ModelService(metaclass=Singleton):
 
 
     def get_embeddings(self, text: str) -> List[float]:
+        """
+        Get embedding for given text.
+
+        Args:
+            text (str): Text to get embeddings.
+
+        Returns:
+            List[float]: List of float representing embedding of the text.
+        """
         return self._embedding_model.embed(text).embedding
 
     def prepare_prompt(self, input_variables: List[str], prompt_file_name: str) -> str:
