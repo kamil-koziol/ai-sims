@@ -13,5 +13,3 @@ env/
 .pytest_cache/
 
 .idea/
-
-storage/
