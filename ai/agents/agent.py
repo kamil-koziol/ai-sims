@@ -12,7 +12,9 @@ class Agent:
     """
     def __init__(self, init_parameters: STM_attributes = None, save_file: str = None, load_file: str = None) -> None:
         """
-        Initialize an agent
+        Initialize an agent.
+        To create new agent provide only init_parameters and save_file.
+        To read agent from a file provide only load_file.
 
         Args:
             init_parameters (STM_attributes): Short term memory.
@@ -79,7 +81,7 @@ class Agent:
 
     def save(self) -> None:
         """
-        Save the agent to the file.
+        Save the agent state to the file.
         """
         curr_dir = os.path.dirname(__file__)
         storage_dir = os.path.join(curr_dir, '..', 'storage')
