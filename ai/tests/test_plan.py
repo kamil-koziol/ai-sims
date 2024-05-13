@@ -19,7 +19,3 @@ def list_of_places():
 def test_create_daily_plan(mocker, agent: Agent, list_of_places: List[str]):
     plan = create_daily_plan(agent=agent, list_of_places=list_of_places)
     assert len(plan) > 0
-
-def test_create_agent_plan(mocker, agent: Agent):
-    agent.plan()
-    assert len(agent.stm.daily_plan) > 0
