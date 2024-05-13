@@ -4,3 +4,4 @@ from .memory_type import MemoryType
 from .memory_stream import MemoryStream
 from .stm import STM, STM_attributes, Action
 from .importance_score_evaluator import ImportanceEvaluator
+from .plan_node import PlanNode

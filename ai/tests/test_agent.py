@@ -22,3 +22,15 @@ class TestAgent:
         agent = Agent(load_file="agent1.txt")
 
         assert agent.memory_stream.nodes[0].attributes.description == "I need to go shopping"
+
+    def test_plan(self):
+        stm_attributes = STM_attributes(
+            name="John Smith",
+            description="young student",
+            age=22,
+            curr_location="cafe",
+            lifestyle="active"
+        )
+        agent = Agent(init_parameters=stm_attributes, save_file="agent1.txt")
+        agent.plan()
+        assert len(agent.stm.daily_plan) > 0

@@ -2,7 +2,7 @@ from __future__ import annotations
 import os
 import sys
 import dill
-from agents.actions import retrieve_relevant_memories, converse, execute, reflect
+from agents.actions import retrieve_relevant_memories, converse, execute, reflect, create_daily_plan
 from agents.memory import STM, STM_attributes, MemoryStream
 
 
@@ -48,7 +48,12 @@ class Agent:
         pass
 
     def plan(self):
-        pass
+        """
+        Create plan for the current day for the agent. List of places is fixed.
+        """
+        list_of_places = ['coffee', 'park', 'river']
+        plan = create_daily_plan(self, list_of_places)
+        self.stm.daily_plan = plan
 
     def retrieve(self, perceived: str):
         """

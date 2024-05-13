@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from utils import WorldTime
 from llm_model import ModelService
 from datetime import datetime
+from agents.memory import PlanNode
 import re
 
 if TYPE_CHECKING:
@@ -19,14 +20,6 @@ class DailyPlanVariables:
     datetime_now: str
     persona_first_names: str
     list_of_places: str
-
-@dataclass
-class PlanNode:
-    """
-    Variables for single plan for a day.
-    """
-    location: str
-    time: datetime
 
 def create_daily_plan(agent: Agent, list_of_places: List):
     """

@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from enum import Enum
 from datetime import datetime
+from typing import List
+from .plan_node import PlanNode
 
 
 @dataclass
@@ -69,6 +71,7 @@ class STM:
 
         self._action: Action = Action.NOTHING
         self._curr_time: datetime = datetime.now()
+        self._daily_plan: List[PlanNode] = []
 
     def get_short_description(self):
         short_description = ''
@@ -156,3 +159,11 @@ class STM:
     @curr_time.setter
     def curr_time(self, value: datetime):
         self._curr_time = value
+
+    @property
+    def daily_plan(self):
+        return self._daily_plan
+
+    @daily_plan.setter
+    def daily_plan(self, value: List[PlanNode]):
+        self._daily_plan = value
