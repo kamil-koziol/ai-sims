@@ -2,7 +2,7 @@ from __future__ import annotations
 import os
 import sys
 import dill
-from agents.actions import plan, retrieve_relevant_memories, converse, execute, reflect
+from agents.actions import retrieve_relevant_memories, converse, execute, reflect
 from agents.memory import STM, STM_attributes, MemoryStream
 
 
@@ -48,7 +48,7 @@ class Agent:
         pass
 
     def plan(self):
-        plan()
+        pass
 
     def retrieve(self, perceived: str):
         """
