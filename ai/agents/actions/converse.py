@@ -52,22 +52,18 @@ class DecideToConverseVariables:
     target_agent_description: str
     init_agent_action: str
     target_agent_action: str
+    curr_time: str
     location: str
-    last_convo_summary: str
 
 
 def converse(init_agent: Agent, target_agent: Agent):
     """
-    Decide whether to start a conversation, and if so, create a memory node of conversation
-    between init agent and target agent and add it to memory stream.
+    Create a memory node of conversation between init agent and target agent and add it to memory stream.
 
     Args:
         init_agent (Agent): The agent who initialized a conversation
         target_agent (Agent): The target of initialized conversation
     """
-    if not _decide_to_converse(init_agent, target_agent):
-        return
-
     convo = generate_conversation(init_agent, target_agent)
     convo_summary = generate_conversation_summary(init_agent, target_agent, convo)
 
@@ -162,19 +158,18 @@ def insert_convo_into_mem_stream(agent: Agent, convo: str, summary: str) -> None
     memory_node = MemoryNodeFactory.create_thought(memory, agent)
     agent.memory_stream.add_memory_node(memory_node)
 
-def _decide_to_converse(init_agent: Agent, target_agent: Agent) -> bool:
+def decide_to_converse(init_agent: Agent, target_agent: Agent) -> bool:
     """
     Decide if the agent should start a conversation with the other agent.
 
     Args:
+        init_agent: The agent who wants to initiate the conversation.
         target_agent (Agent): Agent to potentially converse with.
 
     Returns:
         True if they should converse, False if not.
     """
     prompt_template_file = "decide_to_converse.txt"
-    # TODO retrieve their last convo summary (memory_node node_type==MemoryType.CHAT)
-    last_convo_summary = ""
     prompt_variables = DecideToConverseVariables(
         init_agent_name=init_agent.stm.name,
         target_agent_name=target_agent.stm.name,
@@ -182,8 +177,8 @@ def _decide_to_converse(init_agent: Agent, target_agent: Agent) -> bool:
         target_agent_description=target_agent.stm.description,
         init_agent_action=init_agent.stm.action.value,
         target_agent_action=target_agent.stm.action.value,
+        curr_time=WorldTime().current_time.strftime("%m/%d/%Y, %H:%M:%S"),
         location=init_agent.stm.curr_location,
-        last_convo_summary=last_convo_summary
     )
     model_output = ModelService().generate_text(prompt_variables, prompt_template_file)
     decision = _convert_model_response_to_bool(model_output)

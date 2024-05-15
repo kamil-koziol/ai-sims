@@ -8,8 +8,8 @@ Variables:
 !<INPUT 4>! -- init agent curr action description
 !<INPUT 5>! -- target agent curr action description
 
-!<INPUT 6>! -- curr location
-!<INPUT 7>! -- last convo summary
+!<INPUT 6>! -- curr time
+!<INPUT 7>! -- curr location
 
 <commentblockmarker>###</commentblockmarker>
 Task -- given the context, determine whether the person will initiate a conversation with the other person.
@@ -25,8 +25,7 @@ Context:
 !<INPUT 1>! is currently !<INPUT 5>!.
 !<INPUT 3>!
 
-They are at !<INPUT 6>! right now.
-The summary of the last conversation !<INPUT 0>! and !<INPUT 1>! had: !<INPUT 7>!
+The current time is !<INPUT 6>!. They are at !<INPUT 7>! right now.
 
 Question:
 Would !<INPUT 0>! initiate a conversation with !<INPUT 1>!?

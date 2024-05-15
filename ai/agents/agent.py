@@ -2,8 +2,10 @@ from __future__ import annotations
 import os
 import sys
 import dill
-from agents.actions import plan, retrieve_relevant_memories, converse, execute, reflect
+from typing import Tuple, Any
+from agents.actions import plan, retrieve_relevant_memories, converse, decide_to_converse, execute, reflect
 from agents.memory import STM, STM_attributes, MemoryStream
+from object_types import Objects
 
 
 class Agent: 
@@ -72,6 +74,24 @@ class Agent:
             target_agent (Agent): Agent to converse with.
         """
         converse(self, target_agent)
+
+    def should_converse(self, objects: list[Tuple[Objects, Any]]) -> Agent | bool:
+        """
+        Check if the agent should converse with someone.
+
+        Args:
+            objects: list of tuples(Objects type, actual object) e.g. (Objects.AGENT, agent)
+
+        Returns:
+            the agent to converse with if the conversation should be started, False if not
+        """
+        for obj in objects:
+            if obj[0] == Objects.AGENT:
+                d = decide_to_converse(self, obj[1])
+                print(d)
+                if d:
+                    return obj[1]
+        return False
 
     def perceive(self):
         pass
