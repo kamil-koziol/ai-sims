@@ -6,7 +6,7 @@ import requests
 class TestModel:
 
     def setup_method(self, method):
-        MOCKED = True
+        MOCKED = False
         embed_url = 'http://localhost:8888/embed'
         generation_url = 'http://localhost:8888/generate'
 

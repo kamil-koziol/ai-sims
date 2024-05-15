@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from enum import Enum
 from datetime import datetime
+from typing import List
+from .plan_node import PlanNode
 
 
 @dataclass
@@ -9,24 +11,30 @@ class STM_attributes:
     Short memory attributes.
     """
 
-    name: str
     """
     Name of the agent. If name contains a space (' '). Name is splitted into first and last name.
     """
-    description: str
+    name: str
+
     """
     Description of character for example what is his role in society etc.
     """
-    age: int
+    description: str
+
     """
     Age of agent.
     """
-    curr_location: str
+    age: int
+
     """
     Name of current place where agent is currently standing.
     """
+    curr_location: str
 
-
+    """
+    General preferences of the agent for spending a day.
+    """
+    lifestyle: str
 class Action(Enum):
     """
     Enum for describing agent's current state.
@@ -53,6 +61,7 @@ class STM:
             self._first_name: str = init_parameters.name.split(' ')[0]
             self._last_name: str = init_parameters.name.split(' ')[1]
         self._description: str = init_parameters.description
+        self._life_style: str = init_parameters.lifestyle
         self._age: int = init_parameters.age
         self._curr_location: str = init_parameters.curr_location
 
@@ -62,6 +71,15 @@ class STM:
 
         self._action: Action = Action.NOTHING
         self._curr_time: datetime = datetime.now()
+        self._daily_plan: List[PlanNode] = []
+
+    def get_short_description(self):
+        short_description = ''
+        short_description += f'Name: {self.name}'
+        short_description += f'Age: {self.age}'
+        short_description += f'Currently: {self.action.value}'
+
+        return short_description
 
     @property
     def first_name(self):
@@ -85,6 +103,10 @@ class STM:
     @property
     def description(self):
         return self._description
+
+    @property
+    def life_style(self):
+        return self._life_style
 
     @description.setter
     def description(self, value: str):
@@ -137,3 +159,11 @@ class STM:
     @curr_time.setter
     def curr_time(self, value: datetime):
         self._curr_time = value
+
+    @property
+    def daily_plan(self):
+        return self._daily_plan
+
+    @daily_plan.setter
+    def daily_plan(self, value: List[PlanNode]):
+        self._daily_plan = value
