@@ -9,14 +9,14 @@ class TestAgent:
     @pytest.fixture
     def agent(self):
         # Create and return an instance of the Agent class for testing
-        stm = STM_attributes('John Smith', "John's description", 27, 'cafe')
+        stm = STM_attributes('John Smith', "John's description", 27, 'cafe', 'active')
         agent = Agent(stm, 'save_file1.txt')
         return agent
 
     @pytest.fixture
     def agent2(self):
         # Create and return an instance of the Agent class for testing
-        stm = STM_attributes('John Moore', "Description", 25, 'cafe')
+        stm = STM_attributes('John Moore', "Description", 25, 'cafe', 'active')
         agent = Agent(stm, 'save_file2.txt')
         return agent
 
