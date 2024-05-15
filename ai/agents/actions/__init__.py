@@ -7,6 +7,6 @@ from .converse import (
     decide_to_converse
 )
 from .execute import execute
-from .plan import plan
+from .plan import create_daily_plan
 from .reflect import reflect
 from .retrieve import retrieve_relevant_memories, get_string_memories

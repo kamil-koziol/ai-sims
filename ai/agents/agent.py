@@ -3,6 +3,7 @@ import os
 import sys
 import dill
 from typing import Tuple, Any
+from agents.actions import retrieve_relevant_memories, converse, execute, reflect, create_daily_plan
 from agents.actions import plan, retrieve_relevant_memories, converse, decide_to_converse, execute, reflect
 from agents.memory import STM, STM_attributes, MemoryStream
 from object_types import Objects
@@ -52,7 +53,12 @@ class Agent:
         pass
 
     def plan(self):
-        plan()
+        """
+        Create plan for the current day for the agent. List of places is fixed.
+        """
+        list_of_places = ['cafe', 'park', 'river']
+        plan = create_daily_plan(self, list_of_places)
+        self.stm.daily_plan = plan
 
     def retrieve(self, perceived: str):
         """
