@@ -21,7 +21,7 @@ class ModelService(metaclass=Singleton):
 
 
     def get_embeddings(self, text: str) -> List[float]:
-        return self._embedding_model.embed(text)
+        return self._embedding_model.embed(text).embedding
 
     def prepare_prompt(self, input_variables: List[str], prompt_file_name: str) -> str:
         """
@@ -40,7 +40,7 @@ class ModelService(metaclass=Singleton):
 
         return prompt.strip()
 
-    def generate_response(self, input_variables, prompt_file_name: str) -> str:
+    def generate_text(self, input_variables, prompt_file_name: str) -> str:
         """
         Replaces the !<INPUT 1>! substrings with the actual variables and generates llm response.
         The input_variables should be a @dataclass instance.
@@ -53,5 +53,5 @@ class ModelService(metaclass=Singleton):
             input_variables_list = [str(input_variables)]
 
         prompt = self.prepare_prompt(input_variables_list, prompt_file_name)
-        response = self._generation_model.generate_text(prompt)
+        response = self._generation_model.generate_text(prompt).generated_text
         return response

@@ -42,7 +42,7 @@ def test_converse(mocker, init_agent: Agent, target_agent: Agent):
 
 def test_generate_conversation(mocker, init_agent, target_agent):
     mocker.patch("agents.actions.get_string_memories", return_value="Mocked Memories")
-    mocker.patch.object(ModelService, 'generate_response', return_value="Mocked Conversation Output")
+    mocker.patch.object(ModelService, 'generate_text', return_value="Mocked Conversation Output")
 
     conversation = generate_conversation(init_agent, target_agent)
 
@@ -53,7 +53,7 @@ def test_generate_conversation(mocker, init_agent, target_agent):
 
 def test_generate_memory_on_conversation(mocker, init_agent):
     # Mocking the dependent function
-    mocker.patch.object(ModelService, 'generate_response', return_value="Generated Memory")
+    mocker.patch.object(ModelService, 'generate_text', return_value="Generated Memory")
 
     # Calling the function to test
     result = generate_memory_on_conversation(init_agent, "Test Conversation")
