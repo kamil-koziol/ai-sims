@@ -77,7 +77,7 @@ class STM:
         short_description = ''
         short_description += f'Name: {self.name}'
         short_description += f'Age: {self.age}'
-        short_description += f'Currently: {self.action}'
+        short_description += f'Currently: {self.action.value}'
 
         return short_description
 

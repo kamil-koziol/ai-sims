@@ -51,7 +51,7 @@ class Agent:
         """
         Create plan for the current day for the agent. List of places is fixed.
         """
-        list_of_places = ['coffee', 'park', 'river']
+        list_of_places = ['cafe', 'park', 'river']
         plan = create_daily_plan(self, list_of_places)
         self.stm.daily_plan = plan
 

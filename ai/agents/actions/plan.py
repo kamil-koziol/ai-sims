@@ -40,6 +40,7 @@ def create_daily_plan(agent: Agent, list_of_places: List):
     )
 
     daily_plan = ModelService().generate_text(daily_plan_variables, template_file)
+    print(daily_plan)
     plan = _retrieve_plan(daily_plan, list_of_places)
     return plan
 

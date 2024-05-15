@@ -1,4 +1,5 @@
 from dataclasses import asdict, is_dataclass
+import re
 from typing import List, TYPE_CHECKING
 from llm_model.model import GenerationModel, EmbeddingModel, MockedEmbeddingModel, MockedGenerationModel
 from utils import Singleton
@@ -9,10 +10,10 @@ class ModelService(metaclass=Singleton):
     Singleton. Handles every communication with usage of a prompt.
     """
     def __init__(self) -> None:
-        _MOCKED = False
+        self._MOCKED = True
         _EMBEDDING_URL = 'http://localhost:8888/embed'
         _GENERATION_URL = 'http://localhost:8888/generate'
-        if _MOCKED:
+        if self._MOCKED:
             self._generation_model = MockedGenerationModel('')
             self._embedding_model = MockedEmbeddingModel('')
         else:
@@ -64,3 +65,7 @@ class ModelService(metaclass=Singleton):
         prompt = self.prepare_prompt(input_variables_list, prompt_file_name)
         response = self._generation_model.generate_text(prompt).generated_text
         return response
+
+    @property
+    def mocked(self) -> bool:
+        return self._MOCKED
