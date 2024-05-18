@@ -91,12 +91,10 @@ class Agent:
         Returns:
             the agent to converse with if the conversation should be started, False if not
         """
-        for obj in objects:
-            if obj[0] == Objects.AGENT:
-                d = decide_to_converse(self, obj[1])
-                print(d)
-                if d:
-                    return obj[1]
+        for (object_type, agent_or_object) in objects:
+            if object_type == Objects.AGENT:
+                if decide_to_converse(self, agent_or_object):
+                    return agent_or_object
         return False
 
     def perceive(self):

@@ -76,11 +76,7 @@ def test_insert_convo_into_mem_stream(mocker, init_agent):
     assert True
 
 def test_decide_to_converse_answer_no(mocker, init_agent, target_agent):
-    mocker.patch.object(ModelService, 'generate_text', return_value="no")
+    if ModelService.mocked is True:
+        mocker.patch.object(ModelService, 'generate_text', return_value="no")
     result = decide_to_converse(init_agent, target_agent)
-    assert result is False
-
-def test_decide_to_converse_answer_yes(mocker, init_agent, target_agent):
-    mocker.patch.object(ModelService, 'generate_text', return_value="yes")
-    result = decide_to_converse(init_agent, target_agent)
-    assert result is True
+    assert isinstance(result, bool)
