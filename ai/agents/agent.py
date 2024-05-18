@@ -2,8 +2,11 @@ from __future__ import annotations
 import os
 import sys
 import dill
+from typing import Tuple, Any
 from agents.actions import retrieve_relevant_memories, converse, execute, reflect, create_daily_plan
+from agents.actions import plan, retrieve_relevant_memories, converse, decide_to_converse, execute, reflect
 from agents.memory import STM, STM_attributes, MemoryStream
+from object_types import Objects
 
 
 class Agent: 
@@ -12,7 +15,9 @@ class Agent:
     """
     def __init__(self, init_parameters: STM_attributes = None, save_file: str = None, load_file: str = None) -> None:
         """
-        Initialize an agent
+        Initialize an agent.
+        To create new agent provide only init_parameters and save_file.
+        To read agent from a file provide only load_file.
 
         Args:
             init_parameters (STM_attributes): Short term memory.
@@ -76,6 +81,22 @@ class Agent:
         """
         converse(self, target_agent)
 
+    def should_converse(self, objects: list[Tuple[Objects, Any]]) -> Agent | bool:
+        """
+        Check if the agent should converse with someone.
+
+        Args:
+            objects: list of tuples(Objects type, actual object) e.g. (Objects.AGENT, agent)
+
+        Returns:
+            the agent to converse with if the conversation should be started, False if not
+        """
+        for (object_type, agent_or_object) in objects:
+            if object_type == Objects.AGENT:
+                if decide_to_converse(self, agent_or_object):
+                    return agent_or_object
+        return False
+
     def perceive(self):
         pass
 
@@ -84,7 +105,7 @@ class Agent:
 
     def save(self) -> None:
         """
-        Save the agent to the file.
+        Save the agent state to the file.
         """
         curr_dir = os.path.dirname(__file__)
         storage_dir = os.path.join(curr_dir, '..', 'storage')

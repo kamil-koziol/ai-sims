@@ -7,7 +7,8 @@ from agents.actions import (
     converse,
     generate_conversation,
     generate_memory_on_conversation,
-    insert_convo_into_mem_stream
+    insert_convo_into_mem_stream,
+    decide_to_converse
 )
 
 
@@ -73,3 +74,9 @@ def test_insert_convo_into_mem_stream(mocker, init_agent):
     insert_convo_into_mem_stream(init_agent, "Test Conversation", "Test Summary")
 
     assert True
+
+def test_decide_to_converse_answer_no(mocker, init_agent, target_agent):
+    if ModelService.mocked is True:
+        mocker.patch.object(ModelService, 'generate_text', return_value="no")
+    result = decide_to_converse(init_agent, target_agent)
+    assert isinstance(result, bool)
