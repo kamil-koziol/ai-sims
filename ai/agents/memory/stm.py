@@ -3,6 +3,7 @@ from enum import Enum
 from datetime import datetime
 from typing import List
 from .plan_node import PlanNode
+from uuid import UUID
 
 
 @dataclass
@@ -11,6 +12,11 @@ class STM_attributes:
     Short memory attributes.
     """
 
+    """
+    Id of the agent.
+    """
+    id: UUID
+    
     """
     Name of the agent. If name contains a space (' '). Name is splitted into first and last name.
     """
@@ -56,6 +62,7 @@ class STM:
             init_parameters (STM_attributes): Attributes to initialize memory with.
         """
 
+        self._id: UUID = init_parameters.id
         self._name: str = init_parameters.name
         if ' ' in init_parameters.name:
             self._first_name: str = init_parameters.name.split(' ')[0]
@@ -80,6 +87,10 @@ class STM:
         short_description += f'Currently: {self.action.value}'
 
         return short_description
+
+    @property
+    def id(self):
+        return self._id
 
     @property
     def first_name(self):
