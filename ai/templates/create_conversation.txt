@@ -25,6 +25,19 @@ Context:
 !<INPUT 1>! has the following memories of !<INPUT 0>!:
 !<INPUT 8>!
 
-!<INPUT 0>! and !<INPUT 1>! met at a !<INPUT 6>!. Here is their conversation.
+!<INPUT 0>! and !<INPUT 1>! met at a !<INPUT 6>!. Generate a conversation between them in the format described below.
+Each new utterance by a character must start on a new line and the utterance must be preceded by the name of the speaker. The characters must take turns speaking. Every second line must belong to the same person.
+At the beginning there must be said who starts the conversation.
+Example output:
+Pablo starts the conversation.
+Pablo: Hello, what a beautiful day! How are you?
+Silvana: I'm fine, thank you!
+Pablo: What are you doing here?
+Silvana: Just exploring the area.
 
-!<INPUT 0>!: "
+Output multiple utterances (about 8 utterances in total) in their conversation until the conversation comes to a natural end. Output only the conversation in the form of alternating utterances, without any introductory or closing sentences.
+
+Here is their conversation.
+
+!<INPUT 0>! starts the conversation.
+!<INPUT 0>!:
