@@ -2,13 +2,13 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from uuid import UUID, uuid4
 from typing import List, Dict, Any
-from schemas import Region, Agent, Game
-from state import State, get_state
+from ..schemas import Location, Agent, Game
+from ..state import State, get_state
 
 
 class GameRequest(BaseModel):
     id: UUID
-    regions: List[Region]
+    locations: List[Location]
     agents: List[Agent]
 
 class GameResponse(BaseModel):
@@ -22,7 +22,7 @@ async def create_game(game_request: GameRequest, state: State = Depends(get_stat
     if game_request.id in state.games:
         raise HTTPException(status_code=400, detail="Game already exists")
     
-    newGame: Game = Game([game_request.agents])
+    newGame: Game = Game(game_request.agents, game_request.locations)
     state.games[game_request.id] = newGame
     return {"id": game_request.id}
 

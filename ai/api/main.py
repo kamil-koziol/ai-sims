@@ -1,6 +1,6 @@
 from fastapi import Depends, FastAPI
-from routers import game, plan, conversation, interaction
-from state import get_state
+from .routers import game, plan, conversation, interaction
+from .state import get_state
 
 app = FastAPI()
 

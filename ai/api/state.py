@@ -1,6 +1,6 @@
 from typing import Dict
 from uuid import UUID
-from schemas import Game
+from .schemas import Game
 
 class State:
     def __init__(self):
