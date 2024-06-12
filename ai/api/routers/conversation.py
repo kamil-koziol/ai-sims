@@ -57,9 +57,6 @@ async def create_conversation(conversation_request: ConversationRequest, state: 
 
     target_agent_stm = STM(target_agent_stm_params)
 
-    print(initializing_agent_stm)
-    print(target_agent_stm)
-
     # TODO: implement conversation logic
     # mocked conversation
     conversation_agent1 = ["Hello, how are you?", "What are you doing here?"]
