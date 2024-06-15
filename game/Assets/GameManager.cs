@@ -16,8 +16,13 @@ public class GameManager : MonoBehaviour {
         Instance = this;
     }
 
+    private void Start()
+    {
+        BackendService.Instance.SendGameSnapshot();
+    }
+
     public void SetGameState(GameState gameState) {
-        GameState = gameState;
+        //GameState = gameState;
         OnGameStateChange?.Invoke(gameState);
     }
 }
