@@ -9,6 +9,7 @@
 
 # venv stuff
 env/
+.env/
 
 .pytest_cache/
 
