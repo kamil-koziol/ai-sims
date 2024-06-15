@@ -6,6 +6,9 @@ using UnityEngine;
 
 [RequireComponent(typeof(UnityEngine.AI.NavMeshAgent)), Serializable]
 public class Agent : MonoBehaviour {
+    public Guid ID;
+    
+    [SerializeField] private Transform currentMovingTarget;
     private bool update = true;
     [SerializeField] private String agentName;
     private void Awake() {

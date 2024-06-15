@@ -8,6 +8,8 @@ public enum GameState {
     WAITING_FOR_RESULTS
 }
 public class GameManager : MonoBehaviour {
+    public Guid ID;
+    
     public static GameManager Instance;
     public GameState GameState;
     public event Action<GameState> OnGameStateChange;
