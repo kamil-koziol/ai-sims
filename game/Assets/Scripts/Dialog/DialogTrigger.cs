@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Dialog {
     public class DialogTrigger : MonoBehaviour {
-        [SerializeField] private Message[] messages;
+        [SerializeField]
+        private Message[] messages;
         [SerializeField] private Actor[] actors;
 
         private Dialog IntoDialog() {

@@ -47,13 +47,16 @@ namespace Dialog {
         }
     }
 
+    [Serializable]
     public class Message {
         public int actorId;
         public string message;
     }
 
+    [Serializable]
     public class Actor {
         public int id;
         public Sprite sprite;
+        public string name;
     }
 }

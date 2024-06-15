@@ -6,8 +6,8 @@ namespace Dialog {
     public class DialogManager : MonoBehaviour {
         [SerializeField] private Image firstActorImage;
         [SerializeField] private Image secondActorImage;
-        [SerializeField] private TextMeshProUGUI dialogText;
-        [SerializeField] private TextMeshProUGUI actorNameText;
+        [SerializeField] private TMP_Text dialogText;
+        [SerializeField] private TMP_Text actorNameText;
         private static DialogManager _instance;
 
         public static DialogManager Instance { get { return _instance; } }
@@ -35,9 +35,12 @@ namespace Dialog {
             if (isFirstMessage) {
                 Actor firstActor = currentDialog.actors[currentDialog.messages[0].actorId];
                 firstActorImage.sprite = firstActor.sprite;
+                actorNameText.text = firstActor.name;
+                dialogText.text = currentDialog.messages[currentMessage].message;
                 
                 Actor secondActor = currentDialog.actors[currentDialog.messages[1].actorId];
                 secondActorImage.sprite = secondActor.sprite;
+                
             }
         }
 
