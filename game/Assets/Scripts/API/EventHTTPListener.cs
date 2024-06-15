@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Threading;
 using API.endpoints;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 
 public class EventHTTPListener : MonoBehaviour {
@@ -20,6 +17,8 @@ public class EventHTTPListener : MonoBehaviour {
         endpoints = new List<IEndpoint>();
         endpointPathResolver = new Dictionary<string, IEndpoint>();
         RegisterEndpoint(new MockEndpoint());
+        RegisterEndpoint(AgentMovementEndpoint.getInstance());
+        RegisterEndpoint(GameInit.getInstance());
         
         listener = new HttpListener ();
         listener.Prefixes.Add ($"http://localhost:{PORT}/");
@@ -51,18 +50,19 @@ public class EventHTTPListener : MonoBehaviour {
 
         Debug.Log ("Method: " + context.Request.HttpMethod);
         Debug.Log ("LocalUrl: " + context.Request.Url.LocalPath);
-
         const string JSONContentType = "application/json";
         if (context.Request.HttpMethod == "POST") {	
             if(context.Request.ContentType != JSONContentType) return;
             
-
-
             if (endpointPathResolver.TryGetValue(context.Request.Url.LocalPath, out IEndpoint endpoint)) {
-                endpoint.HandleRequest(context.Request);
+                endpoint.HandleContext(context);
             }
+            Debug.Log("Status code: " + context.Response.StatusCode);
+            context.Response.Close ();
+            return;
         }
-    
+        
+        context.Response.StatusCode = 401;
         context.Response.Close ();
     }
 }

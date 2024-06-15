@@ -1,24 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 
-[RequireComponent(typeof(UnityEngine.AI.NavMeshAgent))]
+[RequireComponent(typeof(UnityEngine.AI.NavMeshAgent)), Serializable]
 public class Agent : MonoBehaviour {
-
-    AgentMovement agentMovement;
     private bool update = true;
-
+    [SerializeField] private String agentName;
     private void Awake() {
-
-        //For now it throws exception, talk about it
-        if (agentMovement != null)
-        {
-            Debug.Log("AgentMovement works");
-        } else
-        {
-            throw new Exception("AgentMovement is null");
-        }
+        
     }
 
     private void Start() {
@@ -40,11 +31,28 @@ public class Agent : MonoBehaviour {
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            BackendService.BackendService.Instance.GetMock();
+            BackendService.Instance.GetMock();
         }
         
         if(!update) return;
-        //TODO: Talk about it
-        //agentMovement.updateAgentPosition();
+    }
+
+    public AgentState getAgentState()
+    {
+        // String json = "";
+        // AgentMovement agMov = GetComponent<AgentMovement>();
+        // json += JsonConvert.SerializeObject(agentName);
+        // json += agMov.getAgentMovementState();
+        AgentMovement agentMovement = this.GetComponent<AgentMovement>();
+
+        AgentState data = new AgentState { agentName = agentName, agentMovementState = agentMovement.getAgentMovementState() };
+        return data;
+    }
+    
+    [Serializable]
+    public struct AgentState
+    {
+        public String agentName;
+        public AgentMovement.AgentMovementState agentMovementState;
     }
 }

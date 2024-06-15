@@ -11,9 +11,9 @@ namespace API.endpoints {
             return "/mock";
         }
 
-        public void HandleRequest(HttpListenerRequest request) {
-            var body = new StreamReader(request.InputStream, 
-                request.ContentEncoding).ReadToEnd();
+        public void HandleContext(HttpListenerContext context) {
+            var body = new StreamReader(context.Request.InputStream, 
+                context.Request.ContentEncoding).ReadToEnd();
             
             Debug.Log("Mocked");
         }
