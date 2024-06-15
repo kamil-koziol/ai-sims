@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from uuid import UUID, uuid4
 from typing import List, Dict, Any
-from ..schemas import Location, Agent, Game
+from ..schemas import Location, Agent
+from game import Game
 from ..state import State, get_state
 
 
