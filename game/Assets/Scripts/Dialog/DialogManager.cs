@@ -28,6 +28,7 @@ namespace Dialog {
         }
 
         public void OpenDialog(Dialog dialog) {
+            GameManager.Instance.SetGameState(GameState.CONVERSATION);
             const int MAX_MSG_LEN = 100;
             dialog.SplitLongMessages(MAX_MSG_LEN);
             
@@ -89,6 +90,8 @@ namespace Dialog {
             currentDialog = null;
             currentMessage = 0;
             dialogBox.SetActive(false);
+            GameManager.Instance.SetGameState(GameState.PLAYING);
+
         }
 
         private void Update() {

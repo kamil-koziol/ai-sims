@@ -25,12 +25,7 @@ public class Agent : MonoBehaviour {
     }
 
     private void GameManagerOnOnGameStateChange(GameState gameState) {
-        if (gameState == GameState.WAITING_FOR_RESULTS) {
-            update = false;
-        }
-        else {
-            update = true;
-        }
+        update = gameState == GameState.PLAYING;
     }
 
     private void OnDestroy() {

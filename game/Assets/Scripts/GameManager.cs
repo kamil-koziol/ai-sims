@@ -5,7 +5,8 @@ using UnityEngine;
 
 public enum GameState {
     PLAYING,
-    WAITING_FOR_RESULTS
+    WAITING_FOR_RESULTS,
+    CONVERSATION
 }
 public class GameManager : MonoBehaviour {
     public Guid ID;
