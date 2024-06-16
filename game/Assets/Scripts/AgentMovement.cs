@@ -35,9 +35,8 @@ public class AgentMovement : MonoBehaviour
         }
     }
 
-    private void OnGameStateChange(GameState obj)
-    {
-        gameFrozen = obj == GameState.WAITING_FOR_RESULTS;
+    private void OnGameStateChange(GameState obj) {
+        gameFrozen = obj != GameState.PLAYING;
         Debug.Log("Game frozen: " + gameFrozen);
     }
 

@@ -33,10 +33,6 @@ public class Agent : MonoBehaviour {
     }
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            BackendService.Instance.GetMock();
-        }
-        
         if(!update) return;
     }
 

@@ -36,7 +36,7 @@ namespace API.endpoints
                 context.Request.ContentEncoding).ReadToEnd();
             Debug.Log("Request body");
             Debug.Log(body);
-            BackendService.GameSnapshot rqWr = JsonConvert.DeserializeObject<BackendService.GameSnapshot>(body);
+            BackendService.dto.GameRequest rqWr = JsonConvert.DeserializeObject<BackendService.dto.GameRequest>(body);
 
             if (rqWr.agents == null)
             {

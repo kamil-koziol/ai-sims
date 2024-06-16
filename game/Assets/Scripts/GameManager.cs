@@ -10,6 +10,7 @@ public enum GameState {
 }
 public class GameManager : MonoBehaviour {
     public Guid ID;
+    [SerializeField] private List<Agent> agents;
     
     public static GameManager Instance;
     public GameState GameState;
@@ -24,16 +25,16 @@ public class GameManager : MonoBehaviour {
     private void Start()
     {
         coroutineQueue = new CoroutineQueue(this);
-        coroutineQueue.Enqueue(BackendService.Instance.SendGameSnapshot());
-        foreach (var plan in BackendService.Instance.RequestPlanForAllAgents())
-        {
-            coroutineQueue.Enqueue(plan);
-            //StartCoroutine(plan);
+        coroutineQueue.Enqueue(DefaultBackendService.Instance.Game());
+        foreach (var agent in agents) {
+            coroutineQueue.Enqueue(DefaultBackendService.Instance.Plan(agent.ID));
         }
+        
+        coroutineQueue.Enqueue(DefaultBackendService.Instance.Conversation(agents[0].ID, agents[1].ID));
     }
 
     public void SetGameState(GameState gameState) {
-        //GameState = gameState;
+        GameState = gameState;
         OnGameStateChange?.Invoke(gameState);
     }
     
@@ -42,9 +43,11 @@ public class GameManager : MonoBehaviour {
         coroutineQueue.Enqueue(coroutine);
     }
 
-    public Agent[] GetAllAgents()
-    {
-        GameObject agentsGameObj = GameObject.Find("Agents");
-        return agentsGameObj.GetComponentsInChildren<Agent>();
+    public List<Agent> GetAgents() {
+        return agents;
+    }
+    
+    public Agent GetAgentById(Guid id) {
+        return agents.Find(agent => agent.ID == id);
     }
 }

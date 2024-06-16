@@ -48,7 +48,7 @@ namespace API.endpoints
                 context.Request.ContentEncoding).ReadToEnd();
             Debug.Log("Request body");
             Debug.Log(body);
-            BackendService.PlanRequest rqWr = JsonConvert.DeserializeObject<BackendService.PlanRequest>(body);
+            BackendService.dto.PlanRequest rqWr = JsonConvert.DeserializeObject<BackendService.dto.PlanRequest>(body);
 
             if (rqWr.game_id == null)
             {
