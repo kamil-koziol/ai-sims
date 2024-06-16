@@ -810,7 +810,7 @@ GameObject:
   - component: {fileID: 675785355}
   - component: {fileID: 675785354}
   m_Layer: 5
-  m_Name: AvatarImage1 (1)
+  m_Name: AvatarImage2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -886,6 +886,7 @@ GameObject:
   - component: {fileID: 684641788}
   - component: {fileID: 684641787}
   - component: {fileID: 684641786}
+  - component: {fileID: 684641789}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -978,6 +979,23 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &684641789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684641784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0d1ec47bf8e468e8901334f28e55142, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogBox: {fileID: 1129268456}
+  firstActorImage: {fileID: 210682743}
+  secondActorImage: {fileID: 675785354}
+  dialogText: {fileID: 670898051}
+  actorNameText: {fileID: 1488354196}
 --- !u!1 &705717894
 GameObject:
   m_ObjectHideFlags: 0
@@ -1219,7 +1237,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1129268457
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2471,7 +2489,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1510067620}
   - component: {fileID: 1510067623}
-  - component: {fileID: 1510067622}
   - component: {fileID: 1510067621}
   m_Layer: 0
   m_Name: UI_Camera
@@ -2539,14 +2556,6 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
---- !u!81 &1510067622
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1510067619}
-  m_Enabled: 1
 --- !u!20 &1510067623
 Camera:
   m_ObjectHideFlags: 0
@@ -2610,7 +2619,7 @@ GameObject:
   - component: {fileID: 1537595753}
   - component: {fileID: 1537595752}
   - component: {fileID: 1537595751}
-  - component: {fileID: 1537595750}
+  - component: {fileID: 1537595754}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -2639,18 +2648,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1537595750
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1537595748}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5662e9a983bf24795bc6b4bcbaebc7e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1537595751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2694,7 +2691,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1537595752}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1537595754}
+        m_TargetAssemblyTypeName: Dialog.DialogTrigger, Assembly-CSharp
+        m_MethodName: StartDialog
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1537595752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2733,6 +2742,39 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1537595748}
   m_CullTransparentMesh: 1
+--- !u!114 &1537595754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1537595748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a08da6da5494bc8a8cbe8cca31dff56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  messages:
+  - actorId: 0
+    message: TEST 1
+  - actorId: 1
+    message: TEST 2
+  - actorId: 0
+    message: TEST 3
+  - actorId: 1
+    message: Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+      Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+      when an unknown printer took a galley of type and scrambled it to make a type
+      specimen book. It has survived not only five centuries,
+  - actorId: 0
+    message: End
+  actors:
+  - id: 0
+    sprite: {fileID: 21300000, guid: 4893a09b567e84573acac394c92786fc, type: 3}
+    name: Name1
+  - id: 1
+    sprite: {fileID: 21300000, guid: adb242b777cae409ea333b8d059dc3ed, type: 3}
+    name: Name2
 --- !u!1 &1639911158
 GameObject:
   m_ObjectHideFlags: 0
@@ -2943,6 +2985,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentMovingTarget: {fileID: 2106990372}
+  agentName: 
 --- !u!195 &1948554065
 NavMeshAgent:
   m_ObjectHideFlags: 0
