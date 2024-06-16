@@ -12,12 +12,8 @@ Variables:
 !<INPUT 7>! -- curr location
 
 <commentblockmarker>###</commentblockmarker>
-Task -- given the context, determine whether the person will initiate a conversation with the other person.
-Format: 
-Context: []
-Question: []
-Answer (yes or no): []
----
+Task: given the context, determine whether the person will initiate a conversation with the other person. Answer yes or no.
+
 Context:
 !<INPUT 0>! is currently !<INPUT 4>!.
 !<INPUT 2>!
@@ -25,9 +21,9 @@ Context:
 !<INPUT 1>! is currently !<INPUT 5>!.
 !<INPUT 3>!
 
-The current time is !<INPUT 6>!. They are at !<INPUT 7>! right now.
+The current time is !<INPUT 6>!. They are at a !<INPUT 7>! right now.
 
 Question:
 Would !<INPUT 0>! initiate a conversation with !<INPUT 1>!?
 
-Answer (yes or no):
+Answer:

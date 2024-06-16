@@ -71,9 +71,6 @@ def converse(init_agent: Agent, target_agent: Agent):
     insert_convo_into_mem_stream(init_agent, convo, convo_summary)
     insert_convo_into_mem_stream(target_agent, convo, convo_summary)
 
-    init_agent.stm.action = Action.CONVERSING
-    target_agent.stm.action = Action.CONVERSING
-
 
 def generate_conversation(init_agent: Agent, target_agent: Agent) -> str:
     """
@@ -98,7 +95,8 @@ def generate_conversation(init_agent: Agent, target_agent: Agent) -> str:
         target_agent_memories=target_agent_memories
     )
     output = ModelService().generate_text(prompt_variables, prompt_template_file)
-    return output
+    convo = output.split(f"{init_agent.stm.name} starts the conversation.")[1].replace("</s>", "").strip()
+    return convo
 
 
 def generate_conversation_summary(init_agent: Agent, target_agent: Agent, convo: str) -> str:
@@ -120,7 +118,8 @@ def generate_conversation_summary(init_agent: Agent, target_agent: Agent, convo:
         target_agent_name=target_agent.stm.name
     )
     output = ModelService().generate_text(prompt_variables, prompt_template_file)
-    return output
+    summary = output.split("Summarize the conversation above in one sentence:")[1].replace("</s>", "").strip()
+    return summary
 
 
 def generate_memory_on_conversation(agent: Agent, convo: str) -> str:
@@ -140,7 +139,8 @@ def generate_memory_on_conversation(agent: Agent, convo: str) -> str:
         agent_name=agent.stm.name
     )
     output = ModelService().generate_text(prompt_variables, prompt_template_file)
-    return output
+    memory = output.split("might have found interesting that")[1].replace("</s>", "").strip()
+    return memory
 
 
 def insert_convo_into_mem_stream(agent: Agent, convo: str, summary: str) -> None:
@@ -195,7 +195,8 @@ def _convert_model_response_to_bool(response: str) -> bool:
     Returns:
         int: Converted bool.
     """
-    if "no" in response.lower():
+    answer_part = response.split("Answer:")[1].strip()
+    if "no" in answer_part.lower():
         return False
     else:
         return True
