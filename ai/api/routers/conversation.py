@@ -37,6 +37,7 @@ async def create_conversation(conversation_request: ConversationRequest, state: 
     
 
     initializing_agent_stm_params: STM_attributes = STM_attributes(
+        id=initializing_agent.id,
         name=initializing_agent.name,
         description=initializing_agent.description,
         age=initializing_agent.age,
@@ -48,6 +49,7 @@ async def create_conversation(conversation_request: ConversationRequest, state: 
 
 
     target_agent_stm_params: STM_attributes = STM_attributes(
+        id = target_agent.id,
         name=target_agent.name,
         description=target_agent.description,
         age=target_agent.age,
