@@ -44,6 +44,28 @@ namespace Dialog {
                 Dialog dialog = new Dialog(messages.ToArray(), actors.ToArray());
                 return dialog;
             }
+            
+
+        }
+        public void SplitLongMessages(int maxLength) {
+            List<Message> processedMessages = new List<Message>();
+
+            foreach (var message in messages) {
+                if (message.message.Length <= maxLength) {
+                    processedMessages.Add(message);
+                } else {
+                    int start = 0;
+                    while (start < message.message.Length) {
+                        int length = Math.Min(maxLength, message.message.Length - start);
+                        string part = message.message.Substring(start, length);
+                        part += "..";
+                        processedMessages.Add(new Message { actorId = message.actorId, message = part });
+                        start += length;
+                    }
+                }
+            }
+
+            messages = processedMessages.ToArray();
         }
     }
 
