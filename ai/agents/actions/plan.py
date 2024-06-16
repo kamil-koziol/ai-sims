@@ -5,6 +5,7 @@ from utils import WorldTime
 from llm_model import ModelService
 from datetime import datetime
 from agents.memory import PlanNode
+from location import Location
 import re
 
 if TYPE_CHECKING:
@@ -44,7 +45,7 @@ def create_daily_plan(agent: Agent, list_of_places: List):
     plan = _retrieve_plan(daily_plan, list_of_places)
     return plan
 
-def _retrieve_plan(generated_text: str, list_of_places: List[str]) -> List[PlanNode]:
+def _retrieve_plan(generated_text: str, list_of_places: List[Location]) -> List[PlanNode]:
     plan = []
     plan_split = generated_text.split('Plan for today:')[1]
     
@@ -63,10 +64,10 @@ def _retrieve_plan(generated_text: str, list_of_places: List[str]) -> List[PlanN
     return plan
         
 
-def _retrieve_location(plan_point: str, list_of_places: List[str]) -> str:
+def _retrieve_location(plan_point: str, list_of_places: List[Location]) -> Location:
     location = None
     for place in list_of_places:
-        if place in plan_point:
+        if place.name in plan_point:
             location = place
             break
     return location

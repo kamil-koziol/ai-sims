@@ -70,7 +70,7 @@ class Agent:
         retrieve_relevant_memories(self, perceived)
 
     def execute(self):
-        execute()
+        execute(self)
 
     def converse(self, target_agent: Agent):
         """
@@ -100,7 +100,7 @@ class Agent:
     def perceive(self):
         pass
 
-    def move(self):
+    def move(self, location: str):
         pass
 
     def save(self) -> None:

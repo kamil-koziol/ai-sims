@@ -3,6 +3,9 @@ from pydantic import BaseModel
 from uuid import UUID, uuid4
 from typing import List, Dict, Any
 from ..schemas import Location, Agent, Game
+from game.game import Game as GlobalGame
+from game.game_manager import GameManager
+from ..mappers import GameMapper, AgentMapper
 from ..state import State, get_state
 
 
@@ -23,6 +26,9 @@ async def create_game(game_request: GameRequest, state: State = Depends(get_stat
         raise HTTPException(status_code=400, detail="Game already exists")
     
     newGame: Game = Game(game_request.agents, game_request.locations)
+
+    GameManager().add_game(game_id=game_request.id, game=GameMapper.request_to_game(game_request))
+
     state.games[game_request.id] = newGame
     return {"id": game_request.id}
 
@@ -40,6 +46,9 @@ async def add_agent(add_agent_request: AddAgentRequest, state: State = Depends(g
     agent = add_agent_request.agent
     if game_id not in state.games:
         raise HTTPException(status_code=404, detail="Game not found")
+
+    GameManager().games[game_id].add_agent(AgentMapper.request_to_agent(add_agent_request.agent))
+    
     
     state.games[game_id].agents.append(agent)
     return {"game_id": game_id, "agents": state.games[game_id].agents}

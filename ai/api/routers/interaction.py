@@ -1,14 +1,12 @@
 import random
-from typing import Any, Dict, List
 from uuid import UUID
-
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
+from typing import List, Dict, Any
 
 from agents.memory.stm import STM, STM_attributes
 from api.schemas import Location
 from api.state import State, get_state
-
 
 class InteractionRequest(BaseModel):
     game_id: UUID
@@ -63,6 +61,5 @@ async def create_interaction(
     )
 
     # TODO: Implement an interaction
-
     status = True if random.random() > 0.5 else False
     return {"status": status}
