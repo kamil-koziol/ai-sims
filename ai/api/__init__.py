@@ -1,2 +1,2 @@
 from .schemas import Game, Agent, Location
-from .api import Api
+from .app import App
