@@ -4,19 +4,28 @@ from agents.actions import create_daily_plan
 from agents import Agent
 from agents.memory import STM_attributes
 from typing import List
+from location import Location
+from uuid import UUID
 
 @pytest.fixture
 def agent():
     # Create and return an instance of the Agent class for testing
-    stm = STM_attributes('John Smith', "John's description", 27, 'cafe', 'active')
-    agent = Agent(stm, 'save_file1.txt')
+    stm = STM_attributes(
+        id=UUID('13262f0c-b5ec-43f4-b10a-e6a6d8dd3dfd'),
+        name='John Smith',
+        description="John's description",
+        age=27,
+        curr_location='cafe',
+        lifestyle='active'
+    )
+    agent = Agent(stm)
     return agent
 
 @pytest.fixture
 def list_of_places():
-    return ['coffee shop', 'river', 'park']
+    return [Location('coffee shop'), Location('river'), Location('park')]
 
-def test_create_daily_plan(mocker, agent: Agent, list_of_places: List[str]):
+def test_create_daily_plan(mocker, agent: Agent, list_of_places: List[Location]):
     if ModelService().mocked:
         response_text = """
 <s> Create plan for one day using only listed places. Use format "Go to [place] at [time]"
