@@ -7,21 +7,23 @@ import pytest
 def game_data():
     return {
         "id": str(uuid4()),
-        "locations": [{"name": "Test Location"}, {"name": "Test location 2"}],
+        "locations": [{"name": "coffee"}, {"name": "park"}],
         "agents": [
             {
                 "id": str(uuid4()),
-                "name": "Agent1",
+                "name": "John Smith",
                 "age": 30,
-                "description": "A test agent",
+                "description": "John's description",
                 "lifestyle": "Active",
+                "curr_location": "coffee",
             },
             {
                 "id": str(uuid4()),
-                "name": "Agent2",
-                "age": 20,
-                "description": "A test agent 2",
-                "lifestyle": "Funny",
+                "name": "Marry Jane",
+                "age": 22,
+                "description": "Merry's description",
+                "lifestyle": "Lazy",
+                "curr_location": "park",
             },
         ],
     }

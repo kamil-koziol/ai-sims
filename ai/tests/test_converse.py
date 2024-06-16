@@ -1,7 +1,9 @@
+from typing import Dict
 from unittest.mock import Mock
 import pytest
 from uuid import UUID
 from agents.memory import MemoryStream, MemoryNodeFactory, Action, STM_attributes
+from location import Location
 from llm_model import ModelService
 from uuid import UUID
 from agents import Agent
@@ -22,8 +24,8 @@ def init_agent():
                                        "at the post office with a passion for hiking in the great outdoors. "
                                        "Despite his busy schedule, he always finds time to explore nature's trails, "
                                        "instilling in his daughters a love for adventure and resilience.",
-                         27, 'cafe', 'lazy')
-    agent = Agent(stm, 'save_file1.txt')
+                         27, Location('cafe'), 'lazy')
+    agent = Agent(stm)
     return agent
 
 @pytest.fixture
@@ -34,8 +36,8 @@ def target_agent():
                                         "Her vibrant personality and culinary skills make her a beloved figure among "
                                         "friends and clients alike, often hosting dinner parties that showcase her "
                                         "talent and warmth.",
-                         27, 'cafe', 'lazy')
-    agent = Agent(stm, 'save_file2.txt')
+                         27, Location('cafe'), 'lazy')
+    agent = Agent(stm)
     return agent
 
 
@@ -45,9 +47,10 @@ def test_converse(mocker, init_agent: Agent, target_agent: Agent):
         mocker.patch("agents.actions.generate_conversation_summary", return_value="Mocked Conversation Summary")
         mocker.patch("agents.actions.insert_convo_into_mem_stream")
 
-    converse(init_agent, target_agent)
+    splitted_dialogs = converse(init_agent, target_agent)
+    print(splitted_dialogs)
 
-    assert True
+    assert len(splitted_dialogs[init_agent.stm.id]) > 0 and len(splitted_dialogs[target_agent.stm.id]) > 0
 
 
 def test_generate_conversation(mocker, init_agent, target_agent):
@@ -87,7 +90,7 @@ def test_generate_conversation_summary(mocker, init_agent, target_agent):
             John Smith: Definitely do. Let me know if you want to go sometime.
             Emily Green: That sounds great! Thanks for the recommendation.
             John Smith: No problem. Have a good day!
-            Emily Green: You too!"""
+            Emily Green: You too!</s>"""
 
     result = generate_conversation_summary(init_agent, target_agent, convo)
     print(result)

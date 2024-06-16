@@ -7,6 +7,8 @@ from api.schemas import Location
 from api.state import State, get_state
 
 from agents.memory.stm import STM, STM_attributes
+from game import GameManager, Game
+from ..mappers import LocationMapper
 
 class ConversationRequest(BaseModel):
     game_id: UUID
@@ -59,10 +61,19 @@ async def create_conversation(conversation_request: ConversationRequest, state: 
 
     target_agent_stm = STM(target_agent_stm_params)
 
-    # TODO: implement conversation logic
-    # mocked conversation
-    conversation_agent1 = ["Hello, how are you?", "What are you doing here?"]
-    conversation_agent2 = ["I'm fine, thank you!", "Just exploring the area."]
+    game = GameManager().games[conversation_request.game_id]
+    initializing_agent = game.get_agent(initializing_agent_stm.id)
+    target_agent = game.get_agent(target_agent_stm.id)
+
+    #TODO: move location to agent schema
+    target_agent.stm.curr_location = LocationMapper.request_to_location(conversation_request.location)
+    initializing_agent.stm.curr_location = LocationMapper.request_to_location(conversation_request.location)
+
+    splitted_dialogs = initializing_agent.converse(target_agent=target_agent)
+    
+
+    conversation_agent1 = splitted_dialogs[initializing_agent_stm.id]
+    conversation_agent2 = splitted_dialogs[target_agent_stm.id]
     return {
         "agent1_conversation": conversation_agent1,
         "agent2_conversation": conversation_agent2,
