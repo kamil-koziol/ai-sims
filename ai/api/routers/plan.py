@@ -32,6 +32,7 @@ async def get_plan(plan_request: PlanRequest, state: State = Depends(get_state))
         raise HTTPException(status_code=404, detail="Agent not found")
     
     agent_stm_params: STM_attributes = STM_attributes(
+        id = agent.id,
         name=agent.name,
         description=agent.description,
         age=agent.age,

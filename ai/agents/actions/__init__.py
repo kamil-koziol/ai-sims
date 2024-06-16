@@ -3,7 +3,8 @@ from .converse import (
     generate_conversation,
     generate_conversation_summary,
     generate_memory_on_conversation,
-    insert_convo_into_mem_stream
+    insert_convo_into_mem_stream,
+    decide_to_converse
 )
 from .execute import execute
 from .plan import create_daily_plan
