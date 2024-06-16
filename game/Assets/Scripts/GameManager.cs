@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour {
         }
         
         coroutineQueue.Enqueue(DefaultBackendService.Instance.Conversation(agents[0].ID, agents[1].ID));
+        coroutineQueue.Enqueue(DefaultBackendService.Instance.Interaction(agents[0].ID, agents[1].ID));
     }
 
     public void SetGameState(GameState gameState) {

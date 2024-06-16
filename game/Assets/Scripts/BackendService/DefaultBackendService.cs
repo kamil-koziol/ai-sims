@@ -79,7 +79,7 @@ public class DefaultBackendService: MonoBehaviour, BackendService.BackendService
         var location = new JObject();
         location["name"] = GameManager.Instance.GetAgentById(initalizingAgent).getLocation();
         
-        ConversationRequest rq = new ConversationRequest
+        InteractionRequest rq = new InteractionRequest()
         {
             game_id = uuid.ToString(),
             initializing_agent = initalizingAgent.ToString(), 
@@ -88,13 +88,15 @@ public class DefaultBackendService: MonoBehaviour, BackendService.BackendService
             location = location
         };
         
-        return APICall.Call<Agent.PlanEntry[]>(
+        return APICall.Call<InteractionResponse>(
             URL + "/interaction", 
             JsonConvert.SerializeObject(
                 rq, 
                 Formatting.Indented, 
                 new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }
-            ), contentTypeJson, null);
+            ), contentTypeJson, i => {
+                Debug.Log(i.status);
+            });
     }
 
     public IEnumerator Game() {

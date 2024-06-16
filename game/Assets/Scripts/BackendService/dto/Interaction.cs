@@ -14,8 +14,7 @@ namespace BackendService.dto {
     
     [Serializable]
     public struct InteractionResponse {
-        public string[] agent1_conversation;
-        public string[] agent2_conversation;
+        public bool status;
     }
 
 }
