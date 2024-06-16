@@ -468,7 +468,7 @@ MonoBehaviour:
   m_VoxelSize: 0.033333335
   m_BuildHeightMesh: 0
   m_HideEditorLogs: 0
-  m_NavMeshData: {fileID: 23800000, guid: 264ffa1be81fd45f7bde205c56ef7ece, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: c1e571b3eadefe745a76a2ad784fe894, type: 2}
 --- !u!4 &705717897
 Transform:
   m_ObjectHideFlags: 0
@@ -1386,6 +1386,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0a154ceba174aa1bebda04acd1ff18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentMovingTarget: {fileID: 0}
+  age: 0
+  description: 
+  lifestyle: 
   agentName: TestAgent
 --- !u!195 &1948554065
 NavMeshAgent:
