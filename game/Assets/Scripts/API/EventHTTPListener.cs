@@ -19,6 +19,7 @@ public class EventHTTPListener : MonoBehaviour {
         RegisterEndpoint(new MockEndpoint());
         RegisterEndpoint(AgentMovementEndpoint.getInstance());
         RegisterEndpoint(GameInit.getInstance());
+        RegisterEndpoint(PlanEndpoint.getInstance());
         
         listener = new HttpListener ();
         listener.Prefixes.Add ($"http://localhost:{PORT}/");
