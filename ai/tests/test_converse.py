@@ -2,6 +2,7 @@ from unittest.mock import Mock
 import pytest
 from agents.memory import MemoryStream, MemoryNodeFactory, Action, STM_attributes
 from llm_model import ModelService
+from uuid import UUID
 from agents import Agent
 from agents.actions import (
     converse,
@@ -15,15 +16,29 @@ from agents.actions import (
 @pytest.fixture
 def init_agent():
     # Create and return an instance of the Agent class for testing
-    stm = STM_attributes('John Smith', "John's description", 27, 'cafe', 'lazy')
-    agent = Agent(stm, 'save_file1.txt')
+    stm = STM_attributes(
+        id=UUID('13262f0c-b5ec-43f4-b10a-e6a6d8dd3dfd'),
+        name='John Smith',
+        description="John's description",
+        age=27,
+        curr_location='cafe',
+        lifestyle='active'
+    )
+    agent = Agent(stm)
     return agent
 
 @pytest.fixture
 def target_agent():
     # Create and return an instance of the Agent class for testing
-    stm = STM_attributes('Emily Green', "Emily's description", 27, 'cafe', 'lazy')
-    agent = Agent(stm, 'save_file2.txt')
+    stm = STM_attributes(
+        id=UUID('524d4082-cc9c-46be-a692-af1f0d2c7dbb'),
+        name='John Moore',
+        description="Description",
+        age=25,
+        curr_location='cafe',
+        lifestyle='active'
+    )
+    agent = Agent(stm)
     return agent
 
 
