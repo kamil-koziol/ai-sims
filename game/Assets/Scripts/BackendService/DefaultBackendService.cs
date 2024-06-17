@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Threading;
 using BackendService.dto;
 using DefaultNamespace;
+using Dialog;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -26,7 +28,6 @@ public class DefaultBackendService: MonoBehaviour, BackendService.BackendService
 
     public IEnumerator Conversation(Guid initalizingAgent, Guid targetAgentId)
     {
-        
         var location = new JObject();
         location["name"] = GameManager.Instance.GetAgentById(initalizingAgent).getLocation();
         
@@ -46,9 +47,50 @@ public class DefaultBackendService: MonoBehaviour, BackendService.BackendService
                 Formatting.Indented, 
                 new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }
             ), contentTypeJson, entries => {
-                foreach(var a in entries.agent1_conversation) {
-                    Debug.Log(a);
+                var dialogBuilder = new Dialog.Dialog.Builder();
+                var iAgent = GameManager.Instance.GetAgentById(initalizingAgent);
+                dialogBuilder.AddActor(new Actor() {
+                    id = 0,
+                    name = iAgent.getAgentState().agentName,
+                    sprite = iAgent.getAgentState().agentSprite
+                });
+                
+                var tAgent = GameManager.Instance.GetAgentById(targetAgentId);
+                dialogBuilder.AddActor(new Actor() {
+                    id = 1,
+                    name = tAgent.getAgentState().agentName,
+                    sprite = tAgent.getAgentState().agentSprite
+                });
+
+
+                int shorterConversationLength =
+                    Math.Min(entries.agent1_conversation.Length, entries.agent2_conversation.Length);
+
+                int i;
+                for (i = 0; i < shorterConversationLength; i++) {
+                    dialogBuilder.AddMessage(new Message() {
+                        actorId = 0,
+                        message = entries.agent1_conversation[i]
+                    });
+                    
+                    dialogBuilder.AddMessage(new Message() {
+                        actorId = 1,
+                        message = entries.agent2_conversation[i]
+                    });
                 }
+
+                // Adding the rest of messages
+                while(i < entries.agent1_conversation.Length) {
+                    dialogBuilder.AddMessage(new Message() {
+                        actorId = 0,
+                        message = entries.agent1_conversation[i]
+                    });
+                    i++;
+                }
+
+                var dialog =dialogBuilder.Build();
+                DialogManager.Instance.OpenDialog(dialog);
+
             });
     }
 

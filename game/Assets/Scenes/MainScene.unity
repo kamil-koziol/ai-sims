@@ -13162,6 +13162,10 @@ PrefabInstance:
       value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 5277360867836543963, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
+      propertyPath: sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 4893a09b567e84573acac394c92786fc, type: 3}
+    - target: {fileID: 5277360867836543963, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
       propertyPath: lifestyle
       value: ziomkoowy
       objectReference: {fileID: 0}
@@ -13175,7 +13179,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8816241443310174770, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -13736,6 +13740,14 @@ PrefabInstance:
       value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 5277360867836543963, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
+      propertyPath: sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: adb242b777cae409ea333b8d059dc3ed, type: 3}
+    - target: {fileID: 5277360867836543963, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
+      propertyPath: agentName
+      value: TestAgent2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5277360867836543963, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
       propertyPath: lifestyle
       value: ziomkoowy
       objectReference: {fileID: 0}
@@ -13749,7 +13761,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8816241443310174770, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

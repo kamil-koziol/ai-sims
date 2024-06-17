@@ -15,9 +15,11 @@ public class Agent : MonoBehaviour {
     [SerializeField] private String description;
     [SerializeField] private String lifestyle;
     [SerializeField] private String agentName;
+    [SerializeField] private Sprite sprite;
     [SerializeField] private PlanEntry[] planForDay;
     private void Awake() {
         ID = Guid.NewGuid();
+        Debug.Log(ID.ToString());
     }
 
     private void Start() {
@@ -68,7 +70,8 @@ public class Agent : MonoBehaviour {
             agentAge = age,
             agentDescription = description,
             agentLifestyle = lifestyle,
-            agentMovementState = agentMovement.getAgentMovementState()
+            agentMovementState = agentMovement.getAgentMovementState(),
+            agentSprite = sprite
         };
         return data;
     }
@@ -82,5 +85,6 @@ public class Agent : MonoBehaviour {
         public String agentDescription;
         public String agentLifestyle;
         public AgentMovement.AgentMovementState agentMovementState;
+        public Sprite agentSprite;
     }
 }
