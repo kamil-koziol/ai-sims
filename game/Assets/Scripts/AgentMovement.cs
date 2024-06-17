@@ -20,14 +20,19 @@ public class AgentMovement : MonoBehaviour
     private Regions regions;
 
     void Awake() {
-        agent = GetComponent<NavMeshAgent>();
-        regions = GameManager.Instance.GetComponent<Regions>();
-        agent.updateRotation = false;
-        agent.updateUpAxis = false;
+        // agent = GetComponent<NavMeshAgent>();
+        // regions = GameManager.Instance.Regions;
+        // agent.updateRotation = false;
+        // agent.updateUpAxis = false;
     }
 
     void Start()
     {
+        agent = GetComponent<NavMeshAgent>();
+        regions = GameManager.Instance.Regions;
+        agent.updateRotation = false;
+        agent.updateUpAxis = false;
+        
         GameManager.Instance.OnGameStateChange += OnGameStateChange;
         if (!useApi)
         {
@@ -37,7 +42,7 @@ public class AgentMovement : MonoBehaviour
 
     private void OnGameStateChange(GameState obj) {
         gameFrozen = obj != GameState.PLAYING;
-        Debug.Log("Game frozen: " + gameFrozen);
+        agent.enabled = !gameFrozen;
     }
 
     void Update()
@@ -92,12 +97,12 @@ public class AgentMovement : MonoBehaviour
             Transform targetToChange;
             if (Regions.getParentName(currentMovingTarget) == Constants.houseObjectName)
             {
-                Debug.Log("Switching to house");
+                // Debug.Log("Switching to house");
                 targetToChange = regions.getRandomTranformFromRegion(Constants.grassObjectName);
             }
             else
             {
-                Debug.Log("Switching to grass");
+                // Debug.Log("Switching to grass");
                 targetToChange = regions.getRandomTranformFromRegion(Constants.houseObjectName);
             }
 

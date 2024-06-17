@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DefaultNamespace;
 using UnityEngine;
 
 public enum GameState {
@@ -13,13 +14,21 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private List<Agent> agents;
     
     public static GameManager Instance;
-    public GameState GameState;
+    private GameState gameState;
+
+    public GameState GameState => gameState;
+
     private CoroutineQueue coroutineQueue;
     
+    private Regions regions;
+    public Regions Regions => regions;
+
+
     public event Action<GameState> OnGameStateChange;
 
     private void Awake() {
         Instance = this;
+        regions = GetComponent<Regions>();
     }
 
     private void Start()
@@ -29,16 +38,19 @@ public class GameManager : MonoBehaviour {
         foreach (var agent in agents) {
             coroutineQueue.Enqueue(DefaultBackendService.Instance.Plan(agent.ID));
         }
-        
-        coroutineQueue.Enqueue(DefaultBackendService.Instance.Conversation(agents[0].ID, agents[1].ID));
-        coroutineQueue.Enqueue(DefaultBackendService.Instance.Interaction(agents[0].ID, agents[1].ID));
     }
 
     public void SetGameState(GameState gameState) {
-        GameState = gameState;
+        this.gameState = gameState;
         OnGameStateChange?.Invoke(gameState);
     }
-    
+
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.C)) {
+            coroutineQueue.Enqueue(DefaultBackendService.Instance.Conversation(agents[0].ID, agents[1].ID));
+        }
+    }
+
     public void registerCoroutine(IEnumerator coroutine)
     {
         coroutineQueue.Enqueue(coroutine);
