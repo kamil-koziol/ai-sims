@@ -22,7 +22,7 @@ class DailyPlanVariables:
     persona_first_names: str
     list_of_places: str
 
-def create_daily_plan(agent: Agent, list_of_places: List):
+def create_daily_plan(agent: Agent, list_of_places: List) -> List[PlanNode]:
     """
     Create list of places for agent to visit during the day.
 

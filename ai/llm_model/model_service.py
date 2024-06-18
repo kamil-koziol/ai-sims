@@ -10,7 +10,7 @@ class ModelService(metaclass=Singleton):
     Singleton. Handles every communication with usage of a prompt.
     """
     def __init__(self) -> None:
-        self._MOCKED = True
+        self._MOCKED = False
         _EMBEDDING_URL = 'http://localhost:8888/embed'
         _GENERATION_URL = 'http://localhost:8888/generate'
         if self._MOCKED:

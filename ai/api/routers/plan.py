@@ -5,8 +5,11 @@ from typing import List, Dict, Any
 
 from api.schemas import Location
 from api.state import State, get_state
+from game import GameManager
+from ..mappers import LocationMapper
 
-from agents.memory.stm import STM, STM_attributes
+from agents.memory import STM, STM_attributes
+from agents.memory import PlanNode as OriginalPlanNode
 
 class PlanRequest(BaseModel):
     game_id: UUID
@@ -42,11 +45,12 @@ async def get_plan(plan_request: PlanRequest, state: State = Depends(get_state))
 
     agent_stm = STM(agent_stm_params)
 
+    game = GameManager().games[plan_request.game_id]
+    agent = game.get_agent(agent.id)
 
-    # TODO: Implement a plan generation
-    plan = [
-        {"action": "move to location A"},
-        {"action": "collect resource B"},
-        {"action": "return to base"},
-    ]
+    #TODO: move location to agent schema
+    agent.stm.curr_location = LocationMapper.request_to_location(plan_request.location)
+
+    plan = agent.plan(game.locations)
+    plan = [{"time": plan_node.time.strftime("%m/%d/%Y, %H:%M:%S"), "location": plan_node.location.name} for plan_node in plan]
     return {"plan": plan}
