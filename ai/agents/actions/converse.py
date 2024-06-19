@@ -1,6 +1,7 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict, List
 from dataclasses import dataclass
+from uuid import UUID
 from agents.memory import Action, MemoryNodeFactory
 from agents.actions.retrieve import get_string_memories
 from llm_model import ModelService
@@ -56,8 +57,23 @@ class DecideToConverseVariables:
     curr_time: str
     location: str
 
+def _split_conversation(init_agent: Agent, target_agent: Agent, conversation: str) -> Dict[UUID, List]:
+    splitted_dialogs = {
+        init_agent.stm.id: [],
+        target_agent.stm.id: []
+    }
+    conversation = conversation.split('\n')
+    for line in conversation:
+        name, dialog = line.split(':')
+        dialog = dialog.strip()
+        if init_agent.stm.name in name:
+            splitted_dialogs[init_agent.stm.id].append(dialog)
+        elif target_agent.stm.name in name:
+            splitted_dialogs[target_agent.stm.id].append(dialog)
 
-def converse(init_agent: Agent, target_agent: Agent):
+    return splitted_dialogs
+
+def converse(init_agent: Agent, target_agent: Agent) -> Dict[UUID, List]:
     """
     Create a memory node of conversation between init agent and target agent and add it to memory stream.
 
@@ -70,9 +86,8 @@ def converse(init_agent: Agent, target_agent: Agent):
 
     insert_convo_into_mem_stream(init_agent, convo, convo_summary)
     insert_convo_into_mem_stream(target_agent, convo, convo_summary)
-
-    init_agent.stm.action = Action.CONVERSING
-    target_agent.stm.action = Action.CONVERSING
+    splitted_dialogs = _split_conversation(init_agent=init_agent, target_agent=target_agent, conversation=convo)
+    return splitted_dialogs
 
 
 def generate_conversation(init_agent: Agent, target_agent: Agent) -> str:
@@ -93,12 +108,13 @@ def generate_conversation(init_agent: Agent, target_agent: Agent) -> str:
         target_agent_description=target_agent.stm.description,
         init_agent_action=init_agent.stm.action.value,
         target_agent_action=target_agent.stm.action.value,
-        location=init_agent.stm.curr_location,
+        location=init_agent.stm.curr_location.name,
         init_agent_memories=init_agent_memories,
         target_agent_memories=target_agent_memories
     )
     output = ModelService().generate_text(prompt_variables, prompt_template_file)
-    return output
+    convo = output.split(f"{init_agent.stm.name} starts the conversation.")[1].replace("</s>", "").strip()
+    return convo
 
 
 def generate_conversation_summary(init_agent: Agent, target_agent: Agent, convo: str) -> str:
@@ -120,7 +136,8 @@ def generate_conversation_summary(init_agent: Agent, target_agent: Agent, convo:
         target_agent_name=target_agent.stm.name
     )
     output = ModelService().generate_text(prompt_variables, prompt_template_file)
-    return output
+    summary = output.split("Summarize the conversation above in one sentence:")[1].replace("</s>", "").strip()
+    return summary
 
 
 def generate_memory_on_conversation(agent: Agent, convo: str) -> str:
@@ -140,7 +157,8 @@ def generate_memory_on_conversation(agent: Agent, convo: str) -> str:
         agent_name=agent.stm.name
     )
     output = ModelService().generate_text(prompt_variables, prompt_template_file)
-    return output
+    memory = output.split("might have found interesting that")[1].replace("</s>", "").strip()
+    return memory
 
 
 def insert_convo_into_mem_stream(agent: Agent, convo: str, summary: str) -> None:
@@ -179,7 +197,7 @@ def decide_to_converse(init_agent: Agent, target_agent: Agent) -> bool:
         init_agent_action=init_agent.stm.action.value,
         target_agent_action=target_agent.stm.action.value,
         curr_time=WorldTime().current_time.strftime("%m/%d/%Y, %H:%M:%S"),
-        location=init_agent.stm.curr_location,
+        location=init_agent.stm.curr_location.name,
     )
     model_output = ModelService().generate_text(prompt_variables, prompt_template_file)
     decision = _convert_model_response_to_bool(model_output)
@@ -195,7 +213,8 @@ def _convert_model_response_to_bool(response: str) -> bool:
     Returns:
         int: Converted bool.
     """
-    if "no" in response.lower():
+    answer_part = response.split("Answer:")[1].strip()
+    if "no" in answer_part.lower():
         return False
     else:
         return True

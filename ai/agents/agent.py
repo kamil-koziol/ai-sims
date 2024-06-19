@@ -1,13 +1,16 @@
 from __future__ import annotations
 import os
 import sys
+from uuid import UUID
 import dill
-from typing import List, Tuple, Any
+from typing import Dict, List, Tuple, Any, TYPE_CHECKING
 from agents.actions import retrieve_relevant_memories, converse, execute, reflect, create_daily_plan
 from agents.actions import plan, retrieve_relevant_memories, converse, decide_to_converse, execute, reflect
 from agents.memory import STM, STM_attributes, MemoryStream
 from object_types import Objects
 from location import Location
+from agents.memory import PlanNode
+
 
 
 class Agent: 
@@ -53,12 +56,13 @@ class Agent:
     def reflect(self):
         pass
 
-    def plan(self, locations: List[Location]):
+    def plan(self, locations: List[Location]) -> List[PlanNode]:
         """
         Create plan for the current day for the agent. List of places is fixed.
         """
         plan = create_daily_plan(self, locations)
         self.stm.daily_plan = plan
+        return plan
 
     def retrieve(self, perceived: str):
         """
@@ -72,14 +76,14 @@ class Agent:
     def execute(self):
         execute(self)
 
-    def converse(self, target_agent: Agent):
+    def converse(self, target_agent: Agent) -> Dict[UUID, List]:
         """
         Perform conversation with targeted agent
 
         Args:
             target_agent (Agent): Agent to converse with.
         """
-        converse(self, target_agent)
+        return converse(self, target_agent)
 
     def should_converse(self, objects: list[Tuple[Objects, Any]]) -> Agent | bool:
         """

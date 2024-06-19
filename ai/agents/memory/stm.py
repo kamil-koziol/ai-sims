@@ -4,6 +4,7 @@ from datetime import datetime
 from typing import List
 from .plan_node import PlanNode
 from uuid import UUID
+from location import Location
 
 
 @dataclass
@@ -70,7 +71,7 @@ class STM:
         self._description: str = init_parameters.description
         self._life_style: str = init_parameters.lifestyle
         self._age: int = init_parameters.age
-        self._curr_location: str = init_parameters.curr_location
+        self._curr_location: Location = init_parameters.curr_location
 
         self._position: tuple = (0, 0)
 
