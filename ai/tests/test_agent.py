@@ -17,7 +17,7 @@ class TestAgent:
             name='John Smith',
             description="John's description",
             age=27,
-            curr_location='cafe',
+            curr_location=Location('cafe'),
             lifestyle='active'
         )
         self.agent_1 = Agent(stm_1)
@@ -27,7 +27,7 @@ class TestAgent:
             name='John Moore',
             description="Description",
             age=25,
-            curr_location='cafe',
+            curr_location=Location('cafe'),
             lifestyle='active'
         )
         self.agent_2 = Agent(stm_2)

@@ -17,7 +17,8 @@ class PlanRequest(BaseModel):
     location: Location
 
 class PlanNode(BaseModel):
-    action: str
+    location: str
+    time: str
 
 class PlanResponse(BaseModel):
     plan: List[PlanNode]
@@ -52,5 +53,5 @@ async def get_plan(plan_request: PlanRequest, state: State = Depends(get_state))
     agent.stm.curr_location = LocationMapper.request_to_location(plan_request.location)
 
     plan = agent.plan(game.locations)
-    plan = [{"time": plan_node.time.strftime("%m/%d/%Y, %H:%M:%S"), "location": plan_node.location.name} for plan_node in plan]
+    plan = [PlanNode(location=plan_node.location.name, time=plan_node.time.strftime("%m/%d/%Y, %H:%M:%S")) for plan_node in plan]
     return {"plan": plan}
