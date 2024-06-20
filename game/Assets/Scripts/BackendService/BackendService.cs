@@ -5,9 +5,9 @@ using BackendService.dto;
 
 namespace BackendService {
     public interface BackendService {
-        public IEnumerator Game();
-        public IEnumerator Interaction(Guid initalizingAgentId, Guid targetAgentId);
-        public IEnumerator Conversation(Guid initalizingAgentId, Guid targetAgentId);
-        public IEnumerator Plan(Guid agentId);
+        public IEnumerator Game(Action<GameResponse> cb = null);
+        public IEnumerator Interaction(Guid initalizingAgentId, Guid targetAgentId, Action<InteractionResponse> cb = null);
+        public IEnumerator Conversation(Guid initalizingAgentId, Guid targetAgentId, Action<ConversationResponse> cb = null);
+        public IEnumerator Plan(Guid agentId, Action<PlanResponse> cb = null);
     }
 }
