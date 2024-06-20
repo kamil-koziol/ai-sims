@@ -12,7 +12,8 @@ namespace BackendService.dto {
     
     [Serializable]
     public struct PlanNode {
-        public String action;
+        public String time;
+        public String location;
     }
     [Serializable]
     public struct PlanResponse {

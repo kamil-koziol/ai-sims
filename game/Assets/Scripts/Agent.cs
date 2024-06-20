@@ -19,7 +19,6 @@ public class Agent : MonoBehaviour {
     [SerializeField] private PlanEntry[] planForDay;
     private void Awake() {
         ID = Guid.NewGuid();
-        Debug.Log(ID.ToString());
     }
 
     private void Start() {
