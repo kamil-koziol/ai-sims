@@ -12,6 +12,7 @@ public enum GameState {
 public class GameManager : MonoBehaviour {
     public Guid ID;
     [SerializeField] private List<Agent> agents;
+    [SerializeField] private bool useApi = true; 
     
     public static GameManager Instance;
     private GameState gameState;
@@ -33,10 +34,13 @@ public class GameManager : MonoBehaviour {
 
     private void Start()
     {
-        coroutineQueue = new CoroutineQueue(this);
-        coroutineQueue.Enqueue(DefaultBackendService.Instance.Game());
-        foreach (var agent in agents) {
-            coroutineQueue.Enqueue(DefaultBackendService.Instance.Plan(agent.ID));
+        if (useApi)
+        {
+            coroutineQueue = new CoroutineQueue(this);
+            coroutineQueue.Enqueue(DefaultBackendService.Instance.Game());
+            foreach (var agent in agents) {
+                coroutineQueue.Enqueue(DefaultBackendService.Instance.Plan(agent.ID));
+            }
         }
     }
 
@@ -54,6 +58,11 @@ public class GameManager : MonoBehaviour {
     public void registerCoroutine(IEnumerator coroutine)
     {
         coroutineQueue.Enqueue(coroutine);
+    }
+
+    public bool IsUsingApi()
+    {
+        return useApi;
     }
 
     public List<Agent> GetAgents() {

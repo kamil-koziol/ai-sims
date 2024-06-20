@@ -12,8 +12,9 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using BackendService;
 
-public class DefaultBackendService: MonoBehaviour, BackendService.BackendService {
+public class DefaultBackendService: MonoBehaviour {
     
     public static DefaultBackendService Instance;
     private static System.Guid uuid;

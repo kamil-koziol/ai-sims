@@ -15,9 +15,12 @@ public class AgentMovement : MonoBehaviour
     public Vector3 agentPosition;
     private NavMeshAgent agent;
     private readonly double MOVEMENT_ESTIMATION_ERROR = 0.1;
-    [SerializeField] private bool useApi = true;
+    private bool useApi;
     public bool gameFrozen = false;
     private Regions regions;
+    private String currentLocation;
+    [SerializeField] private LayerMask locationLayer;
+    [SerializeField] private float raycastDistance = 1.0f;
 
     void Awake() {
         // agent = GetComponent<NavMeshAgent>();
@@ -28,6 +31,7 @@ public class AgentMovement : MonoBehaviour
 
     void Start()
     {
+        useApi = GameManager.Instance.IsUsingApi();
         agent = GetComponent<NavMeshAgent>();
         regions = GameManager.Instance.Regions;
         agent.updateRotation = false;
@@ -44,7 +48,6 @@ public class AgentMovement : MonoBehaviour
         gameFrozen = obj != GameState.PLAYING;
         agent.enabled = !gameFrozen;
     }
-
     void Update()
     {
         if (gameFrozen) return;
@@ -54,6 +57,27 @@ public class AgentMovement : MonoBehaviour
             demoMovement();
         }
         updateAgentPosition();
+        
+        Vector2 agentXY = new Vector2(agent.transform.position.x, agent.transform.position.y);
+        RaycastHit2D hit = Physics2D.Raycast(agentXY, Vector2.zero, raycastDistance, locationLayer);
+
+        if (hit.collider != null)
+        {
+            currentLocation = hit.collider.gameObject.name;
+            Debug.Log("Agent is in location: " + currentLocation);
+        }
+        else
+        {
+            currentLocation = "Unknown";
+            Debug.Log("Agent is not in any location");
+        }
+    }
+    
+    void OnDrawGizmos()
+    {
+        // Draw the raycast in the scene view for debugging purposes
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, Vector2.down * raycastDistance);
     }
 
     public void changeDestination(Transform target)
