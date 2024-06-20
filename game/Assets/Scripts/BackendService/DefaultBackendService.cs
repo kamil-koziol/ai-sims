@@ -5,6 +5,11 @@ using DefaultNamespace;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+using UnityEngine;
+using UnityEngine.Networking;
+using UnityEngine.UI;
+using BackendService;
+
 namespace BackendService
 {
     public class DefaultBackendService: BackendService {

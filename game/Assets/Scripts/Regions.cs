@@ -33,7 +33,14 @@ namespace DefaultNamespace
 
         public Transform getRandomTranformFromRegion(String regionName)
         {
-            return regionNameToSetOfPoints[regionName].ElementAt(random.Next(regionNameToSetOfPoints.Count - 1));
+            return regionNameToSetOfPoints[regionName].ElementAt(random.Next(regionNameToSetOfPoints[regionName].Count - 1));
+        }
+
+        public Transform getRandomTransformFromRandomRegion()
+        {
+            List<String> keys = new List<String>(regionNameToSetOfPoints.Keys);
+            int randomIndex = random.Next(keys.Count - 1);
+            return getRandomTranformFromRegion(keys[randomIndex]);
         }
 
         public static String getParentName(Transform point)

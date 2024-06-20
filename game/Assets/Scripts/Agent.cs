@@ -53,6 +53,17 @@ public class Agent : MonoBehaviour {
         planForDay = newPlan;
         Debug.Log(planForDay);
     }
+
+    public void changeSprite(String spriteName)
+    {
+        const String miniProfilesPath = "MiniProfiles/";
+        const String profilesPath = "Profiles/";
+        var visual = GetComponentInChildren<SpriteRenderer>();
+        visual.sprite = Resources.Load<Sprite>( miniProfilesPath + spriteName);
+        visual.transform.localScale = new Vector3(6.0f, 6.0f, 0.0f);
+        
+        sprite = Resources.Load<Sprite>( profilesPath + spriteName);
+    }
     
     public AgentState getAgentState()
     {

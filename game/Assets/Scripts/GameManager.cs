@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour {
     public Guid ID;
     
     [SerializeField] private List<Agent> agents;
+    [SerializeField] private bool useApi = true; 
     
     public static GameManager Instance;
     private GameState gameState;
@@ -45,23 +46,33 @@ public class GameManager : MonoBehaviour {
 
     private void Start()
     {
-        coroutineQueue = new CoroutineQueue(this);
-        coroutineQueue.Enqueue(backendService.Game(response =>
+
+        if (useApi)
         {
-            ID = Guid.Parse(response.id);
-            Debug.Log(response.id);
-        }));
-        
-        foreach (var agent in agents) {
-            coroutineQueue.Enqueue(backendService.Plan(agent.ID, response =>
-            {
-                foreach (var node in response.plan)
-                {
-                    Debug.Log(node.time + " " + node.location);
-                }
-                ;
-            }));
+
+          coroutineQueue = new CoroutineQueue(this);
+          coroutineQueue.Enqueue(backendService.Game(response =>
+          {
+              ID = Guid.Parse(response.id);
+              Debug.Log(response.id);
+          }));
+
+          foreach (var agent in agents) {
+              coroutineQueue.Enqueue(backendService.Plan(agent.ID, response =>
+              {
+                  foreach (var node in response.plan)
+                  {
+                      Debug.Log(node.time + " " + node.location);
+                  }
+                  ;
+              }));
+
+          }
         }
+
+        agents[0].changeSprite("Other_F_A");
+        agents[1].changeSprite("Other_F_E");
+
     }
 
     public void SetGameState(GameState gameState) {
@@ -83,6 +94,11 @@ public class GameManager : MonoBehaviour {
     public void registerCoroutine(IEnumerator coroutine)
     {
         coroutineQueue.Enqueue(coroutine);
+    }
+
+    public bool IsUsingApi()
+    {
+        return useApi;
     }
 
     public List<Agent> GetAgents() {
