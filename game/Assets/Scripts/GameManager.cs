@@ -42,6 +42,10 @@ public class GameManager : MonoBehaviour {
                 coroutineQueue.Enqueue(DefaultBackendService.Instance.Plan(agent.ID));
             }
         }
+
+        agents[0].changeSprite("Other_F_A");
+        agents[1].changeSprite("Other_F_E");
+
     }
 
     public void SetGameState(GameState gameState) {

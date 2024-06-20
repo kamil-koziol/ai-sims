@@ -68,8 +68,8 @@ public class AgentMovement : MonoBehaviour
         }
         else
         {
-            currentLocation = "Unknown";
-            Debug.Log("Agent is not in any location");
+            currentLocation = "Pathway";
+            Debug.Log("Agent is at pathway");
         }
     }
     
@@ -105,7 +105,7 @@ public class AgentMovement : MonoBehaviour
     {
         //Demo intialization
         
-        Transform grassTransform = regions.getRandomTranformFromRegion(Constants.grassObjectName);
+        Transform grassTransform = regions.getRandomTranformFromRegion("House");
 
         if (grassTransform == null)
         {
@@ -118,17 +118,17 @@ public class AgentMovement : MonoBehaviour
     {
         if (isOnCurrentTargetPosition())
         {
-            Transform targetToChange;
-            if (Regions.getParentName(currentMovingTarget) == Constants.houseObjectName)
-            {
-                // Debug.Log("Switching to house");
-                targetToChange = regions.getRandomTranformFromRegion(Constants.grassObjectName);
-            }
-            else
-            {
-                // Debug.Log("Switching to grass");
-                targetToChange = regions.getRandomTranformFromRegion(Constants.houseObjectName);
-            }
+            Transform targetToChange = regions.getRandomTransformFromRandomRegion();
+            // if (Regions.getParentName(currentMovingTarget) == Constants.houseObjectName)
+            // {
+            //     // Debug.Log("Switching to house");
+            //     targetToChange = regions.getRandomTranformFromRegion(Constants.grassObjectName);
+            // }
+            // else
+            // {
+            //     // Debug.Log("Switching to grass");
+            //     targetToChange = regions.getRandomTranformFromRegion(Constants.houseObjectName);
+            // }
 
 
             changeDestination(targetToChange);
