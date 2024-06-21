@@ -13,6 +13,8 @@ public enum GameState {
     WAITING_FOR_RESULTS,
     CONVERSATION
 }
+
+[RequireComponent(typeof(TimeManager))]
 public class GameManager : MonoBehaviour {
     // Fields
     public Guid ID;
@@ -34,6 +36,10 @@ public class GameManager : MonoBehaviour {
 
     private BackendService.BackendService backendService;
     
+    private TimeManager timeManager;
+
+    public TimeManager TimeManager => timeManager;
+
     // Events
     public event Action<GameState> OnGameStateChange;
 
@@ -42,6 +48,7 @@ public class GameManager : MonoBehaviour {
         regions = GetComponent<Regions>();
         // backendService = new DefaultBackendService();
         backendService = new MockBackendService();
+        timeManager = GetComponent<TimeManager>();
     }
 
     private void Start()
