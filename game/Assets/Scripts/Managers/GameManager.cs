@@ -6,6 +6,7 @@ using BackendService.dto;
 using DefaultNamespace;
 using Dialog;
 using Dialog.Mappers;
+using Plan.Mappers;
 using UnityEngine;
 
 public enum GameState {
@@ -48,7 +49,28 @@ public class GameManager : MonoBehaviour {
         regions = GetComponent<Regions>();
         // backendService = new DefaultBackendService();
         backendService = new MockBackendService();
+        
         timeManager = GetComponent<TimeManager>();
+        timeManager.OnTimeChanged += TimeManagerOnTimeChanged;
+    }
+
+    private void TimeManagerOnTimeChanged(object sender, TimeChangedEventArgs e)
+    {
+        if (!e.IsNewDay) return;
+        
+        GenerateAgentsPlan(); 
+    }
+
+    private void GenerateAgentsPlan()
+    {
+          foreach (var agent in agents) {
+              coroutineQueue.Enqueue(backendService.Plan(agent.ID, response =>
+              {
+                  var plan = PlanMapper.Map(response);
+                  agent.AssignPlan(plan);
+              }));
+
+          }
     }
 
     private void Start()
@@ -64,17 +86,7 @@ public class GameManager : MonoBehaviour {
               Debug.Log(response.id);
           }));
 
-          foreach (var agent in agents) {
-              coroutineQueue.Enqueue(backendService.Plan(agent.ID, response =>
-              {
-                  foreach (var node in response.plan)
-                  {
-                      Debug.Log(node.time + " " + node.location);
-                  }
-                  ;
-              }));
 
-          }
         }
 
         agents[0].changeSprite("Other_F_A");
