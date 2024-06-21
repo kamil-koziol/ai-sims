@@ -38,6 +38,7 @@ public class AgentMovement : MonoBehaviour
         agent.updateUpAxis = false;
         
         GameManager.Instance.OnGameStateChange += OnGameStateChange;
+        
         if (!useApi)
         {
             demoStart();
@@ -64,12 +65,10 @@ public class AgentMovement : MonoBehaviour
         if (hit.collider != null)
         {
             currentLocation = hit.collider.gameObject.name;
-            Debug.Log("Agent is in location: " + currentLocation);
         }
         else
         {
             currentLocation = "Pathway";
-            Debug.Log("Agent is at pathway");
         }
     }
     

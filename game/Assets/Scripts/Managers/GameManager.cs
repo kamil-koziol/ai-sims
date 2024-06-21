@@ -6,6 +6,7 @@ using BackendService.dto;
 using DefaultNamespace;
 using Dialog;
 using Dialog.Mappers;
+using Plan.Mappers;
 using UnityEngine;
 
 public enum GameState {
@@ -13,6 +14,8 @@ public enum GameState {
     WAITING_FOR_RESULTS,
     CONVERSATION
 }
+
+[RequireComponent(typeof(TimeManager))]
 public class GameManager : MonoBehaviour {
     // Fields
     public Guid ID;
@@ -34,6 +37,10 @@ public class GameManager : MonoBehaviour {
 
     private BackendService.BackendService backendService;
     
+    private TimeManager timeManager;
+
+    public TimeManager TimeManager => timeManager;
+
     // Events
     public event Action<GameState> OnGameStateChange;
 
@@ -42,6 +49,28 @@ public class GameManager : MonoBehaviour {
         regions = GetComponent<Regions>();
         // backendService = new DefaultBackendService();
         backendService = new MockBackendService();
+        
+        timeManager = GetComponent<TimeManager>();
+        timeManager.OnTimeChanged += TimeManagerOnTimeChanged;
+    }
+
+    private void TimeManagerOnTimeChanged(object sender, TimeChangedEventArgs e)
+    {
+        if (!e.IsNewDay) return;
+        
+        GenerateAgentsPlan(); 
+    }
+
+    private void GenerateAgentsPlan()
+    {
+          foreach (var agent in agents) {
+              coroutineQueue.Enqueue(backendService.Plan(agent.ID, response =>
+              {
+                  var plan = PlanMapper.Map(response);
+                  agent.AssignPlan(plan);
+              }));
+
+          }
     }
 
     private void Start()
@@ -57,17 +86,7 @@ public class GameManager : MonoBehaviour {
               Debug.Log(response.id);
           }));
 
-          foreach (var agent in agents) {
-              coroutineQueue.Enqueue(backendService.Plan(agent.ID, response =>
-              {
-                  foreach (var node in response.plan)
-                  {
-                      Debug.Log(node.time + " " + node.location);
-                  }
-                  ;
-              }));
 
-          }
         }
 
         agents[0].changeSprite("Other_F_A");

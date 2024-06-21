@@ -59,7 +59,9 @@ agent2_conversation = new string[] {"Hi", "I'm fine too", "This is a very long l
             for (int i = STARTING_HOUR; i < END_HOUR; i++)
             {
                 int randomIndex = random.Next(locations.Count);
-                DateTime dateTime = DateTime.Today.AddHours(i);
+                DateTime gameTime = TimeManager.time;
+                DateTime dateTime = new DateTime(gameTime.Year, gameTime.Month, gameTime.Day);
+                dateTime = dateTime.AddHours(i);
                 string formattedTime = dateTime.ToString("MM/dd/yyyy, HH:mm:ss");
                 
                 PlanNode planNode = new PlanNode()

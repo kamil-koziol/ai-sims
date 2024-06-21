@@ -2,27 +2,49 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Plan;
 using Unity.VisualScripting;
 using UnityEngine;
 
-[RequireComponent(typeof(UnityEngine.AI.NavMeshAgent)), Serializable]
+
+[RequireComponent(typeof(UnityEngine.AI.NavMeshAgent), typeof(AgentMovement)), Serializable]
 public class Agent : MonoBehaviour {
     public Guid ID;
-    
-    [SerializeField] private Transform currentMovingTarget;
     private bool update = true;
+    
+    private Queue<PlanTask> plan;
+    private PlanTask currentTask; 
+    
     [SerializeField] private int age;
     [SerializeField] private String description;
     [SerializeField] private String lifestyle;
     [SerializeField] private String agentName;
     [SerializeField] private Sprite sprite;
-    [SerializeField] private PlanEntry[] planForDay;
+
+    private AgentMovement movement;
+
     private void Awake() {
         ID = Guid.NewGuid();
+        plan = new Queue<PlanTask>();
+        movement = GetComponent<AgentMovement>();
     }
 
     private void Start() {
         GameManager.Instance.OnGameStateChange += GameManagerOnOnGameStateChange;
+        GameManager.Instance.TimeManager.OnTimeChanged += OnTimeChanged;
+    }
+
+    private void OnTimeChanged(object sender, TimeChangedEventArgs e)
+    {
+        if(plan.Count == 0) return;
+        bool shouldStartNextTask = e.NewTime > plan.Peek().time;
+        if (!shouldStartNextTask) return;
+
+        currentTask = plan.Dequeue();
+        
+        // TODO: Make so that i can pass location name and it handles it
+        Debug.Log(this.gameObject + " New task: " + currentTask.location);
+        movement.changeDestination(GameManager.Instance.Regions.getRandomTranformFromRegion(currentTask.location));
     }
 
     private void GameManagerOnOnGameStateChange(GameState gameState) {
@@ -31,6 +53,7 @@ public class Agent : MonoBehaviour {
 
     private void OnDestroy() {
         GameManager.Instance.OnGameStateChange -= GameManagerOnOnGameStateChange;
+        GameManager.Instance.TimeManager.OnTimeChanged -= OnTimeChanged;
     }
 
     void Update() {
@@ -40,18 +63,6 @@ public class Agent : MonoBehaviour {
     public String getLocation()
     {
         return "empty";
-    }
-
-    public struct PlanEntry
-    {
-        public String time;
-        public String location;
-    }
-
-    public void assingPlanToAgent(PlanEntry[] newPlan)
-    {
-        planForDay = newPlan;
-        Debug.Log(planForDay);
     }
 
     public void changeSprite(String spriteName)
@@ -96,5 +107,10 @@ public class Agent : MonoBehaviour {
         public String agentLifestyle;
         public AgentMovement.AgentMovementState agentMovementState;
         public Sprite agentSprite;
+    }
+
+    public void AssignPlan(Plan.Plan plan)
+    {
+        this.plan = new Queue<PlanTask>(plan.tasks);
     }
 }
