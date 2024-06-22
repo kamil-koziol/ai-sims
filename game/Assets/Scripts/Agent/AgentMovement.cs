@@ -154,4 +154,9 @@ public class AgentMovement : MonoBehaviour
         public Vector3 agentPosition;
         public String currentTargetPosition;
     }
+
+    public String getLocation()
+    {
+        return currentLocation;
+    }
 }

@@ -56,6 +56,33 @@ public class FieldOfView : MonoBehaviour
         }
         return new Vector2(Mathf.Cos(angleInDegrees * Mathf.Deg2Rad), Mathf.Sin(angleInDegrees * Mathf.Deg2Rad));
     }
+    
+    public Agent GetClosestTarget()
+    {
+        Transform closestTarget = null;
+        float closestDistance = float.MaxValue;
+        foreach (Transform target in visibleTargets)
+        {
+            if (this.gameObject == target.gameObject)
+            {
+                continue;
+            }
+            
+            float distance = Vector2.Distance(transform.position, target.position);
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestTarget = target;
+            }
+        }
+        
+        if (closestTarget != null)
+        {
+            return closestTarget.gameObject.GetComponent<Agent>();
+        }
+        
+        return null;
+    }
 
     void OnDrawGizmos()
     {

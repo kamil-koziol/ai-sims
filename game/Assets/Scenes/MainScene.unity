@@ -240,6 +240,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2013439448391997173, guid: 1f6e15a515e4d4ce68b12f3e73ab9824, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6181978263664495237, guid: 1f6e15a515e4d4ce68b12f3e73ab9824, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -14991,45 +14995,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1774509344523221846, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
-      propertyPath: useApi
-      value: 0
+    - target: {fileID: 5605672821476951975, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
+      propertyPath: maxTimeBetweenConversations
+      value: 30
       objectReference: {fileID: 0}
-    - target: {fileID: 1774509344523221846, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1774509344523221846, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
-      propertyPath: locationLayer.m_Bits
-      value: 64
-      objectReference: {fileID: 0}
-    - target: {fileID: 5277360867836543963, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
-      propertyPath: age
-      value: 54
-      objectReference: {fileID: 0}
-    - target: {fileID: 5277360867836543963, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
-      propertyPath: sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 4893a09b567e84573acac394c92786fc, type: 3}
-    - target: {fileID: 5277360867836543963, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
-      propertyPath: lifestyle
-      value: ziomkoowy
-      objectReference: {fileID: 0}
-    - target: {fileID: 5277360867836543963, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
-      propertyPath: description
-      value: ziomek
+    - target: {fileID: 5605672821476951975, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
+      propertyPath: minTimeBetweenConversations
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8816241443310174770, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
       propertyPath: m_Name
       value: Agent
       objectReference: {fileID: 0}
-    - target: {fileID: 8816241443310174770, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 8816241443310174770, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
-      propertyPath: m_IsActive
-      value: 1
+    - target: {fileID: 8868033562858898059, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
+      propertyPath: viewRadius
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -15612,29 +15592,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5277360867836543963, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
-      propertyPath: age
-      value: 5
+    - target: {fileID: 5605672821476951975, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
+      propertyPath: maxTimeBetweenConversations
+      value: 30
       objectReference: {fileID: 0}
-    - target: {fileID: 5277360867836543963, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
-      propertyPath: agentName
-      value: TestAgent2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5277360867836543963, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
-      propertyPath: lifestyle
-      value: lazy
-      objectReference: {fileID: 0}
-    - target: {fileID: 5277360867836543963, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
-      propertyPath: description
-      value: jakis descriptiom
+    - target: {fileID: 5605672821476951975, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
+      propertyPath: minTimeBetweenConversations
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8816241443310174770, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
       propertyPath: m_Name
       value: Agent2
       objectReference: {fileID: 0}
-    - target: {fileID: 8816241443310174770, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
-      propertyPath: m_Layer
-      value: 9
+    - target: {fileID: 8868033562858898059, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
+      propertyPath: viewRadius
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

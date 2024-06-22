@@ -22,11 +22,13 @@ public class Agent : MonoBehaviour {
     [SerializeField] private Sprite sprite;
 
     private AgentMovement movement;
+    private FieldOfView fov;
 
     private void Awake() {
         ID = Guid.NewGuid();
         plan = new Queue<PlanTask>();
         movement = GetComponent<AgentMovement>();
+        fov = GetComponent<FieldOfView>();
     }
 
     private void Start() {
@@ -62,7 +64,12 @@ public class Agent : MonoBehaviour {
 
     public String getLocation()
     {
-        return "empty";
+        return movement.getLocation();
+    }
+
+    public Guid getId()
+    {
+        return ID;
     }
 
     public void changeSprite(String spriteName)

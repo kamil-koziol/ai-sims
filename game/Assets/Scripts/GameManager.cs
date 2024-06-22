@@ -135,6 +135,11 @@ public class GameManager : MonoBehaviour {
         return agents;
     }
     
+    public BackendService.BackendService getBackendService()
+    {
+        return backendService;
+    }
+    
     public Agent GetAgentById(Guid id) {
         return agents.Find(agent => agent.ID == id);
     }

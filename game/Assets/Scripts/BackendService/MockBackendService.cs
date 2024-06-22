@@ -35,9 +35,8 @@ namespace BackendService
         {
             ConversationResponse conversationResponse = new ConversationResponse()
             {
-agent1_conversation = new string[] {"Hello", "I'm fine how are you", "This is a very long long long long long text"},
-agent2_conversation = new string[] {"Hi", "I'm fine too", "This is a very long long long long long text"}
-
+                agent1_conversation = new string[] {"Hello", "I'm fine how are you", "This is a very long long long long long text"},
+                agent2_conversation = new string[] {"Hi", "I'm fine too", "This is a very long long long long long text"}
             };
             
             cb?.Invoke(conversationResponse);
