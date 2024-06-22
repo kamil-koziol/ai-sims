@@ -8,8 +8,11 @@ public class AgentSelector : MonoBehaviour
     public event Action<Agent> OnHoverLeave;
 
     private Agent hoveredAgent = null;
-    private Agent selectedAgent = null;
+    public Agent HoveredAgent => hoveredAgent;
     
+    private Agent selectedAgent = null;
+    public Agent SelectedAgent => selectedAgent;
+
     [SerializeField] private LayerMask agentLayer;
 
     private void Update()

@@ -15,7 +15,7 @@ public enum GameState {
     CONVERSATION
 }
 
-[RequireComponent(typeof(TimeManager), typeof(AgentSelector))]
+[RequireComponent(typeof(TimeManager), typeof(AgentSelector), typeof(CameraManager))]
 public class GameManager : MonoBehaviour {
     // Fields
     public Guid ID;
@@ -45,6 +45,9 @@ public class GameManager : MonoBehaviour {
 
     public AgentSelector AgentSelector => agentSelector;
 
+    private CameraManager cameraManager;
+    public CameraManager CameraManager => cameraManager;
+
     // Events
     public event Action<GameState> OnGameStateChange;
 
@@ -58,6 +61,7 @@ public class GameManager : MonoBehaviour {
         timeManager.OnTimeChanged += TimeManagerOnTimeChanged;
 
         agentSelector = GetComponent<AgentSelector>();
+        cameraManager = GetComponent<CameraManager>();
     }
 
     private void TimeManagerOnTimeChanged(object sender, TimeChangedEventArgs e)
