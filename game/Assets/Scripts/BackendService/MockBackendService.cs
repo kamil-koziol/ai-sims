@@ -86,7 +86,7 @@ namespace BackendService
             
             AddAgentResponse addAgentResponse = new AddAgentResponse()
             {
-                id = GameManager.Instance.ID.ToString()
+                id = agent.getId().ToString()
             };
             
             cb?.Invoke(addAgentResponse);

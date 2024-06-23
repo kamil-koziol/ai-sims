@@ -97,7 +97,11 @@ public class GameManager : MonoBehaviour {
         {
             agent.ID = Guid.Parse(response.id);
             AddAgentToGame(agent);
-            coroutineQueue.Enqueue(backendService.Plan(agent.getId()));
+            coroutineQueue.Enqueue(backendService.Plan(agent.getId(), response =>
+            {
+                var plan = PlanMapper.Map(response);
+                agent.AssignPlan(plan);
+            }));
         }));
         
     }
