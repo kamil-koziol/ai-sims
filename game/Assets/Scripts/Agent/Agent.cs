@@ -83,6 +83,15 @@ public class Agent : MonoBehaviour {
         sprite = Resources.Load<Sprite>( profilesPath + spriteName);
     }
     
+    public void setFieldsAgent(int age, String description, String lifestyle, String agentName, String spriteName)
+    {
+        this.age = age;
+        this.description = description;
+        this.lifestyle = lifestyle;
+        this.agentName = agentName;
+        changeSprite(spriteName);
+    }
+    
     public AgentState getAgentState()
     {
         // String json = "";

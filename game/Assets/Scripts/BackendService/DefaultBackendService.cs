@@ -138,5 +138,32 @@ namespace BackendService
                 });
         }
 
+        public IEnumerator AddAgent(Agent agent, Action<AddAgentResponse> cb = null)
+        {
+            JObject agentObj = new JObject();
+            var state = agent.getAgentState();
+            
+            agentObj["id"] = state.agentId.ToString();
+            agentObj["name"] = state.agentName;
+            agentObj["age"] = state.agentAge;
+            agentObj["description"] = state.agentDescription;
+            agentObj["lifestyle"] = state.agentLifestyle;
+            AddAgentRequest rq = new AddAgentRequest
+            {
+                game_id = uuid.ToString(),
+                agent = agentObj
+            };
+            
+            return APICall.Call<AddAgentResponse>(
+                URL + "/add_agent",
+                JsonConvert.SerializeObject(
+                    rq,
+                    Formatting.Indented,
+                    new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Ignore}
+                ), contentTypeJson, response => {
+                    if(cb != null) cb(response);
+                });
+        }
+
     }
 }

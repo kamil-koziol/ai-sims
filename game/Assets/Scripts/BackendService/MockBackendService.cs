@@ -21,10 +21,10 @@ namespace BackendService
 
         public IEnumerator Interaction(Guid initalizingAgentId, Guid targetAgentId, Action<InteractionResponse> cb = null)
         {
-            Random rng = new Random();
+            int randomStatus = UnityEngine.Random.Range(1, 5);
             InteractionResponse interactionResponse = new InteractionResponse()
             {
-                status = rng.NextDouble() > 0.5f
+                status = randomStatus == 1
             };
             
             cb?.Invoke(interactionResponse);
@@ -78,6 +78,18 @@ namespace BackendService
             };
 
             cb?.Invoke(planResponse);
+            yield return null;
+        }
+
+        public IEnumerator AddAgent(Agent agent, Action<AddAgentResponse> cb = null)
+        {
+            
+            AddAgentResponse addAgentResponse = new AddAgentResponse()
+            {
+                id = GameManager.Instance.ID.ToString()
+            };
+            
+            cb?.Invoke(addAgentResponse);
             yield return null;
         }
     }

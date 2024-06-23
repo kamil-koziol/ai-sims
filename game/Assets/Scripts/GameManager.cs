@@ -21,7 +21,8 @@ public class GameManager : MonoBehaviour {
     public Guid ID;
     
     [SerializeField] private List<Agent> agents;
-    [SerializeField] private bool useApi = true; 
+    [SerializeField] private bool useApi = true;
+    public GameObject agentPrefab;
     
     public static GameManager Instance;
     private GameState gameState;
@@ -81,6 +82,29 @@ public class GameManager : MonoBehaviour {
               }));
 
           }
+    }
+
+    public void TryAddAgent(int age, String description, String lifestyle, String agentName, String spriteName)
+    {
+        GameObject instance = Instantiate(agentPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        Agent agent = instance.GetComponent<Agent>();
+        if (agent != null)
+        {
+            agent.setFieldsAgent(age, description, lifestyle, agentName, spriteName);
+        }
+        
+        coroutineQueue.Enqueue(backendService.AddAgent(agent, response =>
+        {
+            agent.ID = Guid.Parse(response.id);
+            AddAgentToGame(agent);
+            coroutineQueue.Enqueue(backendService.Plan(agent.getId()));
+        }));
+        
+    }
+    
+    private void AddAgentToGame(Agent agent)
+    {
+        agents.Add(agent);
     }
 
     private void Start()

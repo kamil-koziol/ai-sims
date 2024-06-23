@@ -45,6 +45,19 @@ namespace DefaultNamespace.Agent
         {
 
             if (GameManager.Instance.GameState != GameState.PLAYING) return;
+
+            bool startConversation = false;
+
+            GameManager.Instance.registerCoroutine(
+                GameManager.Instance.getBackendService().Interaction(agent.getId(), closestAgent.getId(),
+                    response =>
+                    {
+                        startConversation = response.status;
+                    })
+            );
+            
+            if (!startConversation) 
+                return;
             
             Debug.Log("Conversation started! Initializing agent: " + agent.getId() + " Target agent: " + closestAgent.getId());
             GameManager.Instance.registerCoroutine(

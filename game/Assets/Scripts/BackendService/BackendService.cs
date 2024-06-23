@@ -8,6 +8,7 @@ namespace BackendService {
         public IEnumerator Game(Action<GameResponse> cb = null);
         public IEnumerator Interaction(Guid initalizingAgentId, Guid targetAgentId, Action<InteractionResponse> cb = null);
         public IEnumerator Conversation(Guid initalizingAgentId, Guid targetAgentId, Action<ConversationResponse> cb = null);
+        public IEnumerator AddAgent(Agent agent, Action<AddAgentResponse> cb = null);
         public IEnumerator Plan(Guid agentId, Action<PlanResponse> cb = null);
     }
 }
