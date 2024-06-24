@@ -15,7 +15,7 @@ namespace BackendService
     public class DefaultBackendService: BackendService {
     
         private Guid uuid;
-        private string URL = "http://127.0.0.1:8080";
+        private string URL = "http://127.0.0.1:80";
         String contentTypeJson = "application/json";
 
 
@@ -53,6 +53,11 @@ namespace BackendService
             var agent = GameManager.Instance.GetAgentById(agentId);
             var location = new JObject();
             location["name"] = agent.getLocation();
+
+            // TODO: This is quick fix kacper fix pls
+            if (agent.getLocation() == null) {
+                location["name"] = "starting_position";
+            }
             PlanRequest rq = new PlanRequest
                 { game_id = uuid.ToString(), agent_id = agent.ID.ToString(), location = location };
 
@@ -155,7 +160,7 @@ namespace BackendService
             };
             
             return APICall.Call<AddAgentResponse>(
-                URL + "/add_agent",
+                URL + "/game/add_agent",
                 JsonConvert.SerializeObject(
                     rq,
                     Formatting.Indented,

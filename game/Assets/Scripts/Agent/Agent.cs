@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 
+
 [RequireComponent(typeof(UnityEngine.AI.NavMeshAgent), typeof(AgentMovement)), Serializable]
 public class Agent : MonoBehaviour {
     public Guid ID;

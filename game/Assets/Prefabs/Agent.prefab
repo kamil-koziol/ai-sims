@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 120
   m_Sprite: {fileID: 1397473784, guid: 5327edb706b164fa0b1cb67007425b8c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -410,7 +410,7 @@ Transform:
   - {fileID: 4782999351303221652}
   - {fileID: 6967441199273689978}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5277360867836543963
 MonoBehaviour:
@@ -561,8 +561,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dacd8ca55d5e4503919dadedf0c2f6ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minTimeBetweenConversations: 5
-  maxTimeBetweenConversations: 10
+  minTimeBetweenConversations: 90
+  maxTimeBetweenConversations: 150
+  cooldownBetweenInteractions: 45
 --- !u!1 &8935033064144177778
 GameObject:
   m_ObjectHideFlags: 0

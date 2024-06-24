@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour {
     
     [SerializeField] private List<Agent> agents;
     [SerializeField] private bool useApi = true;
+    [SerializeField] private bool mock = false;
     public GameObject agentPrefab;
     
     public static GameManager Instance;
@@ -55,8 +56,14 @@ public class GameManager : MonoBehaviour {
     private void Awake() {
         Instance = this;
         regions = GetComponent<Regions>();
-        // backendService = new DefaultBackendService();
-        backendService = new MockBackendService();
+        
+        if (mock) {
+            backendService = new MockBackendService();
+        }
+        else {
+            backendService = new DefaultBackendService();
+        }
+
         
         timeManager = GetComponent<TimeManager>();
         timeManager.OnTimeChanged += TimeManagerOnTimeChanged;
@@ -95,12 +102,13 @@ public class GameManager : MonoBehaviour {
         
         coroutineQueue.Enqueue(backendService.AddAgent(agent, response =>
         {
-            agent.ID = Guid.Parse(response.id);
             AddAgentToGame(agent);
+
             coroutineQueue.Enqueue(backendService.Plan(agent.getId(), response =>
             {
                 var plan = PlanMapper.Map(response);
                 agent.AssignPlan(plan);
+                SetGameState(GameState.PLAYING);
             }));
         }));
         
@@ -139,14 +147,6 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.C)) {
-            coroutineQueue.Enqueue(this.backendService.Conversation(agents[0].ID, agents[1].ID,
-                response =>
-                {
-                    Dialog.Dialog dialog = DialogMapper.Map(agents[0].ID, agents[1].ID, response);
-                    DialogManager.Instance.OpenDialog(dialog);
-                }));
-        }
     }
 
     public void registerCoroutine(IEnumerator coroutine)

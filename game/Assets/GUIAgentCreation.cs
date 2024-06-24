@@ -45,7 +45,7 @@ namespace DefaultNamespace
         }
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.UpArrow))
             {
                 GameManager.Instance.SetGameState(GameState.WAITING_FOR_RESULTS);
                 visual.SetActive(!visual.activeSelf);

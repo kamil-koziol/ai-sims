@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BackendService.dto;
+using UnityEngine;
+using Random = System.Random;
 
 namespace BackendService
 {
@@ -21,6 +23,7 @@ namespace BackendService
 
         public IEnumerator Interaction(Guid initalizingAgentId, Guid targetAgentId, Action<InteractionResponse> cb = null)
         {
+            Debug.Log("MockBackendService: Interaction");
             int randomStatus = UnityEngine.Random.Range(1, 5);
             InteractionResponse interactionResponse = new InteractionResponse()
             {
@@ -86,7 +89,7 @@ namespace BackendService
             
             AddAgentResponse addAgentResponse = new AddAgentResponse()
             {
-                id = agent.getId().ToString()
+                game_id = agent.getId().ToString()
             };
             
             cb?.Invoke(addAgentResponse);

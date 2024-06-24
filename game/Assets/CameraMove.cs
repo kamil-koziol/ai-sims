@@ -8,6 +8,7 @@ public class CameraMove : MonoBehaviour
 
     void Update()
     {
+        if(GameManager.Instance.GameState != GameState.PLAYING) return;
         HandleCameraMovement();        
     }
 

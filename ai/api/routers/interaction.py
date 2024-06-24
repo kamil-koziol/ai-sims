@@ -1,15 +1,18 @@
 import random
+from typing import Any, Dict, List
 from uuid import UUID
+
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from typing import List, Dict, Any
-from game import GameManager
-from ..mappers import LocationMapper
-from object_types import Objects
 
 from agents.memory.stm import STM, STM_attributes
 from api.schemas import Location
 from api.state import State, get_state
+from game import GameManager
+from object_types import Objects
+
+from ..mappers import LocationMapper
+
 
 class InteractionRequest(BaseModel):
     game_id: UUID
@@ -63,14 +66,19 @@ async def create_interaction(
         lifestyle=target_agent.lifestyle,
     )
 
-
     game = GameManager().games[interaction_request.game_id]
     initializing_agent = game.get_agent(initializing_agent.id)
     target_agent = game.get_agent(target_agent.id)
 
-    #TODO: move location to agent schema
-    target_agent.stm.curr_location = LocationMapper.request_to_location(interaction_request.location)
-    initializing_agent.stm.curr_location = LocationMapper.request_to_location(interaction_request.location)
+    # TODO: move location to agent schema
+    target_agent.stm.curr_location = LocationMapper.request_to_location(
+        interaction_request.location
+    )
+    initializing_agent.stm.curr_location = LocationMapper.request_to_location(
+        interaction_request.location
+    )
 
-    status = initializing_agent.should_converse([(Objects.AGENT, target_agent)]) is not None
+    status = (
+        initializing_agent.should_converse([(Objects.AGENT, target_agent)]) is not None
+    )
     return {"status": status}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BackendService.dto;
 using Dialog;
 using Dialog.Mappers;
 using UnityEngine;
@@ -8,10 +9,12 @@ namespace DefaultNamespace.Agent
 {
     public class AgentConversationHandler : MonoBehaviour
     {
-        public float minTimeBetweenConversations = 30.0f;
-        public float maxTimeBetweenConversations = 120.0f;
+        public float minTimeBetweenConversations = 90.0f;
+        public float maxTimeBetweenConversations = 150.0f;
+        public float cooldownBetweenInteractions = 60.0f;
         
         private static Dictionary<Guid, float> agentIdToLastConversationTime = new Dictionary<Guid, float>();
+        private float interactionCooldown = 0.0f; 
         private FieldOfView fieldOfView;
         private global::Agent agent;
 
@@ -21,57 +24,66 @@ namespace DefaultNamespace.Agent
             fieldOfView = GetComponent<FieldOfView>();
         }
 
+        void AddInteractionCooldown() {
+            interactionCooldown = Time.time + cooldownBetweenInteractions;
+        }
+
+        void AddConversationCooldown(global::Agent initializingAgent, global::Agent targetAgent) {
+            
+            agentIdToLastConversationTime[initializingAgent.getId()] = Time.time + UnityEngine.Random.Range(minTimeBetweenConversations, maxTimeBetweenConversations);
+            agentIdToLastConversationTime[targetAgent.getId()] = Time.time + UnityEngine.Random.Range(minTimeBetweenConversations, maxTimeBetweenConversations);
+            Debug.Log("Time: " + Time.time + " Time to next convo: Initializing agent: " + agentIdToLastConversationTime[agent.getId()] + " Target agent: " + agentIdToLastConversationTime[targetAgent.getId()]);
+        }
+
+        void Interact(global::Agent targetAgent, Action<bool> _cb) {
+            GameManager.Instance.registerCoroutine(
+                GameManager.Instance.getBackendService().Interaction(agent.getId(), targetAgent.getId(), cb => {
+                    _cb(cb.status);
+                    AddInteractionCooldown();
+                })
+                );
+        }
+
+        void Converse(global::Agent targetAgent) {
+            Debug.Log("Conversation started! Initializing agent: " + agent.getId() + " Target agent: " + targetAgent.getId());
+            GameManager.Instance.registerCoroutine(
+                GameManager.Instance.getBackendService().Conversation(agent.getId(), targetAgent.getId(),
+                    response =>
+                    {
+                        Dialog.Dialog dialog = DialogMapper.Map(agent.getId(), targetAgent.getId(), response);
+                        DialogManager.Instance.OpenDialog(dialog);
+                        AddConversationCooldown(agent, targetAgent); 
+                    })
+            );
+
+        }
+
         void Update()
         {
 
-            global::Agent closestAgent = fieldOfView.GetClosestTarget();
+            if (GameManager.Instance.GameState != GameState.PLAYING) return;
             
+            global::Agent closestAgent = fieldOfView.GetClosestTarget();
             if (closestAgent == null) return;
 
-            if ( agentIdToLastConversationTime.ContainsKey(agent.getId()) && agentIdToLastConversationTime.ContainsKey(closestAgent.getId()))
-            {
-                if (Time.time >= agentIdToLastConversationTime[agent.getId()])
-                {
-                    handleConversation(closestAgent);
-                }
+            bool canInteract = Time.time > interactionCooldown;
+            if(!canInteract) return;
+
+            bool canStartConversation = false;
+            if (agentIdToLastConversationTime.ContainsKey(closestAgent.getId())) {
+                canStartConversation = Time.time >= agentIdToLastConversationTime[closestAgent.getId()];
             }
-            else
-            {
-                handleConversation(closestAgent);
+            else {
+                canStartConversation = true;
             }
-        }
-
-        private void handleConversation(global::Agent closestAgent)
-        {
-
-            if (GameManager.Instance.GameState != GameState.PLAYING) return;
-
-            bool startConversation = false;
-
-            GameManager.Instance.registerCoroutine(
-                GameManager.Instance.getBackendService().Interaction(agent.getId(), closestAgent.getId(),
-                    response =>
-                    {
-                        startConversation = response.status;
-                    })
-            );
             
-            if (!startConversation) 
-                return;
-            
-            Debug.Log("Conversation started! Initializing agent: " + agent.getId() + " Target agent: " + closestAgent.getId());
-            GameManager.Instance.registerCoroutine(
-                GameManager.Instance.getBackendService().Conversation(agent.getId(), closestAgent.getId(),
-                    response =>
-                    {
-                        Dialog.Dialog dialog = DialogMapper.Map(agent.getId(), closestAgent.getId(), response);
-                        DialogManager.Instance.OpenDialog(dialog);
-                    })
-            );
-            agentIdToLastConversationTime[agent.getId()] = Time.time + UnityEngine.Random.Range(minTimeBetweenConversations, maxTimeBetweenConversations);
-            agentIdToLastConversationTime[closestAgent.getId()] = Time.time + UnityEngine.Random.Range(minTimeBetweenConversations, maxTimeBetweenConversations);
-            
-            Debug.Log("Time: " + Time.time + " Time to next convo: Initializing agent: " + agentIdToLastConversationTime[agent.getId()] + " Target agent: " + agentIdToLastConversationTime[closestAgent.getId()]);
+            if(!canStartConversation) return;
+           
+            Interact(closestAgent, shouldInteract => {
+                if(!shouldInteract) return;
+                
+                Converse(closestAgent);
+            });
         }
     }
 }
