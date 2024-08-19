@@ -1,6 +1,7 @@
 from __future__ import annotations
-import config
+from utils import Logger
 from typing import List, TYPE_CHECKING
+import config
 import config.agent
 from llm_model import ModelService
 from agents.memory import MemoryNode
@@ -23,13 +24,13 @@ def retrieve_relevant_memories(agent: Agent, perceived: str) -> List[MemoryNode]
     Returns:
         List[MemoryNode]: List of relevant memories.
     """
-    nodes_to_retrieve: int = config.NUMBER_OF_NODES_TO_RETRIEVE
+    nodes_to_retrieve: int = config.agent.NUMBER_OF_NODES_TO_RETRIEVE
     score_list: List[dict] = []
     for node in agent.memory_stream.nodes:
         score_list.append(
             {
                 'id': node.id,
-                 'score': _calculate_overall_compare_score(node, perceived)
+                'score': _calculate_overall_compare_score(node, perceived)
             }
         )
     score_list = sorted(score_list, key=lambda x: x['score'])
@@ -51,6 +52,7 @@ def get_string_memories(agent: Agent, subject: str) -> str:
     """
     retrieved_nodes = retrieve_relevant_memories(agent, subject)
     memories = '\n'.join(node.attributes.description for node in retrieved_nodes)
+    Logger.info(f"{agent.stm.name}'s retrieved memories: {memories}")
     return memories
 
 

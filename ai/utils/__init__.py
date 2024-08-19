@@ -1,1 +1,1 @@
-from .utils import Singleton, WorldTime
+from .utils import Singleton, WorldTime, Logger

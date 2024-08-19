@@ -1,9 +1,16 @@
+from typing import List
 from dataclasses import asdict, is_dataclass
-import re
-from typing import List, TYPE_CHECKING
-from llm_model.model import GenerationModel, EmbeddingModel, MockedEmbeddingModel, MockedGenerationModel
-from utils import Singleton
 import os
+import config
+import config.model
+from llm_model.model import (
+    GenerationModel,
+    EmbeddingModel,
+    MockedEmbeddingModel,
+    MockedGenerationModel
+)
+from utils import Singleton
+
 
 class ModelService(metaclass=Singleton):
     """
@@ -11,15 +18,12 @@ class ModelService(metaclass=Singleton):
     """
     def __init__(self) -> None:
         self._MOCKED = False
-        _EMBEDDING_URL = 'http://localhost:8888/embed'
-        _GENERATION_URL = 'http://localhost:8888/generate'
         if self._MOCKED:
             self._generation_model = MockedGenerationModel('')
             self._embedding_model = MockedEmbeddingModel('')
         else:
-            self._generation_model = GenerationModel(_GENERATION_URL)
-            self._embedding_model = EmbeddingModel(_EMBEDDING_URL)
-
+            self._generation_model = GenerationModel(config.model.GENERATION_URL)
+            self._embedding_model = EmbeddingModel(config.model.EMBEDDING_URL)
 
     def get_embeddings(self, text: str) -> List[float]:
         """
@@ -40,7 +44,7 @@ class ModelService(metaclass=Singleton):
         curr_dir = os.path.dirname(__file__)
         file_path = os.path.join(curr_dir, '..', 'templates', prompt_file_name)
 
-        with open(file_path, "r") as f:
+        with open(file_path, "r", encoding='utf-8') as f:
             prompt = f.read()
 
         if "<commentblockmarker>###</commentblockmarker>" in prompt:
@@ -68,4 +72,7 @@ class ModelService(metaclass=Singleton):
 
     @property
     def mocked(self) -> bool:
+        """
+        Is model service using mocked models.
+        """
         return self._MOCKED

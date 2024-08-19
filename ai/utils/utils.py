@@ -1,4 +1,8 @@
 from datetime import datetime, timedelta
+import config
+import logging
+
+import config.general
 
 class Singleton(type):
     _instances = {}
@@ -41,3 +45,8 @@ class WorldTime(metaclass=Singleton):
         """
         self._current_time = self._current_time + timedelta(hours=1)
         return self._current_time
+
+"""
+Global logger
+"""
+Logger = logging.getLogger(config.general.LOGGER_NAME)
