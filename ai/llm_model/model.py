@@ -1,7 +1,7 @@
 import json
+import logging
 import requests
 import numpy
-from utils import Logger
 from .model_response import GenerationResponse, EmbedResponse
 
 
@@ -26,7 +26,7 @@ class GenerationModel:
         body = json.dumps(body)
         response = requests.post(self.url, data=body, timeout=50)
         generation_response = GenerationResponse(**(json.loads(response.text)))
-        Logger.info("Prompt sent to model: \n %s", prompt)
+        logging.info("Prompt sent to model: \n  %s", prompt)
         return generation_response
 
 

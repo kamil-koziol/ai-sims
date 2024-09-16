@@ -15,7 +15,7 @@ def agent():
         name='John Smith',
         description="John's description",
         age=27,
-        curr_location='cafe',
+        curr_location=Location('cafe'),
         lifestyle='active'
     )
     agent = Agent(stm)
@@ -41,6 +41,6 @@ Plan for today:
 5. Return home at 4:00 pm
 """
         mocker.patch.object(ModelService, 'generate_text', return_value=response_text)
-    plan = create_daily_plan(agent=agent, list_of_places=list_of_places)
-    print(plan)
-    assert len(plan) > 0
+
+    agent.plan(locations=list_of_places)
+    assert len(agent.stm.daily_plan) > 0

@@ -1,6 +1,6 @@
 from __future__ import annotations
-from utils import Logger
 from typing import List, TYPE_CHECKING
+import logging
 import config
 import config.agent
 from llm_model import ModelService
@@ -52,7 +52,7 @@ def get_string_memories(agent: Agent, subject: str) -> str:
     """
     retrieved_nodes = retrieve_relevant_memories(agent, subject)
     memories = '\n'.join(node.attributes.description for node in retrieved_nodes)
-    Logger.info(f"{agent.stm.name}'s retrieved memories: {memories}")
+    logging.info(f"{agent.stm.name}'s retrieved memories: {memories}")
     return memories
 
 

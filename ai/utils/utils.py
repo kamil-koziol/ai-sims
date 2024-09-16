@@ -1,8 +1,6 @@
 from datetime import datetime, timedelta
-import config
 import logging
-
-import config.general
+from typing_extensions import Literal
 
 class Singleton(type):
     _instances = {}
@@ -46,7 +44,15 @@ class WorldTime(metaclass=Singleton):
         self._current_time = self._current_time + timedelta(hours=1)
         return self._current_time
 
-"""
-Global logger
-"""
-Logger = logging.getLogger(config.general.LOGGER_NAME)
+
+formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+def setup_logger(name: str, log_file: str, level=logging.INFO) -> logging.Logger:
+
+    handler = logging.FileHandler(f'logs/{log_file}')        
+    handler.setFormatter(formatter)
+
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    logger.addHandler(handler)
+
+    return logger

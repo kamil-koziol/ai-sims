@@ -36,12 +36,13 @@ class STM_attributes:
     """
     Name of current place where agent is currently standing.
     """
-    curr_location: str
+    curr_location: Location
 
     """
     General preferences of the agent for spending a day.
     """
     lifestyle: str
+
 class Action(Enum):
     """
     Enum for describing agent's current state.
@@ -80,6 +81,16 @@ class STM:
         self._action: Action = Action.NOTHING
         self._curr_time: datetime = datetime.now()
         self._daily_plan: List[PlanNode] = []
+
+    def __str__(self) -> str:
+        return f"""
+        id: {str(self.id)},
+        name: {self.name},
+        description: {self.description},
+        lifestyle: {self._life_style},
+        age: {self.age},
+        location: {self.curr_location.name}
+        """
 
     def get_short_description(self):
         short_description = ''

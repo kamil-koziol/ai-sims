@@ -16,7 +16,6 @@ from agents.actions import (
     generate_conversation_summary
 )
 
-
 @pytest.fixture
 def init_agent():
     stm = STM_attributes(UUID('{12345678-1234-5678-1234-567812345678}'),
