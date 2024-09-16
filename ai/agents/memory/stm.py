@@ -17,7 +17,7 @@ class STM_attributes:
     Id of the agent.
     """
     id: UUID
-    
+
     """
     Name of the agent. If name contains a space (' '). Name is splitted into first and last name.
     """
@@ -43,10 +43,12 @@ class STM_attributes:
     """
     lifestyle: str
 
+
 class Action(Enum):
     """
     Enum for describing agent's current state.
     """
+
     NOTHING = "doing nothing"
     WALKING = "walking"
     CONVERSING = "conversing"
@@ -56,6 +58,7 @@ class STM:
     """
     Short term memory. Memory used for storing recent actions of agent, name, last name and other basic information.
     """
+
     def __init__(self, init_parameters: STM_attributes):
         """
         Create short memory object.
@@ -66,9 +69,9 @@ class STM:
 
         self._id: UUID = init_parameters.id
         self._name: str = init_parameters.name
-        if ' ' in init_parameters.name:
-            self._first_name: str = init_parameters.name.split(' ')[0]
-            self._last_name: str = init_parameters.name.split(' ')[1]
+        if " " in init_parameters.name:
+            self._first_name: str = init_parameters.name.split(" ")[0]
+            self._last_name: str = init_parameters.name.split(" ")[1]
         self._description: str = init_parameters.description
         self._life_style: str = init_parameters.lifestyle
         self._age: int = init_parameters.age
@@ -93,10 +96,10 @@ class STM:
         """
 
     def get_short_description(self):
-        short_description = ''
-        short_description += f'Name: {self.name}'
-        short_description += f'Age: {self.age}'
-        short_description += f'Currently: {self.action.value}'
+        short_description = ""
+        short_description += f"Name: {self.name}"
+        short_description += f"Age: {self.age}"
+        short_description += f"Currently: {self.action.value}"
 
         return short_description
 
@@ -119,9 +122,9 @@ class STM:
     @name.setter
     def name(self, value: str):
         self._name = value
-        if ' ' in value:
-            self._first_name = value.split(' ')[0]
-            self._last_name = value.split(' ')[1]
+        if " " in value:
+            self._first_name = value.split(" ")[0]
+            self._last_name = value.split(" ")[1]
 
     @property
     def description(self):
@@ -148,7 +151,7 @@ class STM:
         return self._curr_location
 
     @curr_location.setter
-    def curr_location(self, value: str):
+    def curr_location(self, value: Location):
         self._curr_location = value
 
     @property

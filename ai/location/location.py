@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class Location:
     def __str__(self) -> str:
