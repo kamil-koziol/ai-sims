@@ -48,7 +48,7 @@ class WorldTime(metaclass=Singleton):
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 def setup_logger(name: str, log_file: str, level=logging.INFO) -> logging.Logger:
 
-    handler = logging.FileHandler(f'logs/{log_file}')        
+    handler = logging.FileHandler(f'logs/{log_file}')
     handler.setFormatter(formatter)
 
     logger = logging.getLogger(name)
