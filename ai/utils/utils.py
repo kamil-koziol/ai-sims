@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 import logging
+from typing import Dict, List
+from uuid import UUID
 from typing_extensions import Literal
 
 
@@ -59,3 +61,6 @@ def setup_logger(
     logger.addHandler(handler)
 
     return logger
+
+def pretty_format_dialogs(conversation: Dict[UUID, List]) -> str:
+    logging.error("%s", str(conversation))

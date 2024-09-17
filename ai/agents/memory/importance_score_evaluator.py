@@ -1,5 +1,5 @@
 from __future__ import annotations
-import config
+from config.agent import DEFAULT_IMPORTANCE_SCORE
 from typing import TYPE_CHECKING
 from utils import Singleton
 from dataclasses import dataclass
@@ -25,7 +25,7 @@ class ImportanceEvaluator(metaclass=Singleton):
     Singleton. Handles importance evaluation.
     """
     def __init__(self) -> None:
-        self._default_value = config.DEFAULT_IMPORTANCE_SCORE
+        self._default_value = DEFAULT_IMPORTANCE_SCORE
 
     def calculate_importance_score(self, agent: Agent, memory_description: str, memory_type: MemoryType) -> int:
         """

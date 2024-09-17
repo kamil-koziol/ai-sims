@@ -87,12 +87,12 @@ class STM:
 
     def __str__(self) -> str:
         return f"""
-        id: {str(self.id)},
-        name: {self.name},
-        description: {self.description},
-        lifestyle: {self._life_style},
-        age: {self.age},
-        location: {self.curr_location.name}
+id: {str(self.id)},
+name: {self.name},
+description: {self.description},
+lifestyle: {self._life_style},
+age: {self.age},
+location: {self.curr_location.name}
         """
 
     def get_short_description(self):
