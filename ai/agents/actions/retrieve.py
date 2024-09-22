@@ -4,7 +4,7 @@ import logging
 import config
 import config.agent
 from llm_model import ModelService
-from agents.memory import MemoryNode
+from memory import MemoryNode
 from datetime import datetime
 from numpy import dot
 from numpy.linalg import norm

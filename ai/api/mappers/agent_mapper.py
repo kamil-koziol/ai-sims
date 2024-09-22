@@ -1,6 +1,7 @@
 from utils import Singleton
 from api import Agent as ApiAgent
-from agents import Agent, STM_attributes
+from agents import Agent
+from memory import STM_attributes
 
 class AgentMapper():
     def request_to_agent(api_agent: ApiAgent) -> Agent:

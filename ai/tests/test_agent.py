@@ -1,5 +1,5 @@
 from agents import Agent
-from agents.memory import STM_attributes, MemoryNodeFactory
+from memory import STM_attributes
 from object_types import Objects
 from llm_model import ModelService
 import pytest

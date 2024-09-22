@@ -15,18 +15,31 @@ class MockInputVariables:
     init_agent_memories: str
     target_agent_memories: str
 
+
 @pytest.fixture
 def model_service():
     # Creating a fixture to instantiate ModelService for testing
     return ModelService()
 
+
 class TestModelService:
     def test_prepare_prompt(self):
-        input_variables = ["name1", "name2", "description1", "description2", "doing nothing",
-                           "conversing", "cafe", "memories1", "memories2"]
+        input_variables = [
+            "name1",
+            "name2",
+            "description1",
+            "description2",
+            "doing nothing",
+            "conversing",
+            "cafe",
+            "memories1",
+            "memories2",
+        ]
         prompt_file_name = "create_conversation.txt"
 
-        prompt = ModelService().prepare_prompt(input_variables, prompt_file_name)
+        prompt = ModelService().prepare_prompt(
+            input_variables, prompt_file_name
+        )
         print(prompt)
 
         assert "name1" in prompt
@@ -44,7 +57,9 @@ class TestModelService:
         def mock_generate_text(prompt):
             return GenerationResponse(generated_text="Mocked response")
 
-        monkeypatch.setattr(model_service._generation_model, 'generate_text', mock_generate_text)
+        monkeypatch.setattr(
+            model_service._generation_model, "generate_text", mock_generate_text
+        )
 
         # Creating a mock input dataclass
         input_variables = MockInputVariables(
@@ -56,7 +71,7 @@ class TestModelService:
             target_agent_action="conversing",
             location="cafe",
             init_agent_memories="memories1",
-            target_agent_memories="memories2"
+            target_agent_memories="memories2",
         )
         prompt_file_name = "create_conversation.txt"
 

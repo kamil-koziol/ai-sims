@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Dict, List
 from dataclasses import dataclass
 from uuid import UUID
-from agents.memory import Action, MemoryNodeFactory
+from memory import Action, MemoryNodeFactory
 from agents.actions.retrieve import get_string_memories
 from llm_model import ModelService
 from utils import WorldTime

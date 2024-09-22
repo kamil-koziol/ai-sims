@@ -1,5 +1,5 @@
 from __future__ import annotations
-from agents.memory import MemoryNode, MemoryNodeAttributes
+from memory import MemoryNode, MemoryNodeAttributes
 from .memory_type import MemoryType
 from .importance_score_evaluator import ImportanceEvaluator
 from llm_model import ModelService
