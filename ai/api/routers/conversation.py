@@ -6,7 +6,7 @@ from typing import List, Dict
 from api.schemas import Location
 from api.state import State, get_state
 
-from agents.memory.stm import STM, STM_attributes
+from memory.stm import STM, STM_attributes
 from game import GameManager, Game
 from ..mappers import LocationMapper
 

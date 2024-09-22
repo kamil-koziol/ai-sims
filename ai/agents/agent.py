@@ -18,10 +18,9 @@ from agents.actions import (
     execute,
     reflect,
 )
-from agents.memory import STM, STM_attributes, MemoryStream
+from memory import STM, STM_attributes, MemoryStream, PlanNode
 from object_types import Objects
 from location import Location
-from agents.memory import PlanNode
 from utils import setup_logger
 from utils.utils import pretty_format_dialogs
 

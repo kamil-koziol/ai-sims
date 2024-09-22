@@ -7,7 +7,7 @@ from game import GameManager
 from ..mappers import LocationMapper
 from object_types import Objects
 
-from agents.memory.stm import STM, STM_attributes
+from memory.stm import STM, STM_attributes
 from api.schemas import Location
 from api.state import State, get_state
 

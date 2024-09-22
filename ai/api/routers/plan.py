@@ -46,7 +46,7 @@ async def get_plan(
         name=agent.name,
         description=agent.description,
         age=agent.age,
-        curr_location=plan_request.location.name,
+        curr_location=plan_request.location,
         lifestyle=agent.lifestyle,
     )
 

@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from utils import WorldTime
 from llm_model import ModelService
 from datetime import datetime
-from agents.memory import PlanNode
+from memory import PlanNode
 from location import Location
 import re
 
