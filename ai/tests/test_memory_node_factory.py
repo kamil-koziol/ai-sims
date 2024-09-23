@@ -2,6 +2,7 @@ import pytest
 from memory import MemoryNodeFactory, STM_attributes
 from agents import Agent
 from uuid import UUID
+from location import Location
 
 
 @pytest.fixture
@@ -12,7 +13,7 @@ def init_agent():
         name="John Smith",
         description="John's description",
         age=27,
-        curr_location="cafe",
+        curr_location=Location("cafe"),
         lifestyle="active",
     )
     agent = Agent(stm)
