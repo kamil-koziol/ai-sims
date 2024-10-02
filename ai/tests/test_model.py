@@ -1,6 +1,4 @@
-from typing import List
 from llm_model import MockedEmbeddingModel, MockedGenerationModel, GenerationModel, EmbeddingModel, EmbedResponse, GenerationResponse
-import requests
 
 
 class TestModel:

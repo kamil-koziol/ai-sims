@@ -3,15 +3,15 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
+from typing import List
 
-from agents.memory import STM
-from agents.memory import PlanNode as OriginalPlanNode
-from agents.memory import STM_attributes
 from api.schemas import Location
 from api.state import State, get_state
 from game import GameManager
 
 from ..mappers import LocationMapper
+
+from memory import STM, STM_attributes
 
 
 class PlanRequest(BaseModel):
@@ -33,7 +33,9 @@ router = APIRouter()
 
 
 @router.post("/", response_model=PlanResponse)
-async def get_plan(plan_request: PlanRequest, state: State = Depends(get_state)):
+async def get_plan(
+    plan_request: PlanRequest, state: State = Depends(get_state)
+):
     game = state.games.get(plan_request.game_id)
     if not game:
         raise HTTPException(status_code=404, detail="Game not found")
@@ -47,7 +49,7 @@ async def get_plan(plan_request: PlanRequest, state: State = Depends(get_state))
         name=agent.name,
         description=agent.description,
         age=agent.age,
-        curr_location=plan_request.location.name,
+        curr_location=plan_request.location,
         lifestyle=agent.lifestyle,
     )
 
@@ -57,7 +59,9 @@ async def get_plan(plan_request: PlanRequest, state: State = Depends(get_state))
     agent = game.get_agent(agent.id)
 
     # TODO: move location to agent schema
-    agent.stm.curr_location = LocationMapper.request_to_location(plan_request.location)
+    agent.stm.curr_location = LocationMapper.request_to_location(
+        plan_request.location
+    )
 
     plan = agent.plan(game.locations)
     plan = [

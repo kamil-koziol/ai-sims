@@ -1,23 +1,41 @@
 from __future__ import annotations
 import os
-import sys
 from uuid import UUID
 import dill
-from typing import Dict, List, Tuple, Any, TYPE_CHECKING
-from agents.actions import retrieve_relevant_memories, converse, execute, reflect, create_daily_plan
-from agents.actions import plan, retrieve_relevant_memories, converse, decide_to_converse, execute, reflect
-from agents.memory import STM, STM_attributes, MemoryStream
+from typing import Dict, List, Tuple, Any
+from agents.actions import (
+    retrieve_relevant_memories,
+    converse,
+    execute,
+    reflect,
+    create_daily_plan,
+)
+from agents.actions import (
+    plan,
+    retrieve_relevant_memories,
+    converse,
+    decide_to_converse,
+    execute,
+    reflect,
+)
+from memory import STM, STM_attributes, MemoryStream, PlanNode
 from object_types import Objects
 from location import Location
-from agents.memory import PlanNode
+from utils import setup_logger
+from utils.utils import pretty_format_dialogs
 
 
-
-class Agent: 
+class Agent:
     """
     A class used to represent an Agent
     """
-    def __init__(self, init_parameters: STM_attributes = None, save_file: str = None, load_file: str = None) -> None:
+
+    def __init__(
+        self,
+        init_parameters: STM_attributes = None,
+        save_file: str = None,
+        load_file: str = None,
+    ) -> None:
         """
         Initialize an agent.
         To create new agent provide only init_parameters and save_file.
@@ -29,17 +47,10 @@ class Agent:
             load_file (str): Name of the file which agent should be loaded from.
         """
 
-        # if load_file is not None:
-        #     curr_dir = os.path.dirname(__file__)
-        #     file_path = os.path.join(curr_dir, '..', 'storage', load_file)
-        #     with open(file_path, 'rb') as f:
-        #         saved_data = dill.load(f)
-        #         self.__dict__.update(saved_data.__dict__)
-        #     return
-
-        # if init_parameters is None or save_file is None:
-        #     print('STM parameters and/or Save_file are not provided. Agent not initialized properly.', file=sys.stderr)
-        #     return
+        self.logger = setup_logger(
+            init_parameters.name,
+            f'{init_parameters.name.lower().replace(" ", "_")}_logs.logs',
+        )
 
         self.stm = STM(init_parameters)
         """
@@ -51,7 +62,7 @@ class Agent:
         A long term memory for storing agent's memories.
         """
 
-        # self.save_file = save_file
+        self.logger.info("Created agent with parameters: \n %s", str(self.stm))
 
     def reflect(self):
         pass
@@ -61,6 +72,7 @@ class Agent:
         Create plan for the current day for the agent. List of places is fixed.
         """
         plan = create_daily_plan(self, locations)
+        self.logger.info("Created daily plan: \n %s", str(plan))
         self.stm.daily_plan = plan
         return plan
 
@@ -83,9 +95,14 @@ class Agent:
         Args:
             target_agent (Agent): Agent to converse with.
         """
-        return converse(self, target_agent)
+        conversation = converse(self, target_agent)
+        pretty_formated = pretty_format_dialogs(conversation)
+        self.logger.info("Started conversation with %s: \n %s".format(target_agent.stm.name, '\n'.join(conversation)))
+        return conversation
 
-    def should_converse(self, objects: list[Tuple[Objects, Any]]) -> Agent | bool:
+    def should_converse(
+        self, objects: list[Tuple[Objects, Any]]
+    ) -> Agent | bool:
         """
         Check if the agent should converse with someone.
 
@@ -95,7 +112,7 @@ class Agent:
         Returns:
             the agent to converse with if the conversation should be started, False if not
         """
-        for (object_type, agent_or_object) in objects:
+        for object_type, agent_or_object in objects:
             if object_type == Objects.AGENT:
                 if decide_to_converse(self, agent_or_object):
                     return agent_or_object
@@ -112,10 +129,10 @@ class Agent:
         Save the agent state to the file.
         """
         curr_dir = os.path.dirname(__file__)
-        storage_dir = os.path.join(curr_dir, '..', 'storage')
+        storage_dir = os.path.join(curr_dir, "..", "storage")
         if not os.path.exists(storage_dir):
             os.makedirs(storage_dir)
 
         file_path = os.path.join(storage_dir, self.save_file)
-        with open(file_path, 'wb') as f:
+        with open(file_path, "wb") as f:
             dill.dump(self, f)

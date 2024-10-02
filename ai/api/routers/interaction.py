@@ -5,7 +5,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
-from agents.memory.stm import STM, STM_attributes
+from memory.stm import STM, STM_attributes
 from api.schemas import Location
 from api.state import State, get_state
 from game import GameManager

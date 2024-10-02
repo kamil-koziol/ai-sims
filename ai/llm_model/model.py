@@ -1,8 +1,8 @@
-from typing import List
-from .model_response import *
-import requests
 import json
+import logging
+import requests
 import numpy
+from .model_response import GenerationResponse, EmbedResponse
 
 
 class GenerationModel:
@@ -12,7 +12,7 @@ class GenerationModel:
     def __init__(self, url) -> None:
         self.url = url
 
-    def generate_text(self, prompt: str) -> str:
+    def generate_text(self, prompt: str) -> GenerationResponse:
         """
         Generate response from model based on prompt.
 
@@ -24,8 +24,9 @@ class GenerationModel:
         """
         body = {"prompt": prompt}
         body = json.dumps(body)
-        response = requests.post(self.url, data=body)
+        response = requests.post(self.url, data=body, timeout=50)
         generation_response = GenerationResponse(**(json.loads(response.text)))
+        logging.info("Prompt sent to model: \n  %s", prompt)
         return generation_response
 
 
@@ -33,10 +34,7 @@ class MockedGenerationModel(GenerationModel):
     """
     Mocked generation model.
     """
-    def __init__(self, url):
-        super().__init__(url)
-
-    def generate_text(self, prompt: str) -> str:
+    def generate_text(self, prompt: str) -> GenerationResponse:
         """
         Mocked generate text method.
 
@@ -69,16 +67,25 @@ class EmbeddingModel:
         """
         body = {"sentence": text}
         body = json.dumps(body)
-        response = requests.post(self.url, data=body)
+        response = requests.post(self.url, data=body, timeout=50)
         embed_response = EmbedResponse(**(json.loads(response.text)))
         return embed_response
 
 
 class MockedEmbeddingModel(EmbeddingModel):
-    def __init__(self, url):
-        super().__init__(url)
+    """
+    Backend class for mocked model creating embeddings of text.
+    """
+    def embed(self, text: str) -> EmbedResponse:
+        """
+        Create mocked embeddings of text.
 
-    def embed(self, text: str) -> List[float]:
+        Args:
+            text (str): Text to embed.
+
+        Returns:
+            List[float]: Embedding
+        """
         response = EmbedResponse(
             sentences=f'Some mocked embedding sentence for {text}',
             embedding=numpy.random.rand(100).tolist(),

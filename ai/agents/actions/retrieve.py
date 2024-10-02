@@ -1,12 +1,16 @@
 from __future__ import annotations
-
+from typing import List, TYPE_CHECKING
+import logging
+import config
+import config.agent
+from llm_model import ModelService
+from memory import MemoryNode
 from datetime import datetime
 from typing import TYPE_CHECKING, List
 
 from numpy import dot
 from numpy.linalg import norm
 
-from agents.memory import MemoryNode
 from llm_model import ModelService
 
 if TYPE_CHECKING:
@@ -24,11 +28,14 @@ def retrieve_relevant_memories(agent: Agent, perceived: str) -> List[MemoryNode]
     Returns:
         List[MemoryNode]: List of relevant memories.
     """
-    nodes_to_retrieve: int = 5
+    nodes_to_retrieve: int = config.agent.NUMBER_OF_NODES_TO_RETRIEVE
     score_list: List[dict] = []
     for node in agent.memory_stream.nodes:
         score_list.append(
-            {"id": node.id, "score": _calculate_overall_compare_score(node, perceived)}
+            {
+                'id': node.id,
+                'score': _calculate_overall_compare_score(node, perceived)
+            }
         )
     score_list = sorted(score_list, key=lambda x: x["score"])
     top_nodes_ids = score_list[:nodes_to_retrieve]
@@ -48,7 +55,8 @@ def get_string_memories(agent: Agent, subject: str) -> str:
         str: String representation of memories.
     """
     retrieved_nodes = retrieve_relevant_memories(agent, subject)
-    memories = "\n".join(node.attributes.description for node in retrieved_nodes)
+    memories = '\n'.join(node.attributes.description for node in retrieved_nodes)
+    logging.info(f"{agent.stm.name}'s retrieved memories: {memories}")
     return memories
 
 
@@ -64,7 +72,11 @@ def _calculate_overall_compare_score(node: MemoryNode, perceived: str) -> float:
     Returns:
         float: Score of overall relevancy.
     """
-    weights = [1, 1, 1]
+    weights = [
+        config.agent.RELEVANCE_WEIGHT,
+        config.agent.IMPORTANCE_WEIGHT,
+        config.agent.RELEVANCE_WEIGHT
+    ]
     date_to_compere = datetime.now()
 
     relevance_score = weights[0] * _calculate_relevance_score(node, perceived)
@@ -88,7 +100,7 @@ def _calculate_relevance_score(node: MemoryNode, perceived: str) -> float:
     Returns:
         float: relevance score
     """
-    MAX_SCORE = 10
+    MAX_SCORE = config.agent.RELEVANCE_MAX_SCORE
     description_embeddings = ModelService().get_embeddings(text=perceived)
     similarity = _cos_sim(node.attributes.embeddings, description_embeddings)
     score = MAX_SCORE * similarity
@@ -107,8 +119,8 @@ def _calculate_recency_score(node: MemoryNode, date_to_compere: datetime) -> flo
         float: recency score
     """
     SECS_IN_HOUR = 3600
-    MAX_SCORE = 10
-    DECAY_FACTOR = 0.99
+    MAX_SCORE = config.agent.RECENCY_MAX_SCORE
+    DECAY_FACTOR = config.agent.RECENCY_DECAY_FACTOR
     diff = abs(node.attributes.created - date_to_compere)
     diff_in_hours = diff.total_seconds() / SECS_IN_HOUR
     score = MAX_SCORE * DECAY_FACTOR**diff_in_hours

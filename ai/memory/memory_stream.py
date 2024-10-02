@@ -1,5 +1,5 @@
 from typing import List
-from agents.memory import MemoryNode
+from memory import MemoryNode
 
 
 class MemoryStream:

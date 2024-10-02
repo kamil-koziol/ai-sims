@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import List, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from agents.memory import MemoryType
+    from memory import MemoryType
 
 """
 Single memory node.
