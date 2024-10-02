@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BackendService.dto;
+using UnityEngine;
+using Random = System.Random;
 
 namespace BackendService
 {
@@ -21,6 +23,7 @@ namespace BackendService
 
         public IEnumerator Interaction(Guid initalizingAgentId, Guid targetAgentId, Action<InteractionResponse> cb = null)
         {
+            Debug.Log("MockBackendService: Interaction");
             int randomStatus = UnityEngine.Random.Range(1, 5);
             InteractionResponse interactionResponse = new InteractionResponse()
             {
@@ -35,7 +38,7 @@ namespace BackendService
         {
             ConversationResponse conversationResponse = new ConversationResponse()
             {
-                agent1_conversation = new string[] {"Hello", "I'm fine how are you", "This is a very long long long long long text"},
+                agent1_conversation = new string[] {"Hello", "I'm fine how are you", "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."},
                 agent2_conversation = new string[] {"Hi", "I'm fine too", "This is a very long long long long long text"}
             };
             
@@ -86,7 +89,7 @@ namespace BackendService
             
             AddAgentResponse addAgentResponse = new AddAgentResponse()
             {
-                id = agent.getId().ToString()
+                game_id = agent.getId().ToString()
             };
             
             cb?.Invoke(addAgentResponse);

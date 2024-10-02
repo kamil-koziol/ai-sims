@@ -11,6 +11,6 @@ namespace BackendService.dto
     
     public struct AddAgentResponse
     {
-        public String id;
+        public String game_id;
     }
 }

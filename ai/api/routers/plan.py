@@ -1,11 +1,17 @@
+from typing import Any, Dict, List
 from uuid import UUID
+
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from typing import List
 
+from agents.memory import STM
+from agents.memory import PlanNode as OriginalPlanNode
+from agents.memory import STM_attributes
 from api.schemas import Location
 from api.state import State, get_state
 from game import GameManager
+
 from ..mappers import LocationMapper
 
 from memory import STM, STM_attributes

@@ -6,8 +6,13 @@ import config.agent
 from llm_model import ModelService
 from memory import MemoryNode
 from datetime import datetime
+from typing import TYPE_CHECKING, List
+
 from numpy import dot
 from numpy.linalg import norm
+
+from agents.memory import MemoryNode
+from llm_model import ModelService
 
 if TYPE_CHECKING:
     from agents import Agent
@@ -33,7 +38,7 @@ def retrieve_relevant_memories(agent: Agent, perceived: str) -> List[MemoryNode]
                 'score': _calculate_overall_compare_score(node, perceived)
             }
         )
-    score_list = sorted(score_list, key=lambda x: x['score'])
+    score_list = sorted(score_list, key=lambda x: x["score"])
     top_nodes_ids = score_list[:nodes_to_retrieve]
     top_nodes = list(filter(lambda x: x.id in top_nodes_ids, agent.memory_stream.nodes))
     return top_nodes
@@ -76,7 +81,9 @@ def _calculate_overall_compare_score(node: MemoryNode, perceived: str) -> float:
     date_to_compere = datetime.now()
 
     relevance_score = weights[0] * _calculate_relevance_score(node, perceived)
-    importance_score = weights[1] * node.attributes.importance
+    # TODO: Fix importance
+    importance_score = weights[1] * 4
+    # importance_score = weights[1] * node.attributes.importance
     recency_score = weights[2] * _calculate_recency_score(node, date_to_compere)
 
     overall_score = importance_score + relevance_score + recency_score
@@ -117,7 +124,7 @@ def _calculate_recency_score(node: MemoryNode, date_to_compere: datetime) -> flo
     DECAY_FACTOR = config.agent.RECENCY_DECAY_FACTOR
     diff = abs(node.attributes.created - date_to_compere)
     diff_in_hours = diff.total_seconds() / SECS_IN_HOUR
-    score = MAX_SCORE * DECAY_FACTOR ** diff_in_hours
+    score = MAX_SCORE * DECAY_FACTOR**diff_in_hours
     return score
 
 

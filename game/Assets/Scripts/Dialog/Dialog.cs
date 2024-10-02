@@ -44,20 +44,39 @@ namespace Dialog {
             
 
         }
-        public void SplitLongMessages(int maxLength) {
+        public void SplitLongMessages(int maxLength)
+        {
             List<Message> processedMessages = new List<Message>();
 
-            foreach (var message in messages) {
-                if (message.message.Length <= maxLength) {
+            foreach (var message in messages)
+            {
+                if (message.message.Length <= maxLength)
+                {
                     processedMessages.Add(message);
-                } else {
-                    int start = 0;
-                    while (start < message.message.Length) {
-                        int length = Math.Min(maxLength, message.message.Length - start);
-                        string part = message.message.Substring(start, length);
-                        part += "..";
-                        processedMessages.Add(new Message { actorId = message.actorId, message = part });
-                        start += length;
+                }
+                else
+                {
+                    string[] words = message.message.Split(' ');
+                    string part = "";
+                    foreach (var word in words)
+                    {
+                        if (part.Length + word.Length + 1 <= maxLength) // +1 for the space
+                        {
+                            if (part.Length > 0)
+                            {
+                                part += " ";
+                            }
+                            part += word;
+                        }
+                        else
+                        {
+                            processedMessages.Add(new Message { actorId = message.actorId, message = part + ".." });
+                            part = word;
+                        }
+                    }
+                    if (part.Length > 0)
+                    {
+                        processedMessages.Add(new Message { actorId = message.actorId, message = part + ".." });
                     }
                 }
             }

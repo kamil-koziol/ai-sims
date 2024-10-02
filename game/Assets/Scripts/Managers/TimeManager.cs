@@ -25,8 +25,10 @@ public class TimeManager : MonoBehaviour
     public delegate void TimeChangedEventHandler(object sender, TimeChangedEventArgs e);
     public event TimeChangedEventHandler OnTimeChanged;
 
-    public const int REALTIME_MULTIPLIER = 60 * 1;
-    private float CLOCK_EVERY_S = 1.0f;
+    public const int TIME_MULTIPLIER = 60 * 1;
+    public const int CLOCKS_PER_S = 3;
+    
+    private float CLOCK_EVERY = 1.0f/CLOCKS_PER_S;
 
     private float timer;
 
@@ -47,7 +49,7 @@ public class TimeManager : MonoBehaviour
         if (!update) return;
         
         timer += Time.deltaTime;
-        if (timer >= CLOCK_EVERY_S)
+        if (timer >= CLOCK_EVERY)
         {
             IncrementTime();
             timer = 0f;
@@ -57,7 +59,7 @@ public class TimeManager : MonoBehaviour
     private void IncrementTime()
     {
         previousTime = time;
-        time = time.AddSeconds(REALTIME_MULTIPLIER * CLOCK_EVERY_S);
+        time = time.AddSeconds(TIME_MULTIPLIER);
         bool isNewDay = previousTime.Day != time.Day;
         isNewDay = isNewDay || previousTime == startingDate; // initial day 
         OnTimeChanged?.Invoke(this, new TimeChangedEventArgs(time, isNewDay));
