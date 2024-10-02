@@ -11,7 +11,6 @@ from typing import TYPE_CHECKING, List
 from numpy import dot
 from numpy.linalg import norm
 
-from agents.memory import MemoryNode
 from llm_model import ModelService
 
 if TYPE_CHECKING:
