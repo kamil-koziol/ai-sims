@@ -6,6 +6,7 @@ from memory import STM_attributes
 from typing import List
 from location import Location
 from uuid import UUID
+from config.model import MOCK_MODELS
 
 
 @pytest.fixture
@@ -31,7 +32,7 @@ def list_of_places():
 def test_create_daily_plan(
     mocker, agent: Agent, list_of_places: List[Location]
 ):
-    if ModelService().mocked:
+    if MOCK_MODELS:
         response_text = """
 <s> Create plan for one day using only listed places. Use format "Go to [place] at [time]"
 Name: John SmithAge: 27Currently: doing nothing

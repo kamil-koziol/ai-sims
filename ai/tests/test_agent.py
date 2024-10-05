@@ -7,6 +7,7 @@ from uuid import UUID
 from game import Game
 from location import Location
 import unittest.mock as mock
+from config.model import MOCK_MODELS
 
 
 class TestAgent:
@@ -43,7 +44,7 @@ class TestAgent:
         )
 
     def test_plan(self):
-        if ModelService().mocked:
+        if MOCK_MODELS:
             response_text = """
     <s> Create plan for one day using only listed places. Use format "Go to [place] at [time]"
     Name: John SmithAge: 27Currently: doing nothing

@@ -1,19 +1,19 @@
 from llm_model import MockedEmbeddingModel, MockedGenerationModel, GenerationModel, EmbeddingModel, EmbedResponse, GenerationResponse
+from config.model import MOCK_MODELS
 
 
 class TestModel:
 
     def setup_method(self, method):
-        MOCKED = True
         embed_url = 'http://localhost:8888/embed'
         generation_url = 'http://localhost:8888/generate'
 
-        if MOCKED:
+        if MOCK_MODELS:
             self.embed_model = MockedEmbeddingModel(embed_url)
         else:
             self.embed_model = EmbeddingModel(embed_url)
 
-        if MOCKED:
+        if MOCK_MODELS:
             self.generation_model = MockedGenerationModel(generation_url)
         else:
             self.generation_model = GenerationModel(generation_url)

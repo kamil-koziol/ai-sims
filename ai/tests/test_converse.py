@@ -15,6 +15,7 @@ from agents.actions import (
     decide_to_converse,
     generate_conversation_summary,
 )
+from config.model import MOCK_MODELS
 
 
 @pytest.fixture
@@ -53,7 +54,7 @@ def target_agent():
 
 
 def test_converse(mocker, init_agent: Agent, target_agent: Agent):
-    if ModelService().mocked:
+    if MOCK_MODELS:
         mocker.patch(
             "agents.actions.generate_conversation",
             return_value="Mocked Conversation",
@@ -74,7 +75,7 @@ def test_converse(mocker, init_agent: Agent, target_agent: Agent):
 
 
 def test_generate_conversation(mocker, init_agent, target_agent):
-    if ModelService().mocked:
+    if MOCK_MODELS:
         mocker.patch(
             "agents.actions.get_string_memories", return_value="Mocked Memories"
         )
@@ -102,7 +103,7 @@ def test_generate_conversation(mocker, init_agent, target_agent):
 
 
 def test_generate_conversation_summary(mocker, init_agent, target_agent):
-    if ModelService().mocked:
+    if MOCK_MODELS:
         mocker.patch.object(
             ModelService,
             "generate_text",
@@ -128,7 +129,7 @@ def test_generate_conversation_summary(mocker, init_agent, target_agent):
 
 
 def test_generate_memory_on_conversation(mocker, init_agent):
-    if ModelService().mocked:
+    if MOCK_MODELS:
         mocker.patch.object(
             ModelService,
             "generate_text",
@@ -156,7 +157,7 @@ def test_generate_memory_on_conversation(mocker, init_agent):
 
 
 def test_insert_convo_into_mem_stream(mocker, init_agent):
-    if ModelService().mocked:
+    if MOCK_MODELS:
         mocker.patch.object(
             MemoryNodeFactory, "create_chat", return_value=Mock()
         )
@@ -177,7 +178,7 @@ def test_insert_convo_into_mem_stream(mocker, init_agent):
 
 
 def test_decide_to_converse(mocker, init_agent, target_agent):
-    if ModelService().mocked:
+    if MOCK_MODELS:
         mocker.patch.object(
             ModelService, "generate_text", return_value="Answer:no"
         )
