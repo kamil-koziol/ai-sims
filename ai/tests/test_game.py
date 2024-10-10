@@ -1,5 +1,6 @@
 import os
 import pytest
+import yaml
 
 from game import Game
 from memory import MemoryStream, MemoryNodeFactory, STM_attributes, ImportanceEvaluator
@@ -87,6 +88,16 @@ class TestGame:
 
     def test_load_from_yaml_file(self, example_game: Game):
         game = Game.load_from_yaml_file("test_game1.yml")
+
+        loaded_name = game._agents[UUID("{12345678-1234-5678-1234-567812345679}")].stm.name
+        original_name = example_game._agents[UUID("{12345678-1234-5678-1234-567812345679}")].stm.name
+        assert loaded_name == original_name
+        assert game.locations == example_game.locations
+
+    def test_load_from_yaml_data(self, example_game: Game):
+        parsed_yaml_game = yaml.dump(example_game, default_flow_style=False)
+
+        game = Game.load_from_yaml_data(parsed_yaml_game)
 
         loaded_name = game._agents[UUID("{12345678-1234-5678-1234-567812345679}")].stm.name
         original_name = example_game._agents[UUID("{12345678-1234-5678-1234-567812345679}")].stm.name
