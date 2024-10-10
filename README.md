@@ -40,11 +40,15 @@ python3 run main.py
 
 ### Connecting to KASK
 
+Make sure to run the LLM's API in kask and run in on port `8888`. See: [Local hosting]([#local-hosting])
+
 1. SSH bind to kask. Backend will connect to localhost:8888
 
 ```sh
-ssh -L 8888:sanna.kask:8003 -N s188864@kask.eti.pg.gda.pl
+ssh -L 8888:sanna.kask:PORT -N account@kask.eti.pg.gda.pl
 ```
+
+
 
 ### Local hosting
 
