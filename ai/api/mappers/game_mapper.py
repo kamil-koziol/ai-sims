@@ -8,11 +8,13 @@ if TYPE_CHECKING:
     from ..routers.game import GameRequest
 
 class GameMapper:
+    @staticmethod
     def request_to_game(game_request: GameRequest):
         agents = {}
         for agent in game_request.agents:
             agents[agent.id] = AgentMapper.request_to_agent(agent)
 
         locations = [LocationMapper.request_to_location(location) for location in game_request.locations]
+        game_id = game_request.id
 
-        return Game(agents=agents, locations=locations)
+        return Game(game_id=game_id, agents=agents, locations=locations)

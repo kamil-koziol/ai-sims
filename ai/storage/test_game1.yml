@@ -9,7 +9,7 @@ _agents:
       nodes:
       - !!python/object:memory.memory_node.MemoryNode
         attributes: !!python/object:memory.memory_node.MemoryNodeAttributes
-          created: &id001 2024-10-10 09:43:14.067399
+          created: &id001 2024-10-10 20:06:31.273215
           description: chat desc
           embeddings: &id002
           - 0.1
@@ -70,7 +70,7 @@ _agents:
       _age: 27
       _curr_location: !!python/object:location.location.Location
         name: cafe
-      _curr_time: 2024-10-10 09:43:14.067399
+      _curr_time: 2024-10-10 20:06:31.274332
       _daily_plan: []
       _description: Emily Green, a 25-year-old hairdresser with a flair for creativity,
         is single and finds joy in crafting delicious meals in her spare time. Her
@@ -84,6 +84,8 @@ _agents:
       _name: Emily Green
       _position: *id006
       _recency_decay: 0.99
+_game_id: !!python/object:uuid.UUID
+  int: 109397810949670477183142395340070326545
 _locations:
 - !!python/object:location.location.Location
   name: cafe

@@ -1,3 +1,5 @@
+from typing import Dict
+
 from agents import Agent
 from memory import STM_attributes
 from object_types import Objects
@@ -33,8 +35,12 @@ class TestAgent:
         )
         self.agent_2 = Agent(stm_2)
 
+        agents = [self.agent_1, self.agent_2]
+        agents_dict: Dict[UUID, Agent] = {agent.stm.id: agent for agent in agents}
+
         self.game = Game(
-            agents=[self.agent_1, self.agent_2],
+            game_id=UUID("524d4082-cc9c-be58-a692-af1f0d2c1111"),
+            agents=agents_dict,
             locations=[
                 Location("coffee"),
                 Location("park"),

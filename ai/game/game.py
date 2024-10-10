@@ -14,7 +14,8 @@ class Game(yaml.YAMLObject):
     yaml_tag = '!game.game.Game'
     register_uuid_yaml_constructor()
 
-    def __init__(self, agents: Dict[UUID, Agent], locations: List[Location]):
+    def __init__(self, game_id: UUID, agents: Dict[UUID, Agent], locations: List[Location]):
+        self._game_id = game_id
         self._agents: Dict[UUID, Agent] = agents.copy()
         self._locations: List[Location] = locations.copy()
     
@@ -29,6 +30,10 @@ class Game(yaml.YAMLObject):
     @property
     def locations(self):
         return self._locations
+
+    @property
+    def game_id(self):
+        return self._game_id
 
     def save_to_yaml(self, filename: str) -> None:
         """

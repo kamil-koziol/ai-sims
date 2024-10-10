@@ -72,7 +72,9 @@ def example_game(mocker):
         Location("office")
     ]
 
-    game = Game(agents_dict, locations)
+    game_id = UUID("524d4082-cc9c-be58-a692-af1f0d2c1111")
+
+    game = Game(game_id, agents_dict, locations)
     return game
 
 
@@ -93,6 +95,7 @@ class TestGame:
         original_name = example_game._agents[UUID("{12345678-1234-5678-1234-567812345679}")].stm.name
         assert loaded_name == original_name
         assert game.locations == example_game.locations
+        assert game.game_id == example_game.game_id
 
     def test_load_from_yaml_data(self, example_game: Game):
         parsed_yaml_game = yaml.dump(example_game, default_flow_style=False)
