@@ -16,6 +16,7 @@ class ConversationVariables:
     """
     Variables necessary for creating a conversation templates.
     """
+
     init_agent_name: str
     target_agent_name: str
     init_agent_description: str
@@ -26,28 +27,34 @@ class ConversationVariables:
     init_agent_memories: str
     target_agent_memories: str
 
+
 @dataclass
 class SummarizeConversationVariables:
     """
     Variables necessary for creating a summarization templates.
     """
+
     conversation: str
     init_agent_name: str
     target_agent_name: str
+
 
 @dataclass
 class MemoryOnConversationVariables:
     """
     Variables necessary for creating a memory out of conversation.
     """
+
     conversation: str
     agent_name: str
+
 
 @dataclass
 class DecideToConverseVariables:
     """
     Variables necessary for deciding whether to start a conversation.
     """
+
     init_agent_name: str
     target_agent_name: str
     init_agent_description: str
@@ -57,14 +64,14 @@ class DecideToConverseVariables:
     curr_time: str
     location: str
 
-def _split_conversation(init_agent: Agent, target_agent: Agent, conversation: str) -> Dict[UUID, List]:
-    splitted_dialogs = {
-        init_agent.stm.id: [],
-        target_agent.stm.id: []
-    }
-    conversation = conversation.split('\n')
+
+def _split_conversation(
+    init_agent: Agent, target_agent: Agent, conversation: str
+) -> Dict[UUID, List]:
+    splitted_dialogs = {init_agent.stm.id: [], target_agent.stm.id: []}
+    conversation = conversation.split("\n")
     for line in conversation:
-        name, dialog = line.split(':')
+        name, dialog = line.split(":")
         dialog = dialog.strip()
         if init_agent.stm.name in name:
             splitted_dialogs[init_agent.stm.id].append(dialog)
@@ -72,6 +79,7 @@ def _split_conversation(init_agent: Agent, target_agent: Agent, conversation: st
             splitted_dialogs[target_agent.stm.id].append(dialog)
 
     return splitted_dialogs
+
 
 def converse(init_agent: Agent, target_agent: Agent) -> Dict[UUID, List]:
     """
@@ -82,11 +90,15 @@ def converse(init_agent: Agent, target_agent: Agent) -> Dict[UUID, List]:
         target_agent (Agent): The target of initialized conversation
     """
     convo = generate_conversation(init_agent, target_agent)
-    convo_summary = generate_conversation_summary(init_agent, target_agent, convo)
+    convo_summary = generate_conversation_summary(
+        init_agent, target_agent, convo
+    )
 
     insert_convo_into_mem_stream(init_agent, convo, convo_summary)
     insert_convo_into_mem_stream(target_agent, convo, convo_summary)
-    splitted_dialogs = _split_conversation(init_agent=init_agent, target_agent=target_agent, conversation=convo)
+    splitted_dialogs = _split_conversation(
+        init_agent=init_agent, target_agent=target_agent, conversation=convo
+    )
     return splitted_dialogs
 
 
@@ -100,7 +112,9 @@ def generate_conversation(init_agent: Agent, target_agent: Agent) -> str:
     """
     prompt_template_file = "create_conversation.txt"
     init_agent_memories = get_string_memories(init_agent, target_agent.stm.name)
-    target_agent_memories = get_string_memories(target_agent, init_agent.stm.name)
+    target_agent_memories = get_string_memories(
+        target_agent, init_agent.stm.name
+    )
     prompt_variables = ConversationVariables(
         init_agent_name=init_agent.stm.name,
         target_agent_name=target_agent.stm.name,
@@ -110,14 +124,17 @@ def generate_conversation(init_agent: Agent, target_agent: Agent) -> str:
         target_agent_action=target_agent.stm.action.value,
         location=init_agent.stm.curr_location.name,
         init_agent_memories=init_agent_memories,
-        target_agent_memories=target_agent_memories
+        target_agent_memories=target_agent_memories,
     )
-    output = ModelService().generate_text(prompt_variables, prompt_template_file)
-    convo = output.split(f"{init_agent.stm.name} starts the conversation.")[1].replace("</s>", "").strip()
-    return convo
+    output = ModelService().generate_text(
+        prompt_variables, prompt_template_file
+    )
+    return output
 
 
-def generate_conversation_summary(init_agent: Agent, target_agent: Agent, convo: str) -> str:
+def generate_conversation_summary(
+    init_agent: Agent, target_agent: Agent, convo: str
+) -> str:
     """
     Generate summary of conversation.
 
@@ -133,11 +150,12 @@ def generate_conversation_summary(init_agent: Agent, target_agent: Agent, convo:
     prompt_variables = SummarizeConversationVariables(
         conversation=convo,
         init_agent_name=init_agent.stm.name,
-        target_agent_name=target_agent.stm.name
+        target_agent_name=target_agent.stm.name,
     )
-    output = ModelService().generate_text(prompt_variables, prompt_template_file)
-    summary = output.split("Summarize the conversation above in one sentence:")[1].replace("</s>", "").strip()
-    return summary
+    output = ModelService().generate_text(
+        prompt_variables, prompt_template_file
+    )
+    return output
 
 
 def generate_memory_on_conversation(agent: Agent, convo: str) -> str:
@@ -153,15 +171,17 @@ def generate_memory_on_conversation(agent: Agent, convo: str) -> str:
     """
     prompt_template_file = "memo_on_convo.txt"
     prompt_variables = MemoryOnConversationVariables(
-        conversation=convo,
-        agent_name=agent.stm.name
+        conversation=convo, agent_name=agent.stm.name
     )
-    output = ModelService().generate_text(prompt_variables, prompt_template_file)
-    memory = output.split("might have found interesting that")[1].replace("</s>", "").strip()
-    return memory
+    output = ModelService().generate_text(
+        prompt_variables, prompt_template_file
+    )
+    return output
 
 
-def insert_convo_into_mem_stream(agent: Agent, convo: str, summary: str) -> None:
+def insert_convo_into_mem_stream(
+    agent: Agent, convo: str, summary: str
+) -> None:
     """
     Add a memory into agent's memory stream.
 
@@ -176,6 +196,7 @@ def insert_convo_into_mem_stream(agent: Agent, convo: str, summary: str) -> None
     memory = generate_memory_on_conversation(agent, convo)
     memory_node = MemoryNodeFactory.create_thought(memory, agent)
     agent.memory_stream.add_memory_node(memory_node)
+
 
 def decide_to_converse(init_agent: Agent, target_agent: Agent) -> bool:
     """
@@ -199,9 +220,12 @@ def decide_to_converse(init_agent: Agent, target_agent: Agent) -> bool:
         curr_time=WorldTime().current_time.strftime("%m/%d/%Y, %H:%M:%S"),
         location=init_agent.stm.curr_location.name,
     )
-    model_output = ModelService().generate_text(prompt_variables, prompt_template_file)
+    model_output = ModelService().generate_text(
+        prompt_variables, prompt_template_file
+    )
     decision = _convert_model_response_to_bool(model_output)
     return decision
+
 
 def _convert_model_response_to_bool(response: str) -> bool:
     """
@@ -213,8 +237,8 @@ def _convert_model_response_to_bool(response: str) -> bool:
     Returns:
         int: Converted bool.
     """
-    answer_part = response.split("Answer:")[1].strip()
-    if "no" in answer_part.lower():
+    answer_part = response.lower().replace(".", "")
+    if "no" in answer_part:
         return False
     else:
         return True

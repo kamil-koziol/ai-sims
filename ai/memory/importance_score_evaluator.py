@@ -59,7 +59,7 @@ class ImportanceEvaluator(metaclass=Singleton):
             agent_short_description=agent.stm.description,
             chat_description=memory_description
         )
-        model_response = ModelService().generate_text(prompt_variables, prompt_template_file).split('10):')[-1]
+        model_response = ModelService().generate_text(prompt_variables, prompt_template_file)
         score = self._convert_model_response_to_int(response=model_response)
         return score
 

@@ -7,11 +7,9 @@ from agents.actions import (
     retrieve_relevant_memories,
     converse,
     execute,
-    reflect,
     create_daily_plan,
 )
 from agents.actions import (
-    plan,
     retrieve_relevant_memories,
     converse,
     decide_to_converse,
@@ -32,7 +30,7 @@ class Agent:
 
     def __init__(
         self,
-        init_parameters: STM_attributes = None,
+        init_parameters: STM_attributes,
         save_file: str = None,
         load_file: str = None,
     ) -> None:
@@ -49,7 +47,7 @@ class Agent:
 
         self.logger = setup_logger(
             init_parameters.name,
-            f'{init_parameters.name.lower().replace(" ", "_")}_logs.logs',
+            f'{init_parameters.name.lower().replace(" ", "_")}.log',
         )
 
         self.stm = STM(init_parameters)
@@ -96,8 +94,8 @@ class Agent:
             target_agent (Agent): Agent to converse with.
         """
         conversation = converse(self, target_agent)
-        pretty_formated = pretty_format_dialogs(conversation)
-        self.logger.info("Started conversation with %s: \n %s".format(target_agent.stm.name, '\n'.join(conversation)))
+        # pretty_formated = pretty_format_dialogs(conversation)
+        # self.logger.info("Started conversation with %s: \n %s".format(target_agent.stm.name, '\n'.join(conversation)))
         return conversation
 
     def should_converse(
