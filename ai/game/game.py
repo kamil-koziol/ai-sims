@@ -50,8 +50,8 @@ class Game(yaml.YAMLObject):
         try:
             with open(file_path, 'w') as outfile:
                 yaml.dump(self, outfile, default_flow_style=False)
-        except (Exception,):
-            raise Exception("Failed to save game data in YAML format.")
+        except Exception as e:
+            raise Exception(f"Failed to save game data in YAML format: {e}")
 
     @classmethod
     def load_from_yaml_file(cls, filename: str) -> Game:
@@ -73,8 +73,8 @@ class Game(yaml.YAMLObject):
             with open(file_path, 'r') as file:
                 game: Game = yaml.load(file, Loader=yaml.Loader)
                 return game
-        except (Exception,):
-            raise Exception(f"Failed to load game from YAML file {filename}.")
+        except Exception as e:
+            raise Exception(f"Failed to load game from YAML file {filename}: {e}")
 
     @classmethod
     def load_from_yaml_data(cls, yaml_data) -> Game:
@@ -93,8 +93,8 @@ class Game(yaml.YAMLObject):
         try:
             game: Game = yaml.load(yaml_data, Loader=yaml.Loader)
             return game
-        except (Exception,):
-            raise Exception(f"Failed to load game from YAML data.")
+        except Exception as e:
+            raise Exception(f"Failed to load game from YAML data: {e}")
 
     @staticmethod
     def _get_storage_dir() -> str:
