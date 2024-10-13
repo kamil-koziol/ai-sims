@@ -1,4 +1,5 @@
 from __future__ import annotations
+import logging
 from typing import TYPE_CHECKING, Dict, List
 from dataclasses import dataclass
 from uuid import UUID
@@ -196,6 +197,7 @@ def insert_convo_into_mem_stream(
     memory = generate_memory_on_conversation(agent, convo)
     memory_node = MemoryNodeFactory.create_thought(memory, agent)
     agent.memory_stream.add_memory_node(memory_node)
+    agent.logger.info("Added memory note to memory stream:\n%s", str(memory_node))
 
 
 def decide_to_converse(init_agent: Agent, target_agent: Agent) -> bool:
