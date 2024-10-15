@@ -51,4 +51,15 @@ class MemoryNode:
 importance: {self.attributes.importance}
 created: {self.attributes.created}
 type: {self.attributes.node_type.value}
-description: {self.attributes.description}"""
+description: {self.attributes.description}
+"""
+
+    def __repr__(self) -> str:
+        return f"""
+{{
+  importance: {self.attributes.importance},
+  created: {self.attributes.created},
+  type: {self.attributes.node_type.value},
+  description: {self.attributes.description}
+}}
+"""

@@ -10,17 +10,12 @@ from agents.actions import (
     create_daily_plan,
 )
 from agents.actions import (
-    retrieve_relevant_memories,
-    converse,
     decide_to_converse,
-    execute,
-    reflect,
 )
-from memory import STM, STM_attributes, MemoryStream, PlanNode
+from memory import STM, STM_attributes, MemoryStream, PlanNode, MemoryNode
 from object_types import Objects
 from location import Location
 from utils import setup_logger
-from utils.utils import pretty_format_dialogs
 
 
 class Agent:
@@ -60,7 +55,7 @@ class Agent:
         A long term memory for storing agent's memories.
         """
 
-        self.logger.info("Created agent with parameters: \n %s", str(self.stm))
+        # self.logger.info("Created agent with parameters: \n %s", str(self.stm))
 
     def reflect(self):
         pass
@@ -70,18 +65,18 @@ class Agent:
         Create plan for the current day for the agent. List of places is fixed.
         """
         plan = create_daily_plan(self, locations)
-        self.logger.info("Created daily plan: \n %s", str(plan))
+        self.logger.info("Created daily plan:%s\n", str(plan))
         self.stm.daily_plan = plan
         return plan
 
-    def retrieve(self, perceived: str):
+    def retrieve(self, perceived: str) -> List[MemoryNode]:
         """
         Retrieve a relevant memories to perceived events
 
         Args:
             perceived (str): Description of perceived events.
         """
-        retrieve_relevant_memories(self, perceived)
+        return retrieve_relevant_memories(self, perceived)
 
     def execute(self):
         execute(self)

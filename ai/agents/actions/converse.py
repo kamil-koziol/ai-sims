@@ -70,15 +70,15 @@ def _split_conversation(
     init_agent: Agent, target_agent: Agent, conversation: str
 ) -> Dict[UUID, List]:
     splitted_dialogs = {init_agent.stm.id: [], target_agent.stm.id: []}
-    conversation = conversation.split("\n")
-    for line in conversation:
-        name, dialog = line.split(":")
-        dialog = dialog.strip()
-        if init_agent.stm.name in name:
-            splitted_dialogs[init_agent.stm.id].append(dialog)
-        elif target_agent.stm.name in name:
-            splitted_dialogs[target_agent.stm.id].append(dialog)
-
+    conversation_list = conversation.split("\n")
+    for line in conversation_list:
+        if line != '':
+            name, dialog = line.split(":")
+            dialog = dialog.strip()
+            if init_agent.stm.name in name:
+                splitted_dialogs[init_agent.stm.id].append(dialog)
+            elif target_agent.stm.name in name:
+                splitted_dialogs[target_agent.stm.id].append(dialog)
     return splitted_dialogs
 
 
@@ -197,7 +197,7 @@ def insert_convo_into_mem_stream(
     memory = generate_memory_on_conversation(agent, convo)
     memory_node = MemoryNodeFactory.create_thought(memory, agent)
     agent.memory_stream.add_memory_node(memory_node)
-    agent.logger.info("Added memory note to memory stream:\n%s", str(memory_node))
+    agent.logger.info("Added memory note to memory stream:%s\n", str(memory_node))
 
 
 def decide_to_converse(init_agent: Agent, target_agent: Agent) -> bool:

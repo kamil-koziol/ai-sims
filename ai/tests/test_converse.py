@@ -1,3 +1,4 @@
+from logging import log
 from typing import Dict
 from unittest.mock import Mock
 import pytest
@@ -66,7 +67,8 @@ def test_converse(mocker, init_agent: Agent, target_agent: Agent):
         mocker.patch("agents.actions.insert_convo_into_mem_stream")
 
     splitted_dialogs = converse(init_agent, target_agent)
-    print(splitted_dialogs)
+    splitted_dialogs = converse(init_agent, target_agent)
+    splitted_dialogs = converse(init_agent, target_agent)
 
     assert (
         len(splitted_dialogs[init_agent.stm.id]) > 0
@@ -82,9 +84,7 @@ def test_generate_conversation(mocker, init_agent, target_agent):
         mocker.patch.object(
             ModelService,
             "generate_text",
-            return_value=f"""Here is their conversation.
-            {init_agent.stm.name} starts the conversation.
-            John Smith: Hey Emily, how's it going?
+            return_value=f"""John Smith: Hey Emily, how's it going?
             Emily Green: Not bad, just enjoying the day off. How about you?
             John Smith: Same here. Just took the girls for a hike this morning. They had a blast.
             Emily Green: That's great! I love hiking too. Have you been to any good spots lately?
@@ -93,7 +93,7 @@ def test_generate_conversation(mocker, init_agent, target_agent):
             John Smith: Definitely do. Let me know if you want to go sometime.
             Emily Green: That sounds great! Thanks for the recommendation.
             John Smith: No problem. Have a good day!
-            Emily Green: You too!</s>""",
+            Emily Green: You too!""",
         )
 
     conversation = generate_conversation(init_agent, target_agent)
@@ -108,19 +108,19 @@ def test_generate_conversation_summary(mocker, init_agent, target_agent):
             ModelService,
             "generate_text",
             return_value="Summarize the conversation above in one sentence: "
-            "John Smith and Emily Green had a conversation about the weather.</s>",
+            "John Smith and Emily Green had a conversation about the weather.",
         )
 
     convo = """John Smith: Hey Emily, how's it going?
-            Emily Green: Not bad, just enjoying the day off. How about you?
-            John Smith: Same here. Just took the girls for a hike this morning. They had a blast.
-            Emily Green: That's great! I love hiking too. Have you been to any good spots lately?
-            John Smith: Yeah, I've been to a few new trails recently. There's this one beautiful spot near the lake.
-            Emily Green: Oh, I'll have to check it out! I'm always looking for new places to explore.
-            John Smith: Definitely do. Let me know if you want to go sometime.
-            Emily Green: That sounds great! Thanks for the recommendation.
-            John Smith: No problem. Have a good day!
-            Emily Green: You too!</s>"""
+Emily Green: Not bad, just enjoying the day off. How about you?
+John Smith: Same here. Just took the girls for a hike this morning. They had a blast.
+Emily Green: That's great! I love hiking too. Have you been to any good spots lately?
+John Smith: Yeah, I've been to a few new trails recently. There's this one beautiful spot near the lake.
+Emily Green: Oh, I'll have to check it out! I'm always looking for new places to explore.
+John Smith: Definitely do. Let me know if you want to go sometime.
+Emily Green: That sounds great! Thanks for the recommendation.
+John Smith: No problem. Have a good day!
+Emily Green: You too!"""
 
     result = generate_conversation_summary(init_agent, target_agent, convo)
     print(result)
@@ -140,15 +140,15 @@ def test_generate_memory_on_conversation(mocker, init_agent):
         )
 
     convo = """John Smith: Hey Emily, how's it going?
-        Emily Green: Not bad, just enjoying the day off. How about you?
-        John Smith: Same here. Just took the girls for a hike this morning. They had a blast.
-        Emily Green: That's great! I love hiking too. Have you been to any good spots lately?
-        John Smith: Yeah, I've been to a few new trails recently. There's this one beautiful spot near the lake.
-        Emily Green: Oh, I'll have to check it out! I'm always looking for new places to explore.
-        John Smith: Definitely do. Let me know if you want to go sometime.
-        Emily Green: That sounds great! Thanks for the recommendation.
-        John Smith: No problem. Have a good day!
-        Emily Green: You too!"""
+Emily Green: Not bad, just enjoying the day off. How about you?
+John Smith: Same here. Just took the girls for a hike this morning. They had a blast.
+Emily Green: That's great! I love hiking too. Have you been to any good spots lately?
+John Smith: Yeah, I've been to a few new trails recently. There's this one beautiful spot near the lake.
+Emily Green: Oh, I'll have to check it out! I'm always looking for new places to explore.
+John Smith: Definitely do. Let me know if you want to go sometime.
+Emily Green: That sounds great! Thanks for the recommendation.
+John Smith: No problem. Have a good day!
+Emily Green: You too!"""
 
     result = generate_memory_on_conversation(init_agent, convo)
     print(result)
@@ -156,7 +156,7 @@ def test_generate_memory_on_conversation(mocker, init_agent):
     assert isinstance(result, str)
 
 
-def test_insert_convo_into_mem_stream(mocker, init_agent):
+def test_insert_convo_into_mem_stream(mocker, init_agent: Agent):
     if MOCK_MODELS:
         mocker.patch.object(
             MemoryNodeFactory, "create_chat", return_value=Mock()
@@ -170,17 +170,23 @@ def test_insert_convo_into_mem_stream(mocker, init_agent):
             return_value="Generated Memory",
         )
 
-    insert_convo_into_mem_stream(
-        init_agent, "Test Conversation", "Test Summary"
-    )
+    convo = "John Smith might have found interesting that Emily Green is interested in hiking "
+    convo += "and has been wanting to get into it more, as it suggests they share a common interest "
+    convo += "and could potentially have a fun and bonding experience together on their hike."
 
-    assert True
+    summary = "John Smith and Emily Green had a conversation about their shared love of the outdoors, "
+    summary += "with John inviting Emily to join him on a hike this Sunday and making plans to meet up "
+    summary += "and explore a trail together."
+
+    insert_convo_into_mem_stream(init_agent, convo, summary)
+
+    assert len(init_agent.memory_stream.nodes) > 0
 
 
 def test_decide_to_converse(mocker, init_agent, target_agent):
     if MOCK_MODELS:
         mocker.patch.object(
-            ModelService, "generate_text", return_value="Answer:no"
+            ModelService, "generate_text", return_value="No"
         )
     result = decide_to_converse(init_agent, target_agent)
     print(result)
