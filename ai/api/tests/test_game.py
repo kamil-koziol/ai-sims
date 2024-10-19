@@ -1,17 +1,14 @@
 from fastapi import status
 
+from api.routers.game import CreateGameResponse
 from api.tests.sample_game import game_data
 
 
 def test_create_game(client, game_data):
     response = client.post("/game/", json=game_data)
     assert response.status_code == status.HTTP_200_OK
-    assert "id" in response.json()
-    assert response.json()["id"] == game_data["id"]
 
+    create_game_response = CreateGameResponse.model_validate(response.json())
 
-def test_create_existing_game(client, game_data):
-    client.post("/game/", json=game_data)
-    response = client.post("/game/", json=game_data)
-    assert response.status_code == status.HTTP_400_BAD_REQUEST
-    assert response.json()["detail"] == "Game already exists"
+    assert len(create_game_response.game.agents) == len(game_data["agents"])
+    assert create_game_response.game.agents[0].name == game_data["agents"][0]["name"]
