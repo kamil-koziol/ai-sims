@@ -23,6 +23,7 @@ class ConversationVariables:
     init_agent_action: str
     target_agent_action: str
     location: str
+    curr_time: str
     init_agent_memories: str
     target_agent_memories: str
 
@@ -122,6 +123,7 @@ def generate_conversation(init_agent: Agent, target_agent: Agent) -> str:
         init_agent_action=init_agent.stm.action.value,
         target_agent_action=target_agent.stm.action.value,
         location=init_agent.stm.curr_location.name,
+        curr_time=init_agent.stm.get_curr_time_str(),
         init_agent_memories=init_agent_memories,
         target_agent_memories=target_agent_memories,
     )

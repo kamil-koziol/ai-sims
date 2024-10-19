@@ -20,7 +20,7 @@ class CalculateImportanceScoreVariables:
     Variables necessary for evaluating importance score for a chat.
     """
     agent_name: str
-    agent_short_description: str
+    agent_description: str
     chat_description: str
 
 class ImportanceEvaluator(metaclass=Singleton):
@@ -62,7 +62,7 @@ class ImportanceEvaluator(metaclass=Singleton):
         prompt_template_file = 'evaluate_chat.txt'
         prompt_variables = CalculateImportanceScoreVariables(
             agent_name=agent.stm.name,
-            agent_short_description=agent.stm.description,
+            agent_description=agent.stm.description,
             chat_description=memory_description
         )
         model_response = ModelService().generate_text(prompt_variables, prompt_template_file)
@@ -83,7 +83,7 @@ class ImportanceEvaluator(metaclass=Singleton):
         prompt_template_file = 'evaluate_thought.txt'
         prompt_variables = CalculateImportanceScoreVariables(
             agent_name=agent.stm.name,
-            agent_short_description=agent.stm.description,
+            agent_description=agent.stm.description,
             chat_description=memory_description
         )
         model_response = ModelService().generate_text(prompt_variables, prompt_template_file)

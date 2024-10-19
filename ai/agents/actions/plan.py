@@ -16,11 +16,12 @@ class DailyPlanVariables:
     Variables for creating daily plan for places to go.
     """
 
-    persona_short_description: str
+    persona_description: str
     persona_life_style: str
     datetime_now: str
-    persona_first_names: str
+    persona_name: str
     list_of_places: str
+    persona_age: str
 
 
 def create_daily_plan(agent: Agent, list_of_places: List) -> List[PlanNode]:
@@ -36,11 +37,12 @@ def create_daily_plan(agent: Agent, list_of_places: List) -> List[PlanNode]:
     current_time = agent.stm.curr_time
 
     daily_plan_variables = DailyPlanVariables(
-        persona_short_description=agent.stm.get_short_description(),
+        persona_description=agent.stm.description,
         persona_life_style=agent.stm.life_style,
         datetime_now=current_time.strftime("%m/%d/%Y, %H:%M:%S"),
-        persona_first_names=agent.stm.name,
+        persona_name=agent.stm.name,
         list_of_places=str(list_of_places).strip("[").strip("]"),
+        persona_age=str(agent.stm.age)
     )
 
     daily_plan = ModelService().generate_text(daily_plan_variables, template_file)

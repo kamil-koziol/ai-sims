@@ -1,14 +1,17 @@
-!<INPUT 0>! -- Persona short description
+!<INPUT 0>! -- Description
 !<INPUT 1>! -- Lifestyle
-!<INPUT 2>! -- Reverie date time now
-!<INPUT 3>! -- Persona first names
+!<INPUT 2>! -- Date time now
+!<INPUT 3>! -- Persona name
 !<INPUT 4>! -- List of places that agent can go to.
+!<INPUT 5>! -- Age
 
 <commentblockmarker>###</commentblockmarker>
-Create plan for one day using only listed places. Use format "Go to [place] at [time]"
-!<INPUT 0>!
+Create plan for one day for !<INPUT 3>! using only listed places. The plan must take into account their character traits and personality.
+Use format "Go to [place] at [hour]".
 
+!<INPUT 3>! is !<INPUT 5>! years old. !<INPUT 0>!
 In general, !<INPUT 1>!
+
 Today is !<INPUT 2>!. Here is !<INPUT 3>!'s plan to visit various places. List of available places: !<INPUT 4>!. 
 Plan for today:
 1. Wake up 8:00 am
