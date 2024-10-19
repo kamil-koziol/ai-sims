@@ -13,32 +13,33 @@ from ..schemas import Agent, Game, Location
 from ..state import State, get_state
 
 
-class GameRequest(BaseModel):
-    id: UUID
+class CreateGameRequest(BaseModel):
     locations: List[Location]
     agents: List[Agent]
 
 
-class GameResponse(BaseModel):
-    id: UUID
+class CreateGameResponse(BaseModel):
+    game: Game
 
 
 router = APIRouter()
 
 
-@router.post("/", response_model=GameResponse)
-async def create_game(game_request: GameRequest, state: State = Depends(get_state)):
-    if game_request.id in state.games:
+@router.post("/", response_model=CreateGameResponse)
+async def create_game(
+    game_request: CreateGameRequest, state: State = Depends(get_state)
+):
+    game: Game = Game(
+        id=uuid4(), agents=game_request.agents, locations=game_request.locations
+    )
+    if game.id in state.games:
         raise GameExistsErr
 
-    newGame: Game = Game(game_request.agents, game_request.locations)
+    state.games[game.id] = game
 
-    GameManager().add_game(
-        game_id=game_request.id, game=GameMapper.request_to_game(game_request)
-    )
+    GameManager().add_game(game_id=game.id, game=GameMapper.api_game_to_game(game))
 
-    state.games[game_request.id] = newGame
-    return {"id": game_request.id}
+    return CreateGameResponse(game=game)
 
 
 class CreateAgentRequest(BaseModel):
