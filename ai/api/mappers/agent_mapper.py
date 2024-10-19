@@ -1,5 +1,6 @@
 from agents import Agent
 from api import Agent as ApiAgent
+from location.location import Location
 from memory import STM_attributes
 
 
@@ -14,4 +15,4 @@ class AgentMapper:
             curr_location=None,
             lifestyle=api_agent.lifestyle,
         )
-        return Agent(init_parameters=stm_attributes, save_file=None, load_file=None)
+        return Agent(init_parameters=stm_attributes)
