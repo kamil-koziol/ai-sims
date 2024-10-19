@@ -7,22 +7,15 @@ from agents.actions import (
     retrieve_relevant_memories,
     converse,
     execute,
-    reflect,
     create_daily_plan,
 )
 from agents.actions import (
-    plan,
-    retrieve_relevant_memories,
-    converse,
     decide_to_converse,
-    execute,
-    reflect,
 )
-from memory import STM, STM_attributes, MemoryStream, PlanNode
+from memory import STM, STM_attributes, MemoryStream, PlanNode, MemoryNode
 from object_types import Objects
 from location import Location
 from utils import setup_logger
-from utils.utils import pretty_format_dialogs
 
 
 class Agent:
@@ -32,7 +25,7 @@ class Agent:
 
     def __init__(
         self,
-        init_parameters: STM_attributes = None,
+        init_parameters: STM_attributes,
         save_file: str = None,
         load_file: str = None,
     ) -> None:
@@ -49,7 +42,7 @@ class Agent:
 
         self.logger = setup_logger(
             init_parameters.name,
-            f'{init_parameters.name.lower().replace(" ", "_")}_logs.logs',
+            f'{init_parameters.name.lower().replace(" ", "_")}.log',
         )
 
         self.stm = STM(init_parameters)
@@ -72,18 +65,18 @@ class Agent:
         Create plan for the current day for the agent. List of places is fixed.
         """
         plan = create_daily_plan(self, locations)
-        self.logger.info("Created daily plan: \n %s", str(plan))
+        self.logger.info("Created daily plan:%s\n", str(plan))
         self.stm.daily_plan = plan
         return plan
 
-    def retrieve(self, perceived: str):
+    def retrieve(self, perceived: str) -> List[MemoryNode]:
         """
         Retrieve a relevant memories to perceived events
 
         Args:
             perceived (str): Description of perceived events.
         """
-        retrieve_relevant_memories(self, perceived)
+        return retrieve_relevant_memories(self, perceived)
 
     def execute(self):
         execute(self)
@@ -96,8 +89,6 @@ class Agent:
             target_agent (Agent): Agent to converse with.
         """
         conversation = converse(self, target_agent)
-        pretty_formated = pretty_format_dialogs(conversation)
-        self.logger.info("Started conversation with %s: \n %s".format(target_agent.stm.name, '\n'.join(conversation)))
         return conversation
 
     def should_converse(

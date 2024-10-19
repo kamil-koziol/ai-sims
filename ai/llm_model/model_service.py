@@ -3,6 +3,7 @@ from dataclasses import asdict, is_dataclass
 import os
 import config
 import config.model
+from utils import setup_logger
 from llm_model.model import (
     GenerationModel,
     EmbeddingModel,
@@ -24,6 +25,10 @@ class ModelService(metaclass=Singleton):
         else:
             self._generation_model = GenerationModel(config.model.GENERATION_URL)
             self._embedding_model = EmbeddingModel(config.model.EMBEDDING_URL)
+        self.logger = setup_logger(
+            "model service logger",
+            'model_service.log',
+        )
 
     def get_embeddings(self, text: str) -> List[float]:
         """
@@ -68,6 +73,7 @@ class ModelService(metaclass=Singleton):
 
         prompt = self.prepare_prompt(input_variables_list, prompt_file_name)
         response = self._generation_model.generate_text(prompt).generated_text
+        self.logger.info("Prompt sent to model:\n%s\nResponse from model:\n%s", prompt, response)
         return response
 
     @property

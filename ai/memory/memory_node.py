@@ -19,10 +19,11 @@ embeddings: embedded description
 
 
 @dataclass
-class MemoryNodeAttributes():
+class MemoryNodeAttributes:
     """
     Attributes describing memory node.
     """
+
     importance: int
     created: datetime
     description: str
@@ -30,10 +31,11 @@ class MemoryNodeAttributes():
     embeddings: List[float]
 
 
-class MemoryNode():
+class MemoryNode:
     """
     Single memory.
     """
+
     def __init__(self, attributes: MemoryNodeAttributes) -> None:
         """
         Create a memory node.
@@ -42,4 +44,22 @@ class MemoryNode():
             attributes (MemoryNodeAttributes): Attributes describing memory node.
         """
         self.attributes: MemoryNodeAttributes = attributes
-        self.id: int = 0
+        self.id: int
+
+    def __str__(self) -> str:
+        return f"""
+importance: {self.attributes.importance}
+created: {self.attributes.created}
+type: {self.attributes.node_type.value}
+description: {self.attributes.description}
+"""
+
+    def __repr__(self) -> str:
+        return f"""
+{{
+  importance: {self.attributes.importance},
+  created: {self.attributes.created},
+  type: {self.attributes.node_type.value},
+  description: {self.attributes.description}
+}}
+"""

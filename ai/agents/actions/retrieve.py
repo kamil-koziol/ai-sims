@@ -39,6 +39,7 @@ def retrieve_relevant_memories(agent: Agent, perceived: str) -> List[MemoryNode]
         )
     score_list = sorted(score_list, key=lambda x: x["score"])
     top_nodes_ids = score_list[:nodes_to_retrieve]
+    top_nodes_ids = list(map(lambda x: x['id'], top_nodes_ids))
     top_nodes = list(filter(lambda x: x.id in top_nodes_ids, agent.memory_stream.nodes))
     return top_nodes
 
@@ -56,7 +57,8 @@ def get_string_memories(agent: Agent, subject: str) -> str:
     """
     retrieved_nodes = retrieve_relevant_memories(agent, subject)
     memories = '\n'.join(node.attributes.description for node in retrieved_nodes)
-    logging.info(f"{agent.stm.name}'s retrieved memories: {memories}")
+    agent.logger.info("%s's retrieved memories:\n%s\n", agent.stm.name, memories)
+    agent.logger.info("Memories: %s", str(agent.memory_stream.nodes))
     return memories
 
 

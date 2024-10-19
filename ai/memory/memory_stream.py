@@ -1,5 +1,6 @@
 from typing import List
 from memory import MemoryNode
+import logging
 
 
 class MemoryStream:
