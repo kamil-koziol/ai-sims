@@ -55,7 +55,7 @@ class Agent:
         A long term memory for storing agent's memories.
         """
 
-        # self.logger.info("Created agent with parameters: \n %s", str(self.stm))
+        self.logger.info("Created agent with parameters: \n %s", str(self.stm))
 
     def reflect(self):
         pass
@@ -89,8 +89,6 @@ class Agent:
             target_agent (Agent): Agent to converse with.
         """
         conversation = converse(self, target_agent)
-        # pretty_formated = pretty_format_dialogs(conversation)
-        # self.logger.info("Started conversation with %s: \n %s".format(target_agent.stm.name, '\n'.join(conversation)))
         return conversation
 
     def should_converse(

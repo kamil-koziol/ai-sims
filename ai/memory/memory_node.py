@@ -44,7 +44,7 @@ class MemoryNode:
             attributes (MemoryNodeAttributes): Attributes describing memory node.
         """
         self.attributes: MemoryNodeAttributes = attributes
-        self.id: int = 0
+        self.id: int
 
     def __str__(self) -> str:
         return f"""

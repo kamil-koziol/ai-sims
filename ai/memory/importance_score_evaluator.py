@@ -74,8 +74,6 @@ class ImportanceEvaluator(metaclass=Singleton):
             int: Converted string.
         """
         try:
-            print(int(response))
-            if int(response) == None: raise Exception("co jest")
             return int(response)
         except ValueError as e:
             print(f'Invalid model response! {e} cannot be converted to int. Returning default value.', file=sys.stderr)
