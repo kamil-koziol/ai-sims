@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from game.game import Game as GlobalGame
 from game.game_manager import GameManager
 
+from ..errors import GameExistsErr, GameNotFoundErr
 from ..mappers import AgentMapper, GameMapper
 from ..schemas import Agent, Game, Location
 from ..state import State, get_state
@@ -27,9 +28,8 @@ router = APIRouter()
 
 @router.post("/", response_model=GameResponse)
 async def create_game(game_request: GameRequest, state: State = Depends(get_state)):
-
     if game_request.id in state.games:
-        raise HTTPException(status_code=400, detail="Game already exists")
+        raise GameExistsErr
 
     newGame: Game = Game(game_request.agents, game_request.locations)
 
@@ -59,7 +59,7 @@ async def create_agent(
     state: State = Depends(get_state),
 ):
     if game_id not in state.games:
-        raise HTTPException(status_code=404, detail="Game not found")
+        raise GameNotFoundErr
 
     agent = Agent(
         id=uuid4(),
