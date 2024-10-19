@@ -11,7 +11,7 @@ class App:
 
         self.app.include_router(
             game.router,
-            prefix="/game",
+            prefix="/games",
             tags=["game"],
             dependencies=[Depends(get_state)],
         )
