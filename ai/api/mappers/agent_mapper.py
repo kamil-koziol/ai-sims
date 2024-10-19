@@ -1,14 +1,16 @@
+from uuid import UUID
+
 from agents import Agent
-from api import Agent as ApiAgent
-from location.location import Location
 from memory import STM_attributes
+
+from ..schemas import Agent as ApiAgent
 
 
 class AgentMapper:
     @staticmethod
     def request_to_agent(api_agent: ApiAgent) -> Agent:
         stm_attributes = STM_attributes(
-            id=api_agent.id,
+            id=UUID(api_agent.id),
             name=api_agent.name,
             description=api_agent.description,
             age=api_agent.age,

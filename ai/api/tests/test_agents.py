@@ -1,6 +1,3 @@
-from uuid import uuid4
-
-import pytest
 from fastapi import status
 from fastapi.testclient import TestClient
 

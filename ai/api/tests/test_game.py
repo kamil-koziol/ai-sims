@@ -18,7 +18,8 @@ def test_create_game(client: TestClient):
     create_game_response = CreateGameResponse.model_validate(response.json())
 
     assert len(create_game_response.game.agents) == len(game["agents"])
-    assert create_game_response.game.agents[0].name == game["agents"][0]["name"]
+    assert create_game_response.game.agents[0].id == game["agents"][0]["id"]
+    assert create_game_response.game.agents[1].id == game["agents"][1]["id"]
 
 
 def test_get_game_succeds_on_existing_game(client: TestClient):

@@ -3,14 +3,11 @@ from uuid import uuid4
 import pytest
 from fastapi import status
 
-from api.tests.sample_game import game_data  # Assuming you have sample game data
+from api.tests.utils import create_sample_game
 
 
 def test_create_interaction_success(client, game_data):
-    # Create game
-    response = client.post("/game/", json=game_data)
-    assert response.status_code == status.HTTP_200_OK
-
+    game = create_sample_game(client)
     # Prepare interaction request payload
     agents = game_data["agents"]
     locations = game_data["locations"]

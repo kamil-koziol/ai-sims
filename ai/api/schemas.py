@@ -9,7 +9,7 @@ class Location(BaseModel):
 
 
 class Agent(BaseModel):
-    id: UUID
+    id: str
     name: str
     age: int
     description: str
@@ -17,13 +17,12 @@ class Agent(BaseModel):
 
 
 class Game(BaseModel):
-    id: UUID
+    id: str
     agents: List[Agent]
     locations: List[Location]
 
-    def get_agent(self, agent_id: UUID) -> Optional[Agent]:
+    def get_agent(self, agent_id: str) -> Optional[Agent]:
         for agent in self.agents:
             if agent.id == agent_id:
                 return agent
         return None
-
