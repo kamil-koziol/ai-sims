@@ -42,6 +42,21 @@ async def create_game(
     return CreateGameResponse(game=game)
 
 
+class GetGameResponse(BaseModel):
+    game: Game
+
+
+@router.get("/{game_id}", response_model=CreateGameResponse)
+async def get_game(
+    game_id: Annotated[UUID, Path(title="Game id")], state: State = Depends(get_state)
+):
+    if game_id not in state.games:
+        raise GameNotFoundErr
+
+    game = state.games[game_id]
+    return GetGameResponse(game=game)
+
+
 class CreateAgentRequest(BaseModel):
     name: str
     age: int
