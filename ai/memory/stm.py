@@ -1,10 +1,12 @@
 from dataclasses import dataclass
-from enum import Enum
 from datetime import datetime
-from typing import List
-from .plan_node import PlanNode
+from enum import Enum
+from typing import List, Optional
 from uuid import UUID
+
 from location import Location
+
+from .plan_node import PlanNode
 
 
 @dataclass
@@ -36,7 +38,7 @@ class STM_attributes:
     """
     Name of current place where agent is currently standing.
     """
-    curr_location: Location
+    curr_location: Optional[Location]
 
     """
     General preferences of the agent for spending a day.
@@ -75,7 +77,7 @@ class STM:
         self._description: str = init_parameters.description
         self._life_style: str = init_parameters.lifestyle
         self._age: int = init_parameters.age
-        self._curr_location: Location = init_parameters.curr_location
+        self._curr_location: Optional[Location] = init_parameters.curr_location
 
         self._position: tuple = (0, 0)
 
@@ -92,7 +94,7 @@ name: {self.name},
 description: {self.description},
 lifestyle: {self._life_style},
 age: {self.age},
-location: {self.curr_location.name}
+location: {self.curr_location.name if self.curr_location else None}
         """
 
     def get_short_description(self):
