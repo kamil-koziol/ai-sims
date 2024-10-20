@@ -95,8 +95,8 @@ def converse(init_agent: Agent, target_agent: Agent) -> Dict[UUID, List]:
         init_agent, target_agent, convo
     )
 
-    insert_convo_into_mem_stream(init_agent, convo, convo_summary)
-    insert_convo_into_mem_stream(target_agent, convo, convo_summary)
+    insert_convo_into_mem_stream(init_agent, convo, convo_summary, target_agent.stm.name)
+    insert_convo_into_mem_stream(target_agent, convo, convo_summary, target_agent.stm.name)
     splitted_dialogs = _split_conversation(
         init_agent=init_agent, target_agent=target_agent, conversation=convo
     )
@@ -181,7 +181,7 @@ def generate_memory_on_conversation(agent: Agent, convo: str) -> str:
 
 
 def insert_convo_into_mem_stream(
-    agent: Agent, convo: str, summary: str
+    agent: Agent, convo: str, summary: str, source: str
 ) -> None:
     """
     Add a memory into agent's memory stream.
@@ -191,11 +191,11 @@ def insert_convo_into_mem_stream(
         convo (str): Description of conversation.
         summary (str): Summary of conversation.
     """
-    dialog_node = MemoryNodeFactory.create_chat(summary, agent)
+    dialog_node = MemoryNodeFactory.create_chat(summary, agent, source)
     agent.memory_stream.add_memory_node(dialog_node)
 
     memory = generate_memory_on_conversation(agent, convo)
-    memory_node = MemoryNodeFactory.create_thought(memory, agent)
+    memory_node = MemoryNodeFactory.create_thought(memory, agent, source)
     agent.memory_stream.add_memory_node(memory_node)
     agent.logger.info("Added memory node to memory stream:%s\n", str(memory_node))
 

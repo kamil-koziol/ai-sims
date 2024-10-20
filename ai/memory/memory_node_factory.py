@@ -15,13 +15,14 @@ class MemoryNodeFactory:
     Factory for MemoryNode class.
     """
     @staticmethod
-    def create_observation(description: str, agent: Agent) -> MemoryNode:
+    def create_observation(description: str, agent: Agent, source: str) -> MemoryNode:
         """
         Create memory node of observation performed by agent.
 
         Args:
             description (str): Description of observation.
             agent (Agent): Agent for whom calculate importance score.
+            source (Agent): Agent th
 
         Returns:
             MemoryNode: Created memory node.
@@ -37,13 +38,14 @@ class MemoryNodeFactory:
             created=agent.stm.curr_time,
             node_type=MemoryType.OBSERVATION,
             importance=importance_score,
-            embeddings=embeddings
+            embeddings=embeddings,
+            source=source
         )
         memory_node = MemoryNode(attributes=attributes)
         return memory_node
 
     @staticmethod
-    def create_chat(description: str, agent: Agent) -> MemoryNode:
+    def create_chat(description: str, agent: Agent, source: str) -> MemoryNode:
         """
         Create memory node of dialog.
 
@@ -65,13 +67,14 @@ class MemoryNodeFactory:
             created=agent.stm.curr_time,
             node_type=MemoryType.CHAT,
             importance=importance_score,
-            embeddings=embeddings
+            embeddings=embeddings,
+            source=source
         )
         memory_node = MemoryNode(attributes=attributes)
         return memory_node
 
     @staticmethod
-    def create_thought(description: str, agent: Agent) -> MemoryNode:
+    def create_thought(description: str, agent: Agent, source: str) -> MemoryNode:
         """
         Create memory node of thought.
 
@@ -93,7 +96,8 @@ class MemoryNodeFactory:
             created=agent.stm.curr_time,
             node_type=MemoryType.THOUGHT,
             importance=importance_score,
-            embeddings=embeddings
+            embeddings=embeddings,
+            source=source
         )
         memory_node = MemoryNode(attributes=attributes)
         return memory_node
