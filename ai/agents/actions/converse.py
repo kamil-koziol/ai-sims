@@ -189,7 +189,8 @@ def insert_convo_into_mem_stream(
     Args:
         agent (Agent): Agent to add a memory.
         convo (str): Description of conversation.
-        summary (str): Summary of conversation.
+        summary (str): Summary of a conversation.
+        source (str): Source of a conversation.
     """
     dialog_node = MemoryNodeFactory.create_chat(summary, agent, source)
     agent.memory_stream.add_memory_node(dialog_node)
