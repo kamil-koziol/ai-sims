@@ -193,6 +193,7 @@ def insert_convo_into_mem_stream(
     """
     dialog_node = MemoryNodeFactory.create_chat(summary, agent, source)
     agent.memory_stream.add_memory_node(dialog_node)
+    agent.logger.info("Added memory node to memory stream:%s\n", str(dialog_node))
 
     memory = generate_memory_on_conversation(agent, convo)
     memory_node = MemoryNodeFactory.create_thought(memory, agent, source)
