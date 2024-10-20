@@ -5,7 +5,10 @@ from utils import Singleton
 from dataclasses import dataclass
 from llm_model import ModelService
 from .memory_type import MemoryType
+import logging
 import sys
+
+from memory import memory_type
 
 if TYPE_CHECKING:
     from agents import Agent
@@ -41,6 +44,9 @@ class ImportanceEvaluator(metaclass=Singleton):
         """
         if memory_type == MemoryType.CHAT:
             return self._calculate_importance_chat(agent=agent, memory_description=memory_description)
+        if memory_type == MemoryType.THOUGHT:
+            return self._calculate_importance_thought(agent=agent, memory_description=memory_description)
+        agent.logger.error("Calculating importance is not implemented for %s", memory_type.value)
 
     def _calculate_importance_chat(self, agent: Agent, memory_description: str) -> int:
         """
@@ -63,6 +69,27 @@ class ImportanceEvaluator(metaclass=Singleton):
         score = self._convert_model_response_to_int(response=model_response)
         return score
 
+    def _calculate_importance_thought(self, agent: Agent, memory_description: str) -> int:
+        """
+        Calculate importance of thought memory.
+
+        Args:
+            agent (Agent): Owner of a memory
+            memory_description (str): Description of a memory.
+
+        Returns:
+            int: Score
+        """
+        prompt_template_file = 'evaluate_thought.txt'
+        prompt_variables = CalculateImportanceScoreVariables(
+            agent_name=agent.stm.name,
+            agent_short_description=agent.stm.description,
+            chat_description=memory_description
+        )
+        model_response = ModelService().generate_text(prompt_variables, prompt_template_file)
+        score = self._convert_model_response_to_int(response=model_response)
+        return score
+
     def _convert_model_response_to_int(self, response: str) -> int:
         """
         Convert model response as a text to int value.
@@ -76,5 +103,5 @@ class ImportanceEvaluator(metaclass=Singleton):
         try:
             return int(response)
         except ValueError as e:
-            print(f'Invalid model response! {e} cannot be converted to int. Returning default value.', file=sys.stderr)
+            logging.error('Invalid model response! %s cannot be converted to int. Returning default value.', str(e))
             return self._default_value
