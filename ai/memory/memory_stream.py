@@ -1,12 +1,12 @@
 from typing import List
 from memory import MemoryNode
-import logging
 
 
 class MemoryStream:
     """
     Class for memory stream. Memory stream is responsible for storing memories nodes, adding new nodes.
     """
+
     def __init__(self) -> None:
         """
         Initialize a memory stream
