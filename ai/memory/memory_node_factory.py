@@ -9,13 +9,15 @@ if TYPE_CHECKING:
     from agents import Agent
 
 
-
 class MemoryNodeFactory:
     """
     Factory for MemoryNode class.
     """
+
     @staticmethod
-    def create_observation(description: str, agent: Agent, source: str) -> MemoryNode:
+    def create_observation(
+        description: str, agent: Agent, source: str
+    ) -> MemoryNode:
         """
         Create memory node of observation performed by agent.
 
@@ -30,7 +32,7 @@ class MemoryNodeFactory:
         importance_score = ImportanceEvaluator().calculate_importance_score(
             agent=agent,
             memory_description=description,
-            memory_type=MemoryType.OBSERVATION
+            memory_type=MemoryType.OBSERVATION,
         )
         embeddings = ModelService().get_embeddings(text=description)
         attributes = MemoryNodeAttributes(
@@ -39,7 +41,7 @@ class MemoryNodeFactory:
             node_type=MemoryType.OBSERVATION,
             importance=importance_score,
             embeddings=embeddings,
-            source=source
+            source=source,
         )
         memory_node = MemoryNode(attributes=attributes)
         return memory_node
@@ -59,7 +61,7 @@ class MemoryNodeFactory:
         importance_score = ImportanceEvaluator().calculate_importance_score(
             agent=agent,
             memory_description=description,
-            memory_type=MemoryType.CHAT
+            memory_type=MemoryType.CHAT,
         )
         embeddings = ModelService().get_embeddings(text=description)
         attributes = MemoryNodeAttributes(
@@ -68,13 +70,15 @@ class MemoryNodeFactory:
             node_type=MemoryType.CHAT,
             importance=importance_score,
             embeddings=embeddings,
-            source=source
+            source=source,
         )
         memory_node = MemoryNode(attributes=attributes)
         return memory_node
 
     @staticmethod
-    def create_thought(description: str, agent: Agent, source: str) -> MemoryNode:
+    def create_thought(
+        description: str, agent: Agent, source: str
+    ) -> MemoryNode:
         """
         Create memory node of thought.
 
@@ -88,7 +92,7 @@ class MemoryNodeFactory:
         importance_score = ImportanceEvaluator().calculate_importance_score(
             agent=agent,
             memory_description=description,
-            memory_type=MemoryType.THOUGHT
+            memory_type=MemoryType.THOUGHT,
         )
         embeddings = ModelService().get_embeddings(text=description)
         attributes = MemoryNodeAttributes(
@@ -97,7 +101,31 @@ class MemoryNodeFactory:
             node_type=MemoryType.THOUGHT,
             importance=importance_score,
             embeddings=embeddings,
-            source=source
+            source=source,
+        )
+        memory_node = MemoryNode(attributes=attributes)
+        return memory_node
+
+    @staticmethod
+    def create_injection(
+        description: str, agent: Agent, source: str
+    ) -> MemoryNode:
+        """
+        Create injected memory node.
+        """
+        importance_score = ImportanceEvaluator().calculate_importance_score(
+            agent=agent,
+            memory_description=description,
+            memory_type=MemoryType.THOUGHT,
+        )
+        embeddings = ModelService().get_embeddings(text=description)
+        attributes = MemoryNodeAttributes(
+            description=description,
+            created=agent.stm.curr_time,
+            node_type=MemoryType.INJECTION,
+            importance=importance_score,
+            embeddings=embeddings,
+            source=source,
         )
         memory_node = MemoryNode(attributes=attributes)
         return memory_node

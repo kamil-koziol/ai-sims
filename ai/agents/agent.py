@@ -8,6 +8,7 @@ from agents.actions import (
     converse,
     execute,
     create_daily_plan,
+    inject_memory,
 )
 from agents.actions import (
     decide_to_converse,
@@ -109,12 +110,6 @@ class Agent:
                     return agent_or_object
         return False
 
-    def perceive(self):
-        pass
-
-    def move(self, location: str):
-        pass
-
     def save(self) -> None:
         """
         Save the agent state to the file.
@@ -127,3 +122,9 @@ class Agent:
         file_path = os.path.join(storage_dir, self.save_file)
         with open(file_path, "wb") as f:
             dill.dump(self, f)
+
+    def inject_memory(self, description: str) -> None:
+        """
+        Inject memory to agent.
+        """
+        inject_memory(description, self)
