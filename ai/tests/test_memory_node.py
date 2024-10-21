@@ -1,5 +1,5 @@
 from llm_model import MockedEmbeddingModel
-from memory import MemoryNode, MemoryNodeAttributes
+from memory import MemoryNode, MemoryNodeAttributes, MemoryType
 from datetime import datetime
 
 
@@ -10,8 +10,9 @@ class TestModel:
             importance=4,
             created=datetime.now(),
             description="desc",
-            node_type="chat",
-            embeddings=embed_model.embed("something"),
+            node_type=MemoryType.CHAT,
+            embeddings=embed_model.embed("something").embedding,
+            source="test_model"
         )
         self.memory_node = MemoryNode(attributes)
         assert True

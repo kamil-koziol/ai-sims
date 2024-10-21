@@ -36,9 +36,9 @@ def example_game(mocker):
 
     mem_stream = MemoryStream()
 
-    chat = MemoryNodeFactory.create_chat("chat desc", agent1)
-    thought = MemoryNodeFactory.create_thought("memory descr", agent1)
-    observation = MemoryNodeFactory.create_observation("descript observ", agent1)
+    chat = MemoryNodeFactory.create_chat("chat desc", agent1, "test")
+    thought = MemoryNodeFactory.create_thought("memory descr", agent1, "test")
+    observation = MemoryNodeFactory.create_observation("descript observ", agent1, "test")
 
     mem_stream.add_memory_node(chat)
     mem_stream.add_memory_node(thought)

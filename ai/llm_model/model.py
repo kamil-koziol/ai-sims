@@ -84,7 +84,7 @@ class MockedEmbeddingModel(EmbeddingModel):
             text (str): Text to embed.
 
         Returns:
-            List[float]: Embedding
+            EmbedResponse: Embedding
         """
         response = EmbedResponse(
             sentences=f'Some mocked embedding sentence for {text}',

@@ -22,13 +22,13 @@ def init_agent():
 
 class TestModel:
     def test_create_observation(self, init_agent: Agent):
-        MemoryNodeFactory().create_observation("something", init_agent)
+        MemoryNodeFactory().create_observation("something", init_agent, "test_create_observation")
         assert True
 
     def test_create_dialog(self, init_agent: Agent):
-        MemoryNodeFactory().create_chat("something", init_agent)
+        MemoryNodeFactory().create_chat("something", init_agent, "test_create_dialog")
         assert True
 
     def test_create_thought(self, init_agent: Agent):
-        MemoryNodeFactory().create_thought("something", init_agent)
+        MemoryNodeFactory().create_thought("something", init_agent, "test_create_thought")
         assert True
