@@ -47,7 +47,7 @@ class WorldTime(metaclass=Singleton):
         return self._current_time
 
 
-formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
+formatter = logging.Formatter("%(levelname)s %(asctime)s %(message)s")
 
 
 def setup_logger(
