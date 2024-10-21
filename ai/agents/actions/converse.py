@@ -1,12 +1,10 @@
 from __future__ import annotations
-import logging
 from typing import TYPE_CHECKING, Dict, List
 from dataclasses import dataclass
 from uuid import UUID
-from memory import Action, MemoryNodeFactory
+from memory import MemoryNodeFactory
 from agents.actions.retrieve import get_string_memories
 from llm_model import ModelService
-from utils import WorldTime
 
 if TYPE_CHECKING:
     from agents import Agent
@@ -221,7 +219,7 @@ def decide_to_converse(init_agent: Agent, target_agent: Agent) -> bool:
         target_agent_description=target_agent.stm.description,
         init_agent_action=init_agent.stm.action.value,
         target_agent_action=target_agent.stm.action.value,
-        curr_time=WorldTime().current_time.strftime("%m/%d/%Y, %H:%M:%S"),
+        curr_time=target_agent.stm.curr_time.strftime("%m/%d/%Y, %H:%M:%S"),
         location=init_agent.stm.curr_location.name,
     )
     model_output = ModelService().generate_text(

@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import List, TYPE_CHECKING
 from dataclasses import dataclass
-from utils import WorldTime
 from llm_model import ModelService
 from datetime import datetime
 from memory import PlanNode
@@ -34,21 +33,23 @@ def create_daily_plan(agent: Agent, list_of_places: List) -> List[PlanNode]:
     """
     template_file = "daily_planning_only_places.txt"
 
+    current_time = agent.stm.curr_time
+
     daily_plan_variables = DailyPlanVariables(
         persona_short_description=agent.stm.get_short_description(),
         persona_life_style=agent.stm.life_style,
-        datetime_now=WorldTime().current_time.strftime("%m/%d/%Y, %H:%M:%S"),
+        datetime_now=current_time.strftime("%m/%d/%Y, %H:%M:%S"),
         persona_first_names=agent.stm.name,
         list_of_places=str(list_of_places).strip("[").strip("]"),
     )
 
     daily_plan = ModelService().generate_text(daily_plan_variables, template_file)
-    plan = _retrieve_plan(daily_plan, list_of_places)
+    plan = _retrieve_plan(daily_plan, list_of_places, current_time)
     return plan
 
 
 def _retrieve_plan(
-    generated_text: str, list_of_places: List[Location]
+    generated_text: str, list_of_places: List[Location], curr_time: datetime
 ) -> List[PlanNode]:
     plan = []
     plan_split = generated_text.split("Plan for today:")[1]
@@ -59,7 +60,7 @@ def _retrieve_plan(
         location = _retrieve_location(
             plan_point=plan_point, list_of_places=list_of_places
         )
-        time = _retrieve_time(plan_point=plan_point)
+        time = _retrieve_time(plan_point=plan_point, curr_time=curr_time)
         plan_node = PlanNode(location=location, time=time)
         if plan_node.location is not None and plan_node.time is not None:
             plan.append(plan_node)
@@ -76,17 +77,16 @@ def _retrieve_location(plan_point: str, list_of_places: List[Location]) -> Locat
     return location
 
 
-def _retrieve_time(plan_point: str) -> datetime:
+def _retrieve_time(plan_point: str, curr_time: datetime) -> datetime | None:
     time_string = re.search("..:.. ..", plan_point)
     if time_string is None:
         return None
     time_string = time_string.group().upper().strip()
     time_object = datetime.strptime(time_string, "%I:%M %p")
-    current_time = WorldTime().current_time
     return datetime(
-        year=current_time.year,
-        month=current_time.month,
-        day=current_time.day,
+        year=curr_time.year,
+        month=curr_time.month,
+        day=curr_time.day,
         hour=time_object.hour,
         minute=time_object.minute,
         second=0,
