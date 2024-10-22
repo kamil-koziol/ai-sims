@@ -54,9 +54,7 @@ def _retrieve_plan(
     generated_text: str, list_of_places: List[Location], curr_time: datetime
 ) -> List[PlanNode]:
     plan = []
-    plan_split = generated_text.split("Plan for today:")[1]
-
-    plan_points = plan_split.split("\n")
+    plan_points = generated_text.split("\n")
 
     for plan_point in plan_points:
         location = _retrieve_location(
