@@ -68,17 +68,17 @@ class DecideToConverseVariables:
 def _split_conversation(
     init_agent: Agent, target_agent: Agent, conversation: str
 ) -> Dict[UUID, List]:
-    splitted_dialogs = {init_agent.stm.id: [], target_agent.stm.id: []}
+    split_dialogs = {init_agent.stm.id: [], target_agent.stm.id: []}
     conversation_list = conversation.split("\n")
     for line in conversation_list:
         if line != '':
             name, dialog = line.split(":")
             dialog = dialog.strip()
             if init_agent.stm.name in name:
-                splitted_dialogs[init_agent.stm.id].append(dialog)
+                split_dialogs[init_agent.stm.id].append(dialog)
             elif target_agent.stm.name in name:
-                splitted_dialogs[target_agent.stm.id].append(dialog)
-    return splitted_dialogs
+                split_dialogs[target_agent.stm.id].append(dialog)
+    return split_dialogs
 
 
 def converse(init_agent: Agent, target_agent: Agent) -> Dict[UUID, List]:
@@ -96,10 +96,10 @@ def converse(init_agent: Agent, target_agent: Agent) -> Dict[UUID, List]:
 
     insert_convo_into_mem_stream(init_agent, convo, convo_summary, target_agent.stm.name)
     insert_convo_into_mem_stream(target_agent, convo, convo_summary, target_agent.stm.name)
-    splitted_dialogs = _split_conversation(
+    split_dialogs = _split_conversation(
         init_agent=init_agent, target_agent=target_agent, conversation=convo
     )
-    return splitted_dialogs
+    return split_dialogs
 
 
 def generate_conversation(init_agent: Agent, target_agent: Agent) -> str:
@@ -112,9 +112,7 @@ def generate_conversation(init_agent: Agent, target_agent: Agent) -> str:
     """
     prompt_template_file = "create_conversation.txt"
     init_agent_memories = get_string_memories(init_agent, target_agent.stm.name)
-    target_agent_memories = get_string_memories(
-        target_agent, init_agent.stm.name
-    )
+    target_agent_memories = get_string_memories(target_agent, init_agent.stm.name)
     prompt_variables = ConversationVariables(
         init_agent_name=init_agent.stm.name,
         target_agent_name=target_agent.stm.name,

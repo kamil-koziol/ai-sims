@@ -21,11 +21,25 @@ def init_agent():
 
 
 class TestImportanceEvaluator:
-    def test_calculate_importance_score(self, init_agent: Agent):
+    def test_calculate_importance_score_chat(self, init_agent: Agent):
         memory_type = MemoryType.CHAT
-        memory_description = "Mocked memory description"
+        chat = """
+Emily: Hi John!
+John Smith: Hi, nice to see you! I can't wait to get married tomorrow!
+Emily: I'm sure the celebration will be amazing. I'm so happy for you!
+"""
+        score = ImportanceEvaluator().calculate_importance_score(
+            init_agent, chat, memory_type
+        )
+        print(score)
+        assert type(score) == int
+
+    def test_calculate_importance_score_thought(self, init_agent: Agent):
+        memory_type = MemoryType.THOUGHT
+        memory_description = "Emily is getting a huge raise thanks to her hard work."
         score = ImportanceEvaluator().calculate_importance_score(
             init_agent, memory_description, memory_type
         )
+        print(score)
         assert type(score) == int
 
