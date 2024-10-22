@@ -7,12 +7,11 @@
 
 <commentblockmarker>###</commentblockmarker>
 Create plan for one day for !<INPUT 3>! using only listed places. The plan must take into account their character traits and personality.
-Use format "Go to [place] at [hour]".
+Use format "Go to [place] at [hour]". Generate at least 6 points in the plan. Do not give any explanation, just "Go to [place] at [hour]".
 
 !<INPUT 3>! is !<INPUT 5>! years old. !<INPUT 0>!
 In general, !<INPUT 1>!
 
 Today is !<INPUT 2>!. Here is !<INPUT 3>!'s plan to visit various places. List of available places: !<INPUT 4>!. 
-Plan for today:
-1. Wake up 8:00 am
-2.
+The person woke up at 8:00. Plan for today:
+Go to

@@ -56,7 +56,7 @@ def get_string_memories(agent: Agent, subject: str) -> str:
         str: String representation of memories.
     """
     retrieved_nodes = retrieve_relevant_memories(agent, subject)
-    memories = '\n\n'.join(node.attributes.description for node in retrieved_nodes)
+    memories = '\n\n'.join(f"{i + 1}.\n{node.attributes.description}" for i, node in enumerate(retrieved_nodes))
     agent.logger.info("%s's retrieved memories:\n%s\n", agent.stm.name, memories)
     agent.logger.info("Memories: %s", str(agent.memory_stream.nodes))
     return memories
