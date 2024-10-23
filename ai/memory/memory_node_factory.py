@@ -24,7 +24,7 @@ class MemoryNodeFactory:
         Args:
             description (str): Description of observation.
             agent (Agent): Agent for whom calculate importance score.
-            source (Agent): Agent th
+            source (Agent): Who was the source of the information.
 
         Returns:
             MemoryNode: Created memory node.
@@ -54,6 +54,7 @@ class MemoryNodeFactory:
         Args:
             description (str): Text of dialog.
             agent (Agent): Agent for whom calculate importance score.
+            source (Agent): Who was the source of the information.
 
         Returns:
             MemoryNode: Created memory node.
@@ -85,6 +86,7 @@ class MemoryNodeFactory:
         Args:
             description (str): Description of thought.
             agent (Agent): Agent for whom calculate importance score.
+            source (Agent): Who was the source of the information.
 
         Returns:
             MemoryNode: Created memory node.

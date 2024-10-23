@@ -19,20 +19,53 @@ from agents.actions import (
 from config.model import MOCK_MODELS
 
 
+chat_example = """John Smith: Hey Emily, how's it going?
+Emily Green: Not bad, just enjoying the day off. How about you?
+John Smith: Same here. Just took the girls for a hike this morning. They had a blast.
+Emily Green: That's great! I love hiking too. Have you been to any good spots lately?
+John Smith: Yeah, I've been to a few new trails recently. There's this one beautiful spot near the lake.
+Emily Green: Oh, I'll have to check it out! I'm always looking for new places to explore.
+John Smith: Definitely do. Let me know if you want to go sometime.
+Emily Green: That sounds great! Thanks for the recommendation.
+John Smith: No problem. Have a good day!
+Emily Green: You too!"""
+
+
 @pytest.fixture
 def init_agent():
     stm = STM_attributes(
         UUID("{12345678-1234-5678-1234-567812345678}"),
         "John Smith",
-        "John Smith is a dedicated father of two girls who balances his steady job "
-        "at the post office with a passion for hiking in the great outdoors. "
-        "Despite his busy schedule, he always finds time to explore nature's trails, "
-        "instilling in his daughters a love for adventure and resilience.",
+        "He studies computer science.",
         27,
         Location("cafe"),
         "lazy",
     )
     agent = Agent(stm)
+
+    mem_stream = MemoryStream()
+    chat = MemoryNodeFactory.create_chat(
+        description=chat_example,
+        agent=agent,
+        source="Emily Green"
+    )
+    thought1 = MemoryNodeFactory.create_thought(
+        description="Emily Green loves computer games.",
+        agent=agent,
+        source="Emily Green"
+    )
+    thought2 = MemoryNodeFactory.create_thought(
+        description="On 24/12/2024 I need to go to my parents' for Christmas Eve.",
+        agent=agent,
+        source="Emily Green"
+    )
+
+    mem_stream.add_memory_node(chat)
+    mem_stream.add_memory_node(thought1)
+    mem_stream.add_memory_node(thought2)
+
+    agent.memory_stream = mem_stream
+
     return agent
 
 
@@ -41,11 +74,7 @@ def target_agent():
     stm = STM_attributes(
         UUID("{12345678-1234-5678-1234-567812345679}"),
         "Emily Green",
-        "Emily Green, a 25-year-old hairdresser with a flair for creativity, "
-        "is single and finds joy in crafting delicious meals in her spare time. "
-        "Her vibrant personality and culinary skills make her a beloved figure among "
-        "friends and clients alike, often hosting dinner parties that showcase her "
-        "talent and warmth.",
+        "She is a huge fan of computers.",
         27,
         Location("cafe"),
         "lazy",
@@ -66,13 +95,16 @@ def test_converse(mocker, init_agent: Agent, target_agent: Agent):
         )
         mocker.patch("agents.actions.insert_convo_into_mem_stream")
 
-    splitted_dialogs = converse(init_agent, target_agent)
-    splitted_dialogs = converse(init_agent, target_agent)
-    splitted_dialogs = converse(init_agent, target_agent)
+    # 3 conversations for checking memories saving and retrieval
+    split_dialogs = converse(init_agent, target_agent)
+    split_dialogs = converse(init_agent, target_agent)
+    split_dialogs = converse(init_agent, target_agent)
+
+    print(split_dialogs)
 
     assert (
-        len(splitted_dialogs[init_agent.stm.id]) > 0
-        and len(splitted_dialogs[target_agent.stm.id]) > 0
+        len(split_dialogs[init_agent.stm.id]) > 0
+        and len(split_dialogs[target_agent.stm.id]) > 0
     )
 
 

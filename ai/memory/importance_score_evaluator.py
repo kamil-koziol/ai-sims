@@ -6,9 +6,7 @@ from dataclasses import dataclass
 from llm_model import ModelService
 from .memory_type import MemoryType
 import logging
-import sys
 
-from memory import memory_type
 
 if TYPE_CHECKING:
     from agents import Agent
