@@ -1,8 +1,7 @@
 from typing import List
 from dataclasses import asdict, is_dataclass
 import os
-import config
-import config.model
+from config.model import MOCK_MODELS, GENERATION_URL, EMBEDDING_URL
 from utils import setup_logger
 from llm_model.model import (
     GenerationModel,
@@ -18,13 +17,12 @@ class ModelService(metaclass=Singleton):
     Singleton. Handles every communication with usage of a prompt.
     """
     def __init__(self) -> None:
-        self._MOCKED = False
-        if self._MOCKED:
+        if MOCK_MODELS:
             self._generation_model = MockedGenerationModel('')
             self._embedding_model = MockedEmbeddingModel('')
         else:
-            self._generation_model = GenerationModel(config.model.GENERATION_URL)
-            self._embedding_model = EmbeddingModel(config.model.EMBEDDING_URL)
+            self._generation_model = GenerationModel(GENERATION_URL)
+            self._embedding_model = EmbeddingModel(EMBEDDING_URL)
         self.logger = setup_logger(
             "model service logger",
             'model_service.log',
@@ -75,10 +73,3 @@ class ModelService(metaclass=Singleton):
         response = self._generation_model.generate_text(prompt).generated_text
         self.logger.info("Prompt sent to model:\n%s\nResponse from model:\n%s", prompt, response)
         return response
-
-    @property
-    def mocked(self) -> bool:
-        """
-        Is model service using mocked models.
-        """
-        return self._MOCKED
