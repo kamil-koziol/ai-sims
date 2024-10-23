@@ -86,6 +86,8 @@ def target_agent():
 def test_converse(mocker, init_agent: Agent, target_agent: Agent):
     if not MOCK_MODELS:
         split_dialogs = converse(init_agent, target_agent)
+        split_dialogs = converse(init_agent, target_agent)
+        split_dialogs = converse(init_agent, target_agent)
         print(split_dialogs)
 
         assert (
