@@ -188,6 +188,9 @@ location: {self.curr_location.name if self.curr_location else None}
     def curr_time(self, value: datetime):
         self._curr_time = value
 
+    def get_curr_time_str(self):
+        return self._curr_time.strftime("%m/%d/%Y, %H:%M:%S")
+
     @property
     def daily_plan(self):
         return self._daily_plan

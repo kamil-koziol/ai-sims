@@ -5,27 +5,30 @@ Variables:
 !<INPUT 2>! -- init agent description
 !<INPUT 3>! -- target agent description
 
-!<INPUT 4>! -- init agent curr action description
-!<INPUT 5>! -- target agent curr action description
+!<INPUT 4>! -- init agent curr action
+!<INPUT 5>! -- target agent curr action
 
 !<INPUT 6>! -- curr location
+!<INPUT 7>! -- curr time
 
-!<INPUT 7>! -- init agent memories of target agent
-!<INPUT 8>! -- target agent memories of init agent
+!<INPUT 8>! -- init agent memories of target agent
+!<INPUT 9>! -- target agent memories of init agent
 
 <commentblockmarker>###</commentblockmarker>
 Context:
 !<INPUT 0>! is currently !<INPUT 4>!.
 !<INPUT 2>!
 !<INPUT 0>! has the following memories of !<INPUT 1>!:
-!<INPUT 7>!
+!<INPUT 8>!
 
 !<INPUT 1>! is currently !<INPUT 5>!.
 !<INPUT 3>!
 !<INPUT 1>! has the following memories of !<INPUT 0>!:
-!<INPUT 8>!
+!<INPUT 9>!
 
-!<INPUT 0>! and !<INPUT 1>! met at a !<INPUT 6>!. Generate a conversation between them in the format described below.
+Today is !<INPUT 7>!.
+!<INPUT 0>! and !<INPUT 1>! met at a !<INPUT 6>!. Generate a conversation between them taking into account their memories of each other and their personalities.
+Generate a conversation between them in the format described below.
 Each new utterance by a character must start on a new line and the utterance must be preceded by the name of the speaker. The characters must take turns speaking. Every second line must belong to the same person.
 At the beginning there must be said who starts the conversation.
 Example output:

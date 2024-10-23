@@ -12,6 +12,7 @@ class MockInputVariables:
     init_agent_action: str
     target_agent_action: str
     location: str
+    curr_time: str
     init_agent_memories: str
     target_agent_memories: str
 
@@ -32,6 +33,7 @@ class TestModelService:
             "doing nothing",
             "conversing",
             "cafe",
+            "2024-10-10 14:30:00",
             "memories1",
             "memories2",
         ]
@@ -49,6 +51,7 @@ class TestModelService:
         assert "doing nothing" in prompt
         assert "conversing" in prompt
         assert "cafe" in prompt
+        assert "2024-10-10 14:30:00" in prompt
         assert "memories1" in prompt
         assert "memories2" in prompt
 
@@ -70,6 +73,7 @@ class TestModelService:
             init_agent_action="doing nothing",
             target_agent_action="conversing",
             location="cafe",
+            curr_time="2024-10-10 14:30:00",
             init_agent_memories="memories1",
             target_agent_memories="memories2",
         )

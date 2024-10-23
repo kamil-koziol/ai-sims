@@ -156,7 +156,7 @@ Emily Green: You too!"""
     assert isinstance(result, str)
 
 
-def test_insert_convo_into_mem_stream(mocker, init_agent: Agent):
+def test_insert_convo_into_mem_stream(mocker, init_agent: Agent, target_agent: Agent):
     if MOCK_MODELS:
         mocker.patch.object(
             MemoryNodeFactory, "create_chat", return_value=Mock()
@@ -178,7 +178,7 @@ def test_insert_convo_into_mem_stream(mocker, init_agent: Agent):
     summary += "with John inviting Emily to join him on a hike this Sunday and making plans to meet up "
     summary += "and explore a trail together."
 
-    insert_convo_into_mem_stream(init_agent, convo, summary)
+    insert_convo_into_mem_stream(init_agent, convo, summary, target_agent.stm.name)
 
     assert len(init_agent.memory_stream.nodes) > 0
 
