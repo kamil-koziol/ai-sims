@@ -95,7 +95,11 @@ def test_converse(mocker, init_agent: Agent, target_agent: Agent):
         )
         mocker.patch("agents.actions.insert_convo_into_mem_stream")
 
+    # 3 conversations for checking memories saving and retrieval
     split_dialogs = converse(init_agent, target_agent)
+    split_dialogs = converse(init_agent, target_agent)
+    split_dialogs = converse(init_agent, target_agent)
+
     print(split_dialogs)
 
     assert (
