@@ -13,4 +13,4 @@ class AgentMapper():
             curr_location=None,
             lifestyle=api_agent.lifestyle
         )
-        return Agent(init_parameters=stm_attributes, save_file=None, load_file=None)
+        return Agent(init_parameters=stm_attributes)
