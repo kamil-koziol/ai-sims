@@ -6,7 +6,8 @@ from agents.actions import (
     converse,
     execute,
     create_daily_plan,
-    inject_memory, answer_interview_question,
+    inject_memory,
+    answer_interview_question,
 )
 from agents.actions import (
     decide_to_converse,
