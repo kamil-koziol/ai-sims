@@ -164,8 +164,8 @@ async def create_conversation(
 
 
 class CreateInteractionRequest(BaseModel):
-    initializing_agent: str
-    target_agent: str
+    initializing_agent_id: str
+    target_agent_id: str
     surroundings: List[str]
     location: Location
 
@@ -185,8 +185,8 @@ async def create_interaction(
     if not game:
         raise GameNotFoundErr
 
-    initializing_agent = game.get_agent(interaction_request.initializing_agent)
-    target_agent = game.get_agent(interaction_request.target_agent)
+    initializing_agent = game.get_agent(interaction_request.initializing_agent_id)
+    target_agent = game.get_agent(interaction_request.target_agent_id)
     if initializing_agent is None or target_agent is None:
         raise AgentNotFoundErr
 
