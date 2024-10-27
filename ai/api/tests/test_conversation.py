@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import uuid4
 
 from fastapi import status
@@ -18,6 +19,7 @@ def create_random_conversation_request(game: Game) -> CreateConversationRequest:
         target_agent_id=target_agent.id,
         surroundings=["some", "surroundings"],
         location=game.locations[0],
+        time=datetime.now().isoformat(),
     )
 
     return req

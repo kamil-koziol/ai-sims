@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import status
 
 from api.errors import AgentNotFoundErr, GameNotFoundErr
@@ -8,6 +10,7 @@ from api.tests.utils import create_sample_game
 
 def create_random_plan_request(game: Game) -> CreatePlanRequest:
     req = CreatePlanRequest(
+        time=datetime.now().isoformat(),
         location=game.locations[0],
     )
 

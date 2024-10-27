@@ -4,7 +4,6 @@ from fastapi import status
 from fastapi.testclient import TestClient
 
 from api.routers.game import CreateGameResponse, GetGameResponse
-from api.schemas import Game
 
 from .sample_game import game_data
 from .utils import create_sample_game

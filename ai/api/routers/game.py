@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Annotated, Any, Dict, List
 from uuid import UUID, uuid4
 
@@ -107,6 +108,7 @@ def stm_attibutes_from_agent(a: Agent, location: Location) -> STM_attributes:
 
 
 class CreateConversationRequest(BaseModel):
+    time: str
     initializing_agent_id: str
     target_agent_id: str
     surroundings: List[str]
@@ -168,6 +170,7 @@ class CreateInteractionRequest(BaseModel):
     target_agent_id: str
     surroundings: List[str]
     location: Location
+    time: str
 
 
 class CreateInteractionResponse(BaseModel):
@@ -180,7 +183,6 @@ async def create_interaction(
     interaction_request: CreateInteractionRequest,
     state: State = Depends(get_state),
 ):
-
     game = state.games.get(game_id)
     if not game:
         raise GameNotFoundErr
@@ -215,6 +217,7 @@ class PlanNode(BaseModel):
 
 
 class CreatePlanRequest(BaseModel):
+    time: str
     location: Location
 
 

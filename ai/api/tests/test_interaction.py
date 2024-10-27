@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import uuid4
 
 from fastapi import status
@@ -17,6 +18,7 @@ def create_random_interaction_request(game: Game) -> CreateInteractionRequest:
         target_agent_id=target_agent.id,
         surroundings=["some", "surroundings"],
         location=game.locations[0],
+        time=datetime.now().isoformat(),
     )
 
     return req
