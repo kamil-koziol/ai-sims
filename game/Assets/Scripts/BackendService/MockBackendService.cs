@@ -14,7 +14,7 @@ namespace BackendService
         {
             GameResponse gameResponse = new GameResponse()
             {
-                id = Guid.NewGuid().ToString(),
+                //id = Guid.NewGuid().ToString(),
             };
 
             cb?.Invoke(gameResponse);
