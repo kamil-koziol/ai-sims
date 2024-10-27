@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import os
-from typing import List, Optional, Dict
+from typing import Dict, List, Optional
 from uuid import UUID
+
 import yaml
 
 from agents import Agent
@@ -11,14 +12,19 @@ from utils import register_uuid_yaml_constructor
 
 
 class Game(yaml.YAMLObject):
-    yaml_tag = '!game.game.Game'
+    yaml_tag = "!game.game.Game"
     register_uuid_yaml_constructor()
 
-    def __init__(self, game_id: UUID, agents: Dict[UUID, Agent], locations: List[Location]):
+    def __init__(
+        self, game_id: UUID, agents: Dict[UUID, Agent], locations: List[Location]
+    ):
         self._game_id = game_id
         self._agents: Dict[UUID, Agent] = agents.copy()
         self._locations: List[Location] = locations.copy()
-    
+
+    def set_game_id(self, id: UUID):
+        self._game_id = id
+
     def get_agent(self, agent_id: UUID) -> Optional[Agent]:
         if agent_id in self._agents:
             return self._agents[agent_id]
@@ -37,18 +43,18 @@ class Game(yaml.YAMLObject):
 
     def save_to_yaml(self, filename: str) -> None:
         """
-            Save the current game state to a YAML file in storage directory.
+        Save the current game state to a YAML file in storage directory.
 
-            Args:
-                filename (str): The name of the file where the game state will be saved.
+        Args:
+            filename (str): The name of the file where the game state will be saved.
 
-            Raises:
-                Exception: If there is an issue writing the game data to the file.
+        Raises:
+            Exception: If there is an issue writing the game data to the file.
         """
         storage_dir = Game._get_storage_dir()
         file_path = os.path.join(storage_dir, filename)
         try:
-            with open(file_path, 'w') as outfile:
+            with open(file_path, "w") as outfile:
                 yaml.dump(self, outfile, default_flow_style=False)
         except Exception as e:
             raise Exception(f"Failed to save game data in YAML format: {e}")
@@ -56,21 +62,21 @@ class Game(yaml.YAMLObject):
     @classmethod
     def load_from_yaml_file(cls, filename: str) -> Game:
         """
-            Loads the game state from a YAML file in the storage directory.
+        Loads the game state from a YAML file in the storage directory.
 
-            Args:
-               filename (str): The name of the file from which the game state will be loaded.
+        Args:
+           filename (str): The name of the file from which the game state will be loaded.
 
-            Returns:
-               Game: An instance of the Game class populated with the loaded state.
+        Returns:
+           Game: An instance of the Game class populated with the loaded state.
 
-            Raises:
-               Exception: If there is an issue reading or deserializing the YAML file.
+        Raises:
+           Exception: If there is an issue reading or deserializing the YAML file.
         """
         storage_dir = Game._get_storage_dir()
         file_path = os.path.join(storage_dir, filename)
         try:
-            with open(file_path, 'r') as file:
+            with open(file_path, "r") as file:
                 game: Game = yaml.load(file, Loader=yaml.Loader)
                 return game
         except Exception as e:
@@ -79,22 +85,29 @@ class Game(yaml.YAMLObject):
     @classmethod
     def load_from_yaml_data(cls, yaml_data) -> Game:
         """
-            Loads the game state from YAML data provided as a string or stream.
+        Loads the game state from YAML data provided as a string or stream.
 
-            Args:
-                yaml_data: A string or stream containing YAML-formatted game data.
+        Args:
+            yaml_data: A string or stream containing YAML-formatted game data.
 
-            Returns:
-                Game: An instance of the Game class populated with the loaded state.
+        Returns:
+            Game: An instance of the Game class populated with the loaded state.
 
-            Raises:
-                Exception: If there is an issue parsing or loading the YAML data.
+        Raises:
+            Exception: If there is an issue parsing or loading the YAML data.
         """
         try:
             game: Game = yaml.load(yaml_data, Loader=yaml.Loader)
             return game
         except Exception as e:
             raise Exception(f"Failed to load game from YAML data: {e}")
+
+    def to_yaml_string(self) -> str:
+        """Generate YAML representation of the game state as a string."""
+        try:
+            return yaml.dump(self, default_flow_style=False)
+        except Exception as e:
+            raise Exception(f"Failed to convert game data to YAML format: {e}")
 
     @staticmethod
     def _get_storage_dir() -> str:
@@ -103,3 +116,4 @@ class Game(yaml.YAMLObject):
         if not os.path.exists(storage_dir):
             os.makedirs(storage_dir)
         return storage_dir
+
