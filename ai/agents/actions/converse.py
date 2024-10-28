@@ -72,12 +72,15 @@ def _split_conversation(
     conversation_list = conversation.split("\n")
     for line in conversation_list:
         if line != '':
-            name, dialog = line.split(":")
-            dialog = dialog.strip()
-            if init_agent.stm.name in name:
-                split_dialogs[init_agent.stm.id].append(dialog)
-            elif target_agent.stm.name in name:
-                split_dialogs[target_agent.stm.id].append(dialog)
+            try:
+                name, dialog = line.split(":")
+                dialog = dialog.strip()
+                if init_agent.stm.name in name:
+                    split_dialogs[init_agent.stm.id].append(dialog)
+                elif target_agent.stm.name in name:
+                    split_dialogs[target_agent.stm.id].append(dialog)
+            except (Exception,):
+                pass
     return split_dialogs
 
 

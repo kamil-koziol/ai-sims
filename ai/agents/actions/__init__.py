@@ -6,6 +6,7 @@ from .converse import (
     insert_convo_into_mem_stream,
     decide_to_converse
 )
+from .answer_interview_question import answer_interview_question
 from .inject_memory import inject_memory
 from .execute import execute
 from .plan import create_daily_plan

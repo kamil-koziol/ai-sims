@@ -1,7 +1,5 @@
 from __future__ import annotations
-import os
 from uuid import UUID
-import dill
 from typing import Dict, List, Tuple, Any
 from agents.actions import (
     retrieve_relevant_memories,
@@ -9,6 +7,7 @@ from agents.actions import (
     execute,
     create_daily_plan,
     inject_memory,
+    answer_interview_question,
 )
 from agents.actions import (
     decide_to_converse,
@@ -27,8 +26,6 @@ class Agent:
     def __init__(
         self,
         init_parameters: STM_attributes,
-        save_file: str = None,
-        load_file: str = None,
     ) -> None:
         """
         Initialize an agent.
@@ -37,8 +34,6 @@ class Agent:
 
         Args:
             init_parameters (STM_attributes): Short term memory.
-            save_file (str): Name of the file which agent should be saved to.
-            load_file (str): Name of the file which agent should be loaded from.
         """
 
         self.logger = setup_logger(
@@ -110,21 +105,16 @@ class Agent:
                     return agent_or_object
         return False
 
-    def save(self) -> None:
-        """
-        Save the agent state to the file.
-        """
-        curr_dir = os.path.dirname(__file__)
-        storage_dir = os.path.join(curr_dir, "..", "storage")
-        if not os.path.exists(storage_dir):
-            os.makedirs(storage_dir)
-
-        file_path = os.path.join(storage_dir, self.save_file)
-        with open(file_path, "wb") as f:
-            dill.dump(self, f)
-
     def inject_memory(self, description: str) -> None:
         """
         Inject memory to agent.
         """
         inject_memory(description, self)
+
+    def answer_interview_question(self, question: str) -> str:
+        """
+        Answer the question asked by a player.
+
+        @param question: question from a player
+        """
+        return answer_interview_question(self, question)

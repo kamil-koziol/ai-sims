@@ -84,28 +84,16 @@ def target_agent():
 
 
 def test_converse(mocker, init_agent: Agent, target_agent: Agent):
-    if MOCK_MODELS:
-        mocker.patch(
-            "agents.actions.generate_conversation",
-            return_value="Mocked Conversation",
+    if not MOCK_MODELS:
+        split_dialogs = converse(init_agent, target_agent)
+        split_dialogs = converse(init_agent, target_agent)
+        split_dialogs = converse(init_agent, target_agent)
+        print(split_dialogs)
+
+        assert (
+                len(split_dialogs[init_agent.stm.id]) > 0
+                and len(split_dialogs[target_agent.stm.id]) > 0
         )
-        mocker.patch(
-            "agents.actions.generate_conversation_summary",
-            return_value="Mocked Conversation Summary",
-        )
-        mocker.patch("agents.actions.insert_convo_into_mem_stream")
-
-    # 3 conversations for checking memories saving and retrieval
-    split_dialogs = converse(init_agent, target_agent)
-    split_dialogs = converse(init_agent, target_agent)
-    split_dialogs = converse(init_agent, target_agent)
-
-    print(split_dialogs)
-
-    assert (
-        len(split_dialogs[init_agent.stm.id]) > 0
-        and len(split_dialogs[target_agent.stm.id]) > 0
-    )
 
 
 def test_generate_conversation(mocker, init_agent, target_agent):

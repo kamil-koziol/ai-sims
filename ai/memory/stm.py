@@ -198,3 +198,9 @@ location: {self.curr_location.name if self.curr_location else None}
     @daily_plan.setter
     def daily_plan(self, value: List[PlanNode]):
         self._daily_plan = value
+
+    def get_daily_plan_str(self) -> str:
+        daily_plan_str = ""
+        for point in self.daily_plan:
+            daily_plan_str += f"Go to {point.location.name} at {point.time.strftime('%H:%M:%S')}\n"
+        return daily_plan_str
