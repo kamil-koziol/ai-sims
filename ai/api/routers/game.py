@@ -58,12 +58,10 @@ async def create_game(
     response_model=CreateGameResponse,
 )
 async def create_yaml_game(game_request: Request, state: State = Depends(get_state)):
-    print("Hello")
     try:
         # Read and parse YAML from request body
         yaml_contents = await game_request.body()
         yaml_str = yaml_contents.decode("utf-8")
-        print(yaml_str)
     except yaml.YAMLError as e:
         raise HTTPException(status_code=400, detail="Invalid YAML format")
 
