@@ -1,8 +1,12 @@
+import os
+import tempfile
 from datetime import datetime
 from typing import Annotated, Any, Dict, List
 from uuid import UUID, uuid4
 
-from fastapi import APIRouter, Depends, HTTPException, Path
+import yaml
+from fastapi import APIRouter, Depends, HTTPException, Path, Request
+from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel, ConfigDict, field_serializer
 
 from api.mappers.location_mapper import LocationMapper
@@ -10,6 +14,7 @@ from game.game import Game as GlobalGame
 from game.game_manager import GameManager
 from memory.stm import STM, STM_attributes
 from object_types import Objects
+from utils import yaml_constructors
 
 from ..errors import AgentNotFoundErr, GameExistsErr, GameNotFoundErr
 from ..mappers import AgentMapper, GameMapper
@@ -46,6 +51,48 @@ async def create_game(
     )
 
     return CreateGameResponse(game=game)
+
+
+@router.post(
+    "/yaml",
+    response_model=CreateGameResponse,
+)
+async def create_yaml_game(game_request: Request, state: State = Depends(get_state)):
+    try:
+        # Read and parse YAML from request body
+        yaml_contents = await game_request.body()
+        yaml_str = yaml_contents.decode("utf-8")
+    except yaml.YAMLError as e:
+        raise HTTPException(status_code=400, detail="Invalid YAML format")
+
+    globalGame = GlobalGame.load_from_yaml_data(yaml_contents)
+    globalGame.set_game_id(uuid4())
+
+    game = GameMapper.game_to_api_game(globalGame)
+
+    if game.id in state.games:
+        raise GameExistsErr
+
+    state.games[game.id] = game
+
+    GameManager().add_game(game_id=UUID(game.id), game=globalGame)
+
+    return CreateGameResponse(game=game)
+
+
+class GetYamlGameResponse(BaseModel):
+    yaml_contents: str
+
+
+@router.get("/{game_id}/yaml", response_model=CreateGameResponse)
+async def get_yaml_game(
+    game_id: Annotated[str, Path(title="Game id")], state: State = Depends(get_state)
+):
+    if game_id not in state.games:
+        raise GameNotFoundErr
+
+    contents = GameManager().games[UUID(game_id)].to_yaml_string()
+    return PlainTextResponse(content=contents, media_type="application/yaml")
 
 
 class GetGameResponse(BaseModel):

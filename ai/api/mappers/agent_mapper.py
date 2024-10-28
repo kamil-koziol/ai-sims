@@ -18,3 +18,13 @@ class AgentMapper:
             lifestyle=api_agent.lifestyle,
         )
         return Agent(init_parameters=stm_attributes)
+
+    @staticmethod
+    def agent_to_request(agent: Agent) -> ApiAgent:
+        return ApiAgent(
+            id=str(agent.stm.id),
+            name=agent.stm.name,
+            age=agent.stm.age,
+            description=agent.stm.description,
+            lifestyle=agent.stm.life_style,
+        )
