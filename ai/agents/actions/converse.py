@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Dict, List
 from dataclasses import dataclass
 from uuid import UUID
+
+from config.model import MOCK_MODELS
 from memory import MemoryNodeFactory
 from agents.actions.retrieve import get_string_memories
 from llm_model import ModelService
@@ -71,16 +73,13 @@ def _split_conversation(
     split_dialogs = {init_agent.stm.id: [], target_agent.stm.id: []}
     conversation_list = conversation.split("\n")
     for line in conversation_list:
-        if line != '':
-            try:
-                name, dialog = line.split(":")
-                dialog = dialog.strip()
-                if init_agent.stm.name in name:
-                    split_dialogs[init_agent.stm.id].append(dialog)
-                elif target_agent.stm.name in name:
-                    split_dialogs[target_agent.stm.id].append(dialog)
-            except (Exception,):
-                pass
+        if ":" in line:
+            name, dialog = line.split(":")
+            dialog = dialog.strip()
+            if init_agent.stm.name in name:
+                split_dialogs[init_agent.stm.id].append(dialog)
+            elif target_agent.stm.name in name:
+                split_dialogs[target_agent.stm.id].append(dialog)
     return split_dialogs
 
 
@@ -99,9 +98,12 @@ def converse(init_agent: Agent, target_agent: Agent) -> Dict[UUID, List]:
 
     insert_convo_into_mem_stream(init_agent, convo, convo_summary, target_agent.stm.name)
     insert_convo_into_mem_stream(target_agent, convo, convo_summary, target_agent.stm.name)
-    split_dialogs = _split_conversation(
-        init_agent=init_agent, target_agent=target_agent, conversation=convo
-    )
+    if not MOCK_MODELS:
+        split_dialogs = _split_conversation(
+            init_agent=init_agent, target_agent=target_agent, conversation=convo
+        )
+    else:
+        split_dialogs = _get_mocked_split_convo(init_agent, target_agent)
     return split_dialogs
 
 
@@ -247,3 +249,16 @@ def _convert_model_response_to_bool(response: str) -> bool:
         return False
     else:
         return True
+
+
+def _get_mocked_split_convo(init_agent: Agent, target_agent: Agent) -> Dict[UUID, List]:
+    text11 = "Hi! Nice to meet you!"
+    text21 = "Hello, how are you?"
+    text12 = "I'm fine, thanks."
+    text22 = "Me too. Great talking to you!"
+
+    agent1_lines = [text11, text12]
+    agent2_lines = [text21, text22]
+
+    split_dialogs = {init_agent.stm.id: agent1_lines, target_agent.stm.id: agent2_lines}
+    return split_dialogs
