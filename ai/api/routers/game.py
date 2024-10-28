@@ -265,9 +265,11 @@ async def create_interaction(
     target_agent.stm.curr_location = LocationMapper.request_to_location(
         interaction_request.location
     )
+    target_agent.stm.curr_time = time
     initializing_agent.stm.curr_location = LocationMapper.request_to_location(
         interaction_request.location
     )
+    initializing_agent.stm.curr_time = time
 
     status = (
         initializing_agent.should_converse([(Objects.AGENT, target_agent)]) is not None
