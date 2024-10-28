@@ -1,5 +1,6 @@
 pytest==7.4.4
-uvicorn
-fastapi[standard]
-requests
-numpy
+uvicorn==0.23.2
+fastapi[standard]==0.104.0
+requests==2.31.0
+numpy==1.26.1
+pyyaml==6.0.1
