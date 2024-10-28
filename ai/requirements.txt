@@ -1,1 +1,5 @@
 pytest==7.4.4
+uvicorn
+fastapi[standard]
+requests
+numpy
