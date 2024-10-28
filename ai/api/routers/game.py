@@ -16,7 +16,12 @@ from memory.stm import STM, STM_attributes
 from object_types import Objects
 from utils import yaml_constructors
 
-from ..errors import AgentNotFoundErr, GameExistsErr, GameNotFoundErr
+from ..errors import (
+    AgentNotFoundErr,
+    GameExistsErr,
+    GameNotFoundErr,
+    InvalidDateFormatErr,
+)
 from ..mappers import AgentMapper, GameMapper
 from ..schemas import Agent, Game, Location
 from ..state import State, get_state
@@ -173,6 +178,11 @@ async def create_conversation(
     conversation_request: CreateConversationRequest,
     state: State = Depends(get_state),
 ):
+    try:
+        time = datetime.fromisoformat(conversation_request.time)
+    except Exception:
+        raise InvalidDateFormatErr
+
     game = state.games.get(game_id)
     if not game:
         raise GameNotFoundErr
@@ -196,9 +206,11 @@ async def create_conversation(
     target_agent.stm.curr_location = LocationMapper.request_to_location(
         conversation_request.location
     )
+    target_agent.stm.curr_time = time
     initializing_agent.stm.curr_location = LocationMapper.request_to_location(
         conversation_request.location
     )
+    initializing_agent.stm.curr_time = time
 
     splitted_dialogs = initializing_agent.converse(target_agent=target_agent)
 
@@ -230,6 +242,11 @@ async def create_interaction(
     interaction_request: CreateInteractionRequest,
     state: State = Depends(get_state),
 ):
+    try:
+        time = datetime.fromisoformat(interaction_request.time)
+    except Exception:
+        raise InvalidDateFormatErr
+
     game = state.games.get(game_id)
     if not game:
         raise GameNotFoundErr
@@ -264,7 +281,6 @@ class PlanNode(BaseModel):
 
 
 class CreatePlanRequest(BaseModel):
-    time: str
     location: Location
 
 
