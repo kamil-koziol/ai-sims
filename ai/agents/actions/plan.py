@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import List, TYPE_CHECKING
 from dataclasses import dataclass
+
+from config.model import MOCK_MODELS
 from llm_model import ModelService
 from datetime import datetime
 from memory import PlanNode
@@ -46,7 +48,12 @@ def create_daily_plan(agent: Agent, list_of_places: List) -> List[PlanNode]:
     )
 
     daily_plan = ModelService().generate_text(daily_plan_variables, template_file)
-    plan = _retrieve_plan(daily_plan, list_of_places, current_time)
+
+    if not MOCK_MODELS:
+        plan = _retrieve_plan(daily_plan, list_of_places, current_time)
+    else:
+        plan = _retrieve_mocked_plan(list_of_places, current_time)
+
     return plan
 
 
@@ -66,6 +73,32 @@ def _retrieve_plan(
             plan.append(plan_node)
 
     return plan
+
+
+def _retrieve_mocked_plan(
+    list_of_places: List[Location], curr_time: datetime
+) -> List[PlanNode]:
+    time1 = datetime(
+        year=curr_time.year,
+        month=curr_time.month,
+        day=curr_time.day,
+        hour=10,
+        minute=0,
+        second=0,
+    )
+
+    time2 = datetime(
+        year=curr_time.year,
+        month=curr_time.month,
+        day=curr_time.day,
+        hour=12,
+        minute=0,
+        second=0,
+    )
+
+    plan_point1 = PlanNode(location=list_of_places[0], time=time1)
+    plan_point2 = PlanNode(location=list_of_places[1], time=time2)
+    return [plan_point1, plan_point2]
 
 
 def _retrieve_location(plan_point: str, list_of_places: List[Location]) -> Location:
