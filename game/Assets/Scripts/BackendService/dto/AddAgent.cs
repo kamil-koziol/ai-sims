@@ -5,12 +5,16 @@ namespace BackendService.dto
 {
     public struct AddAgentRequest
     {
-        public String game_id;
-        public JObject agent;
+
+        //public String game_id;
+        public String name { get; set; }
+        public int age { get; set; }
+        public String description { get; set; }
+        public String lifestyle { get; set; }
     }
     
     public struct AddAgentResponse
     {
-        public String game_id;
+        public Agent agent;
     }
 }
