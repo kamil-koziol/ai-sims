@@ -83,6 +83,22 @@ public class Agent : MonoBehaviour {
         
         sprite = Resources.Load<Sprite>( profilesPath + spriteName);
     }
+
+    public void loadRandomSprite()
+    {
+        UnityEngine.Object[] assets = Resources.LoadAll("MiniProfiles", typeof(UnityEngine.Object));
+
+        if (assets.Length == 0)
+        {
+            Debug.LogWarning("No assets found in Resources/MyAssets!");
+            return;
+        }
+        
+        int randomIndex = UnityEngine.Random.Range(0, assets.Length);
+        string randomFileName = assets[randomIndex].name;
+        Debug.Log(randomFileName);
+        changeSprite(randomFileName);
+    }
     
     public void setFieldsAgent(int age, String description, String lifestyle, String agentName, String spriteName)
     {

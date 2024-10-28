@@ -89,10 +89,24 @@ namespace BackendService
             
             AddAgentResponse addAgentResponse = new AddAgentResponse()
             {
-                game_id = agent.getId().ToString()
             };
             
             cb?.Invoke(addAgentResponse);
+            yield return null;
+        }
+        
+        public IEnumerator GetGame(Guid gameId, Action<GameResponse> cb = null)
+        {
+            yield return null;
+        }
+        
+        public IEnumerator GameYaml(Action<GameResponse> cb = null)
+        {
+            yield return null;
+        }
+        
+        public IEnumerator SaveGameYaml(Action<string> cb = null)
+        {
             yield return null;
         }
     }

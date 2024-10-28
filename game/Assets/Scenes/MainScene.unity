@@ -350,7 +350,7 @@ PrefabInstance:
       objectReference: {fileID: 1131645235}
     - target: {fileID: 4367102867966814767, guid: 917ef422d497c47bab82b8046fd8d8ff, type: 3}
       propertyPath: mock
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4367102867966814767, guid: 917ef422d497c47bab82b8046fd8d8ff, type: 3}
       propertyPath: agentPrefab
@@ -15025,6 +15025,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Agent
       objectReference: {fileID: 0}
+    - target: {fileID: 8816241443310174770, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8868033562858898059, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
       propertyPath: viewRadius
       value: 3
@@ -15639,6 +15643,10 @@ PrefabInstance:
     - target: {fileID: 8816241443310174770, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
       propertyPath: m_Name
       value: Agent2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816241443310174770, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8868033562858898059, guid: 626292a86d6e240aa8c80a11aa69edd5, type: 3}
       propertyPath: viewRadius

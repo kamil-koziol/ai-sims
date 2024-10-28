@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -22,8 +23,20 @@ namespace DefaultNamespace {
                         string text = request.downloadHandler.text;
                         if (callback != null)
                         {
-                            T t = JsonUtility.FromJson<T>(text);
-                            callback(t);
+                            T t = JsonConvert.DeserializeObject<T>(text);
+                            if (t != null)
+                            {
+                                callback(t);
+                            }
+                            else 
+                            {
+                                Action<string> callbackString = callback as Action<string>;
+                                if (typeof(T) == typeof(string) && callbackString != null)
+                                {
+                                    callbackString(text);
+                                }
+                            }
+                            Debug.Log(text);
                         }
                         break;
                 }
@@ -47,8 +60,20 @@ namespace DefaultNamespace {
                         string text = request.downloadHandler.text;
                         if (callback != null)
                         {
-                            T t = JsonUtility.FromJson<T>(text);
-                            callback(t);
+                            if (contentType == "application/json")
+                            {
+                                T t = JsonConvert.DeserializeObject<T>(text);
+                                callback(t);
+                            }
+                            else if (contentType == "application/yaml")
+                            {
+                                Action<string> callbackString = callback as Action<string>;
+                                if (typeof(T) == typeof(string) && callbackString != null)
+                                {
+                                    callbackString(text);
+                                }
+                            }
+                            Debug.Log(text);
                         }
 
                         break;

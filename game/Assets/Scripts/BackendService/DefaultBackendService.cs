@@ -1,14 +1,14 @@
 using System;
 using System.Collections;
+
+using System.Globalization;
+using System.IO;
 using BackendService.dto;
 using DefaultNamespace;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using UnityEngine;
-using UnityEngine.Networking;
-using UnityEngine.UI;
-using BackendService;
 
 namespace BackendService
 {
@@ -17,12 +17,8 @@ namespace BackendService
         private Guid uuid;
         private string URL = "http://127.0.0.1:80";
         String contentTypeJson = "application/json";
-
-
-        public DefaultBackendService()
-        {
-            uuid = Guid.NewGuid();
-        }
+        String contentTypeYaml = "application/yaml";
+        
         public IEnumerator Conversation(Guid initalizingAgent, Guid targetAgentId, Action<ConversationResponse> cb = null)
         {
             var location = new JObject();
@@ -72,6 +68,45 @@ namespace BackendService
                 });
         }
 
+
+        public IEnumerator GetGame(Guid gameId, Action<GameResponse> cb = null)
+        {
+            return APICall.Call<GameResponse>(
+                URL + "/games/" + gameId,
+                response => {
+                    if(cb != null) cb(response);
+                });
+        }
+        
+        public IEnumerator GameYaml(Action<GameResponse> cb = null)
+        {
+            string path = Path.Combine(Application.persistentDataPath, "config.yaml");
+            Debug.Log(path);
+            string yamlContent = "";
+            if (File.Exists(path))
+            {
+                // Load from persistent path
+                yamlContent = File.ReadAllText(path);
+                Debug.Log("Loaded YAML from persistent path:\n" + yamlContent);
+            }
+            
+            return APICall.Call<GameResponse>(
+                URL + "/games",
+                yamlContent,
+                contentTypeYaml,
+                response => {
+                    if(cb != null) cb(response);
+                });
+        }
+        
+        public IEnumerator SaveGameYaml(Action<string> cb = null)
+        {
+            return APICall.Call<string>(
+                URL + "/games/" + GameManager.Instance.ID + "/yaml",
+                response => {
+                    if(cb != null) cb(response);
+                });
+        }
 
         public IEnumerator Interaction(Guid initalizingAgent, Guid targetAgentId, Action<InteractionResponse> cb = null)
         {
@@ -147,20 +182,17 @@ namespace BackendService
         {
             JObject agentObj = new JObject();
             var state = agent.getAgentState();
-            
-            agentObj["id"] = state.agentId.ToString();
-            agentObj["name"] = state.agentName;
-            agentObj["age"] = state.agentAge;
-            agentObj["description"] = state.agentDescription;
-            agentObj["lifestyle"] = state.agentLifestyle;
+            //agentObj["id"] = state.agentId.ToString();
             AddAgentRequest rq = new AddAgentRequest
             {
-                game_id = uuid.ToString(),
-                agent = agentObj
+                //game_id = uuid.ToString(),
+                name = state.agentName,
+                age = state.agentAge,
+                description = state.agentDescription,
+                lifestyle = state.agentLifestyle
             };
-            
             return APICall.Call<AddAgentResponse>(
-                URL + "/game/add_agent",
+                URL + "/games/" + GameManager.Instance.ID/*.ToString().Replace("-", string.Empty)*/ + "/agents",
                 JsonConvert.SerializeObject(
                     rq,
                     Formatting.Indented,
@@ -169,6 +201,5 @@ namespace BackendService
                     if(cb != null) cb(response);
                 });
         }
-
     }
 }
