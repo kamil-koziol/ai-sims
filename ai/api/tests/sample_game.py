@@ -1,12 +1,8 @@
 from uuid import uuid4
 
-import pytest
 
-
-@pytest.fixture
 def game_data():
     return {
-        "id": str(uuid4()),
         "locations": [{"name": "coffee"}, {"name": "park"}],
         "agents": [
             {

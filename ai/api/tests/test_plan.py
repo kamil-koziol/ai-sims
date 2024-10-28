@@ -1,61 +1,57 @@
-from uuid import uuid4
+from datetime import datetime
 
-import pytest
 from fastapi import status
 
-from api.tests.sample_game import game_data
+from api.errors import AgentNotFoundErr, GameNotFoundErr
+from api.routers.game import CreatePlanRequest
+from api.schemas import Game
+from api.tests.utils import create_sample_game
 
 
-def test_get_plan_success(client, game_data):
-    # Create game
-    response = client.post("/game/", json=game_data)
+def create_random_plan_request(game: Game) -> CreatePlanRequest:
+    req = CreatePlanRequest(
+        time=datetime.now().isoformat(),
+        location=game.locations[0],
+    )
+
+    return req
+
+
+def test_get_plan_success(client):
+    game = create_sample_game(client)
+    req = create_random_plan_request(game)
+    agent_id = game.agents[0].id
+
+    response = client.post(
+        f"/games/{game.id}/agents/{agent_id}/plans", json=req.model_dump()
+    )
     assert response.status_code == status.HTTP_200_OK
 
-    # Prepare plan request payload
-    agents = game_data["agents"]
-    locations = game_data["locations"]
-
-    plan_request = {
-        "game_id": game_data["id"],
-        "agent_id": agents[0]["id"],
-        "location": locations[0],  # Assuming the first location from game_data
-    }
-
-    response_plan = client.post("/plan/", json=plan_request)
-
-    assert response_plan.status_code == status.HTTP_200_OK
-    plan_response = response_plan.json()
+    plan_response = response.json()
     assert "plan" in plan_response
     assert len(plan_response["plan"]) > 0  # Ensure plan is not empty
 
 
-def test_missing_game(client, game_data):
-    # Create game
-    response = client.post("/game/", json=game_data)
-    assert response.status_code == status.HTTP_200_OK
+def test_missing_game(client):
+    game = create_sample_game(client)
+    req = create_random_plan_request(game)
+    agent_id = game.agents[0].id
 
-    plan_request = {
-        "game_id": str(uuid4()),
-        "agent_id": game_data["agents"][0]["id"],
-        "location": game_data["locations"][0],
-    }
-
-    response = client.post("/plan/", json=plan_request)
-    assert response.status_code == status.HTTP_404_NOT_FOUND
-    assert response.json()["detail"] == "Game not found"
+    response = client.post(
+        f"/games/f09c5272-1ae2-44fa-8aea-3b6699de6ea3/agents/{agent_id}/plans",
+        json=req.model_dump(),
+    )
+    assert response.status_code == GameNotFoundErr.status_code
+    assert response.json()["detail"] == GameNotFoundErr.detail
 
 
-def test_agent_not_found(client, game_data):
-    # Create game
-    response = client.post("/game/", json=game_data)
-    assert response.status_code == status.HTTP_200_OK
+def test_agent_not_found(client):
+    game = create_sample_game(client)
+    req = create_random_plan_request(game)
 
-    plan_request = {
-        "game_id": game_data["id"],
-        "agent_id": str(uuid4()),
-        "location": game_data["locations"][0],
-    }
-
-    response = client.post("/plan/", json=plan_request)
-    assert response.status_code == status.HTTP_404_NOT_FOUND
-    assert response.json()["detail"] == "Agent not found"
+    response = client.post(
+        f"/games/{game.id}/agents/2fc13171-6a54-4690-b0a3-7d772e588238/plans",
+        json=req.model_dump(),
+    )
+    assert response.status_code == AgentNotFoundErr.status_code
+    assert response.json()["detail"] == AgentNotFoundErr.detail

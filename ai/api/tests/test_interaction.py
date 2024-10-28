@@ -1,87 +1,78 @@
+from datetime import datetime
 from uuid import uuid4
 
-import pytest
 from fastapi import status
 
-from api.tests.sample_game import game_data  # Assuming you have sample game data
+from api.errors import AgentNotFoundErr, GameNotFoundErr
+from api.routers.game import CreateInteractionRequest
+from api.schemas import Game
+from api.tests.utils import create_sample_game
 
 
-def test_create_interaction_success(client, game_data):
-    # Create game
-    response = client.post("/game/", json=game_data)
-    assert response.status_code == status.HTTP_200_OK
+def create_random_interaction_request(game: Game) -> CreateInteractionRequest:
+    initializing_agent = game.agents[0]
+    target_agent = game.agents[1]
 
-    # Prepare interaction request payload
-    agents = game_data["agents"]
-    locations = game_data["locations"]
+    req = CreateInteractionRequest(
+        initializing_agent_id=initializing_agent.id,
+        target_agent_id=target_agent.id,
+        surroundings=["some", "surroundings"],
+        location=game.locations[0],
+        time=datetime.now().isoformat(),
+    )
 
-    interaction_request = {
-        "game_id": game_data["id"],
-        "initializing_agent": agents[0]["id"],
-        "target_agent": agents[1]["id"],
-        "surroundings": ["hello", "there"],
-        "location": locations[0],  # Assuming the first location from game_data
-    }
+    return req
 
-    # Create interaction
-    response_interaction = client.post("/interaction/", json=interaction_request)
 
-    # Asserts for interaction response
+def test_create_interaction_success(client):
+    game = create_sample_game(client)
+    req = create_random_interaction_request(game)
+
+    response_interaction = client.post(
+        f"/games/{game.id}/interactions", json=req.model_dump()
+    )
+
     assert response_interaction.status_code == status.HTTP_200_OK
     interaction_response = response_interaction.json()
     assert "status" in interaction_response
     assert isinstance(interaction_response["status"], bool)
 
 
-def test_missing_game(client, game_data):
-    # Create game
-    response = client.post("/game/", json=game_data)
-    assert response.status_code == status.HTTP_200_OK
+def test_missing_game(client):
+    game = create_sample_game(client)
+    req = create_random_interaction_request(game)
 
-    interaction_request = {
-        "game_id": str(uuid4()),
-        "initializing_agent": game_data["agents"][0]["id"],
-        "target_agent": game_data["agents"][1]["id"],
-        "surroundings": ["hello", "there"],
-        "location": game_data["locations"][0],
-    }
-
-    response = client.post("/interaction/", json=interaction_request)
-    assert response.status_code == status.HTTP_404_NOT_FOUND
-    assert response.json()["detail"] == "Game not found"
+    response = client.post(
+        f"/games/3ef0a584-2511-4696-9157-5ca6e09927cd/interactions",
+        json=req.model_dump(),
+    )
+    assert response.status_code == GameNotFoundErr.status_code
+    assert response.json()["detail"] == GameNotFoundErr.detail
 
 
-def test_missing_initializing_agent(client, game_data):
-    # Create game
-    response = client.post("/game/", json=game_data)
-    assert response.status_code == status.HTTP_200_OK
+def test_missing_initializing_agent(client):
+    game = create_sample_game(client)
+    req = create_random_interaction_request(game)
+    req.initializing_agent_id = str(uuid4())
 
-    interaction_request = {
-        "game_id": game_data["id"],
-        "initializing_agent": str(uuid4()),
-        "target_agent": game_data["agents"][1]["id"],
-        "surroundings": ["hello", "there"],
-        "location": game_data["locations"][0],
-    }
+    response = client.post(
+        f"/games/{game.id}/interactions",
+        json=req.model_dump(),
+    )
 
-    response = client.post("/interaction/", json=interaction_request)
-    assert response.status_code == status.HTTP_404_NOT_FOUND
-    assert response.json()["detail"] == "Initializing agent not found"
+    assert response.status_code == AgentNotFoundErr.status_code
+    assert response.json()["detail"] == AgentNotFoundErr.detail
 
 
-def test_missing_target_agent(client, game_data):
-    # Create game
-    response = client.post("/game/", json=game_data)
-    assert response.status_code == status.HTTP_200_OK
+def test_missing_target_agent(client):
+    game = create_sample_game(client)
+    req = create_random_interaction_request(game)
+    req.target_agent_id = str(uuid4())
 
-    interaction_request = {
-        "game_id": game_data["id"],
-        "initializing_agent": game_data["agents"][0]["id"],
-        "target_agent": str(uuid4()),
-        "surroundings": ["hello", "there"],
-        "location": game_data["locations"][0],
-    }
+    response = client.post(
+        f"/games/{game.id}/interactions",
+        json=req.model_dump(),
+    )
 
-    response = client.post("/interaction/", json=interaction_request)
-    assert response.status_code == status.HTTP_404_NOT_FOUND
-    assert response.json()["detail"] == "Target agent not found"
+    assert response.status_code == AgentNotFoundErr.status_code
+    assert response.json()["detail"] == AgentNotFoundErr.detail

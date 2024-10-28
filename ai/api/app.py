@@ -1,7 +1,10 @@
+from json import JSONEncoder
+from uuid import UUID
+
 import uvicorn
 from fastapi import Depends, FastAPI
 
-from .routers import conversation, game, interaction, plan
+from .routers import game
 from .state import get_state
 
 
@@ -11,26 +14,8 @@ class App:
 
         self.app.include_router(
             game.router,
-            prefix="/game",
+            prefix="/games",
             tags=["game"],
-            dependencies=[Depends(get_state)],
-        )
-        self.app.include_router(
-            plan.router,
-            prefix="/plan",
-            tags=["plan"],
-            dependencies=[Depends(get_state)],
-        )
-        self.app.include_router(
-            conversation.router,
-            prefix="/conversation",
-            tags=["conversation"],
-            dependencies=[Depends(get_state)],
-        )
-        self.app.include_router(
-            interaction.router,
-            prefix="/interaction",
-            tags=["interaction"],
             dependencies=[Depends(get_state)],
         )
 
