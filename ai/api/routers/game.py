@@ -284,6 +284,7 @@ class PlanNode(BaseModel):
 
 class CreatePlanRequest(BaseModel):
     location: Location
+    time: str
 
 
 class CreatePlanResponse(BaseModel):
@@ -297,6 +298,11 @@ async def get_plan(
     plan_request: CreatePlanRequest,
     state: State = Depends(get_state),
 ):
+    try:
+        time = datetime.fromisoformat(plan_request.time)
+    except Exception:
+        raise InvalidDateFormatErr
+
     game = state.games.get(game_id)
     if not game:
         raise GameNotFoundErr
@@ -310,6 +316,7 @@ async def get_plan(
     assert agent is not None
 
     agent.stm.curr_location = LocationMapper.request_to_location(plan_request.location)
+    agent.stm.curr_time = time
 
     plan = agent.plan(game.locations)
     plan = [
