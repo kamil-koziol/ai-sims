@@ -163,12 +163,11 @@ namespace BackendService
         
             GameRequest snapshot = new GameRequest
             {
-                id = uuid.ToString(),
                 locations = locations,
                 agents = agentsJson
             };
             return APICall.Call<GameResponse>(
-                URL + "/game",
+                URL + "/games",
                 JsonConvert.SerializeObject(
                     snapshot,
                     Formatting.Indented,
