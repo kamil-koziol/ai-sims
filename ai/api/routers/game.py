@@ -283,7 +283,6 @@ class PlanNode(BaseModel):
 
 
 class CreatePlanRequest(BaseModel):
-    location: Location
     time: str
 
 
@@ -315,7 +314,6 @@ async def get_plan(
     agent = game.get_agent(UUID(agent.id))
     assert agent is not None
 
-    agent.stm.curr_location = LocationMapper.request_to_location(plan_request.location)
     agent.stm.curr_time = time
 
     plan = agent.plan(game.locations)
