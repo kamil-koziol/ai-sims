@@ -325,3 +325,28 @@ async def get_plan(
         for plan_node in plan
     ]
     return CreatePlanResponse(plan=plan)
+
+
+class CreateAgentMemoryRequest(BaseModel):
+    memory: str
+
+
+@router.post("/{game_id}/agents/{agent_id}/memories", status_code=204)
+async def create_agent_memory(
+    game_id: Annotated[str, Path(title="Game id")],
+    agent_id: Annotated[str, Path(title="Agent id")],
+    req: CreateAgentMemoryRequest,
+    state: State = Depends(get_state),
+):
+    game = state.games.get(game_id)
+    if not game:
+        raise GameNotFoundErr
+
+    game = GameManager().games[UUID(game_id)]
+    assert game is not None
+
+    agent = game.get_agent(UUID(agent_id))
+    assert agent is not None
+
+    agent.inject_memory(req.memory)
+    return
