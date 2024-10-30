@@ -17,19 +17,20 @@ namespace BackendService
         private string URL = "http://127.0.0.1:80";
         String contentTypeJson = "application/json";
         String contentTypeYaml = "application/yaml";
+        private String path = Path.Combine(Application.persistentDataPath, "config.yaml");
         
         public IEnumerator Conversation(Guid initalizingAgent, Guid targetAgentId, Action<ConversationResponse> cb = null)
         {
-            var location = new JObject();
-            location["name"] = GameManager.Instance.GetAgentById(initalizingAgent).getLocation();
+            Location loc = new Location();
+            loc.name = GameManager.Instance.GetAgentById(initalizingAgent).getLocation();
         
             ConversationRequest rq = new ConversationRequest
             {
-                //time = TimeManager.time.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture),
-                initializing_agent = initalizingAgent.ToString(), 
-                target_agent = targetAgentId.ToString(),
-                surroundings = new JArray(),
-                location = location
+                time = TimeManager.getTimeISO(),
+                initializing_agent_id = initalizingAgent.ToString(), 
+                target_agent_id = targetAgentId.ToString(),
+                surroundings = new List<String>(),
+                location = loc
             };
         
             return APICall.Call<ConversationResponse>(
@@ -45,21 +46,9 @@ namespace BackendService
         }
 
         public IEnumerator Plan(Guid agentId, Action<PlanResponse> cb = null) {
-            var agent = GameManager.Instance.GetAgentById(agentId);
-            var location = new JObject();
-            location["name"] = agent.getLocation();
-
-            // TODO: This is quick fix kacper fix pls
-            if (agent.getLocation() == null) {
-                location["name"] = "starting_position";
-            }
-
-            Location loc = new Location();
-            loc.name = agent.getLocation();
             PlanRequest rq = new PlanRequest
             { 
-                time = TimeManager.time.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture),
-                location = loc
+                time = TimeManager.getTimeISO()
             };
             
             Debug.Log(JsonConvert.SerializeObject(
@@ -90,7 +79,6 @@ namespace BackendService
         
         public IEnumerator GameYaml(Action<GameResponse> cb = null)
         {
-            string path = Path.Combine(Application.persistentDataPath, "config.yaml");
             Debug.Log(path);
             string yamlContent = "";
             if (File.Exists(path))
@@ -99,9 +87,14 @@ namespace BackendService
                 yamlContent = File.ReadAllText(path);
                 Debug.Log("Loaded YAML from persistent path:\n" + yamlContent);
             }
+            else
+            {
+                Debug.LogError("No YAML file found at " + path + "!");
+                return null;
+            }
             
             return APICall.Call<GameResponse>(
-                URL + "/games",
+                URL + "/games/yaml",
                 yamlContent,
                 contentTypeYaml,
                 response => {
@@ -109,31 +102,36 @@ namespace BackendService
                 });
         }
         
-        public IEnumerator SaveGameYaml(Action<string> cb = null)
+        public IEnumerator GetGameYaml(Action<string> cb = null)
         {
+            Debug.Log(path);
             return APICall.Call<string>(
                 URL + "/games/" + GameManager.Instance.ID + "/yaml",
                 response => {
+                    File.WriteAllText(path, response);
                     if(cb != null) cb(response);
                 });
         }
 
         public IEnumerator Interaction(Guid initalizingAgent, Guid targetAgentId, Action<InteractionResponse> cb = null)
         {
-        
-            var location = new JObject();
-            location["name"] = GameManager.Instance.GetAgentById(initalizingAgent).getLocation();
+            Location loc = new Location();
+            loc.name = GameManager.Instance.GetAgentById(initalizingAgent).getLocation();
         
             InteractionRequest rq = new InteractionRequest()
             {
-                //game_id = gameId.ToString(),
-                initializing_agent = initalizingAgent.ToString(), 
-                target_agent = targetAgentId.ToString(),
-                surroundings = new JArray(),
-                location = location,
-                //time = TimeManager.time.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture)
+                initializing_agent_id = initalizingAgent.ToString(), 
+                target_agent_id = targetAgentId.ToString(),
+                surroundings = new List<string>(),
+                location = loc,
+                time = TimeManager.getTimeISO()
             };
         
+            Debug.Log(JsonConvert.SerializeObject(
+                rq, 
+                Formatting.Indented, 
+                new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }
+            ));
             return APICall.Call<InteractionResponse>(
                 URL + "/games/" + GameManager.Instance.ID + "/interactions", 
                 JsonConvert.SerializeObject(
@@ -193,10 +191,8 @@ namespace BackendService
             JObject agentObj = new JObject();
             var state = agent.getAgentState();
             
-            //agentObj["id"] = state.agentId.ToString();
             AddAgentRequest rq = new AddAgentRequest
             {
-                //game_id = uuid.ToString(),
                 name = state.agentName,
                 age = state.agentAge,
                 description = state.agentDescription,
@@ -204,7 +200,7 @@ namespace BackendService
                 
             };
             return APICall.Call<AddAgentResponse>(
-                URL + "/games/" + GameManager.Instance.ID/*.ToString().Replace("-", string.Empty)*/ + "/agents",
+                URL + "/games/" + GameManager.Instance.ID + "/agents",
                 JsonConvert.SerializeObject(
                     rq,
                     Formatting.Indented,
