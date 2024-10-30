@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BackendService.dto;
+using UnityEngine;
 
 namespace Plan.Mappers
 {
@@ -16,7 +17,7 @@ namespace Plan.Mappers
             {
                 nodes.Add(new PlanTask()
                 {
-                   time = DateTime.ParseExact(node.time, dateFormat, System.Globalization.CultureInfo.InvariantCulture),
+                   time = DateTime.Parse(node.time, null, System.Globalization.DateTimeStyles.RoundtripKind),
                    location = node.location
                 });
             }
