@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using UnityEngine;
 
 public class TimeChangedEventArgs : EventArgs
@@ -54,6 +55,11 @@ public class TimeManager : MonoBehaviour
             IncrementTime();
             timer = 0f;
         }
+    }
+
+    public static String getTimeISO()
+    {
+        return time.ToUniversalTime().ToString("s", CultureInfo.InvariantCulture);
     }
 
     private void IncrementTime()

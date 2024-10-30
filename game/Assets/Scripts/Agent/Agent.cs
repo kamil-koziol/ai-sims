@@ -13,7 +13,7 @@ public class Agent : MonoBehaviour {
     public Guid ID;
     private bool update = true;
     
-    private Queue<PlanTask> plan;
+    [SerializeField] private Queue<PlanTask> plan;
     private PlanTask currentTask; 
     
     [SerializeField] private int age;
@@ -73,6 +73,11 @@ public class Agent : MonoBehaviour {
         return ID;
     }
 
+    public void setId(Guid id)
+    {
+        ID = id;
+    }
+
     public void changeSprite(String spriteName)
     {
         const String miniProfilesPath = "MiniProfiles/";
@@ -100,13 +105,17 @@ public class Agent : MonoBehaviour {
         changeSprite(randomFileName);
     }
     
-    public void setFieldsAgent(int age, String description, String lifestyle, String agentName, String spriteName)
+    public void setFieldsAgent(int age, String description, String lifestyle, String agentName, String spriteName, String id = null)
     {
         this.age = age;
         this.description = description;
         this.lifestyle = lifestyle;
         this.agentName = agentName;
         changeSprite(spriteName);
+        if (id != null)
+        {
+            ID = Guid.Parse(id);
+        }
     }
     
     public AgentState getAgentState()

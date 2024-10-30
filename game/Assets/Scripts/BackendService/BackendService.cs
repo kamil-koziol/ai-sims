@@ -9,7 +9,7 @@ namespace BackendService {
         public IEnumerator GetGame(Guid gameId, Action<GameResponse> cb = null);
         public IEnumerator GameYaml(Action<GameResponse> cb = null);
         
-        public IEnumerator SaveGameYaml(Action<string> cb = null);
+        public IEnumerator GetGameYaml(Action<string> cb = null);
 
         public IEnumerator Interaction(Guid initalizingAgentId, Guid targetAgentId, Action<InteractionResponse> cb = null);
         public IEnumerator Conversation(Guid initalizingAgentId, Guid targetAgentId, Action<ConversationResponse> cb = null);

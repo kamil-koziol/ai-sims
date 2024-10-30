@@ -24,26 +24,26 @@ namespace Dialog.Mappers
 
 
             int shorterConversationLength =
-                Math.Min(response.agent1_conversation.Length, response.agent2_conversation.Length);
+                Math.Min(response.initialising_agent_conversation.Length, response.target_agent_conversation.Length);
 
             int i;
             for (i = 0; i < shorterConversationLength; i++) {
                 dialogBuilder.AddMessage(new Message() {
                     actorId = 0,
-                    message = response.agent1_conversation[i]
+                    message = response.initialising_agent_conversation[i]
                 });
                     
                 dialogBuilder.AddMessage(new Message() {
                     actorId = 1,
-                    message = response.agent2_conversation[i]
+                    message = response.target_agent_conversation[i]
                 });
             }
 
             // Adding the rest of messages
-            while(i < response.agent1_conversation.Length) {
+            while(i < response.initialising_agent_conversation.Length) {
                 dialogBuilder.AddMessage(new Message() {
                     actorId = 0,
-                    message = response.agent1_conversation[i]
+                    message = response.initialising_agent_conversation[i]
                 });
                 i++;
             }

@@ -24,9 +24,9 @@ namespace DefaultNamespace {
                         string text = request.downloadHandler.text;
                         if (callback != null)
                         {
-                            T t = JsonConvert.DeserializeObject<T>(text);
-                            if (t != null)
+                            if (request.GetRequestHeader("Content-Type") == "application/json")
                             {
+                                T t = JsonConvert.DeserializeObject<T>(text);
                                 callback(t);
                             }
                             else 
@@ -60,21 +60,22 @@ namespace DefaultNamespace {
                     case UnityWebRequest.Result.Success:
                         GameManager.Instance.SetGameState(previousGameState);
                         string text = request.downloadHandler.text;
+                        
                         if (callback != null)
                         {
-                            if (contentType == "application/json")
-                            {
+                            //if (contentType == "application/json")
+                           // {
                                 T t = JsonConvert.DeserializeObject<T>(text);
                                 callback(t);
-                            }
-                            else if (contentType == "application/yaml")
-                            {
-                                Action<string> callbackString = callback as Action<string>;
-                                if (typeof(T) == typeof(string) && callbackString != null)
-                                {
-                                    callbackString(text);
-                                }
-                            }
+                           // }
+                            // else if (contentType == "application/yaml")
+                            // {
+                            //     Action<string> callbackString = callback as Action<string>;
+                            //     if (typeof(T) == typeof(string) && callbackString != null)
+                            //     {
+                            //         callbackString(text);
+                            //     }
+                            // }
                             Debug.Log(text);
                         }
 
