@@ -87,6 +87,7 @@ public class GameManager : MonoBehaviour {
               {
                   var plan = PlanMapper.Map(response);
                   agent.AssignPlan(plan);
+                  SetGameState(GameState.PLAYING);
               }));
 
           }
@@ -164,25 +165,25 @@ public class GameManager : MonoBehaviour {
 
     private bool doOnce = true;
     private void Update() {
-        if (GameManager.Instance.gameState == GameState.PLAYING && doOnce)
-        {
-            // GameObject instance = Instantiate(agentPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            // Agent agent = instance.GetComponent<Agent>();
-            // agent.setFieldsAgent(10, "description", "lifestyle", "agentName", "Other_F_A");
-            // coroutineQueue.Enqueue(backendService.AddAgent(agent, response =>
-            // {
-            //     AddAgentToGame(agent);
-            // }));
-            // agent.changeSprite("Other_F_A");
-            
-            coroutineQueue.Enqueue(backendService.SaveGameYaml(response =>
-            {
-                string path = Path.Combine(Application.persistentDataPath, "config.yaml");
-                Debug.Log(path);
-                File.WriteAllText(path, response);
-            }));
-            doOnce = false;
-        }
+        // if (GameManager.Instance.gameState == GameState.PLAYING && doOnce)
+        // {
+        //     // GameObject instance = Instantiate(agentPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        //     // Agent agent = instance.GetComponent<Agent>();
+        //     // agent.setFieldsAgent(10, "description", "lifestyle", "agentName", "Other_F_A");
+        //     // coroutineQueue.Enqueue(backendService.AddAgent(agent, response =>
+        //     // {
+        //     //     AddAgentToGame(agent);
+        //     // }));
+        //     // agent.changeSprite("Other_F_A");
+        //     
+        //     coroutineQueue.Enqueue(backendService.SaveGameYaml(response =>
+        //     {
+        //         string path = Path.Combine(Application.persistentDataPath, "config.yaml");
+        //         Debug.Log(path);
+        //         File.WriteAllText(path, response);
+        //     }));
+        //     doOnce = false;
+        // }
     }
 
     public void registerCoroutine(IEnumerator coroutine)

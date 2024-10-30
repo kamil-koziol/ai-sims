@@ -16,6 +16,7 @@ namespace DefaultNamespace {
                     case UnityWebRequest.Result.ProtocolError:
                     case UnityWebRequest.Result.ConnectionError:
                     case UnityWebRequest.Result.DataProcessingError:
+                        Debug.LogError(request.downloadHandler.text);
                         Debug.LogError(request.error);
                         break;
                     case UnityWebRequest.Result.Success:
@@ -53,6 +54,7 @@ namespace DefaultNamespace {
                     case UnityWebRequest.Result.ProtocolError:
                     case UnityWebRequest.Result.ConnectionError:
                     case UnityWebRequest.Result.DataProcessingError:
+                        Debug.LogError(request.downloadHandler.text);
                         Debug.LogError(request.error);
                         break;
                     case UnityWebRequest.Result.Success:

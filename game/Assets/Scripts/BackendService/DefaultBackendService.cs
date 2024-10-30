@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using BackendService.dto;
@@ -13,8 +13,7 @@ using UnityEngine;
 namespace BackendService
 {
     public class DefaultBackendService: BackendService {
-    
-        private Guid uuid;
+        
         private string URL = "http://127.0.0.1:80";
         String contentTypeJson = "application/json";
         String contentTypeYaml = "application/yaml";
@@ -26,7 +25,7 @@ namespace BackendService
         
             ConversationRequest rq = new ConversationRequest
             {
-                game_id = uuid.ToString(),
+                //time = TimeManager.time.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture),
                 initializing_agent = initalizingAgent.ToString(), 
                 target_agent = targetAgentId.ToString(),
                 surroundings = new JArray(),
@@ -34,7 +33,7 @@ namespace BackendService
             };
         
             return APICall.Call<ConversationResponse>(
-                URL + "/conversation", 
+                URL + "/games/" + GameManager.Instance.ID +  "/conversations", 
                 JsonConvert.SerializeObject(
                     rq, 
                     Formatting.Indented, 
@@ -54,11 +53,22 @@ namespace BackendService
             if (agent.getLocation() == null) {
                 location["name"] = "starting_position";
             }
-            PlanRequest rq = new PlanRequest
-                { game_id = uuid.ToString(), agent_id = agent.ID.ToString(), location = location };
 
+            Location loc = new Location();
+            loc.name = agent.getLocation();
+            PlanRequest rq = new PlanRequest
+            { 
+                time = TimeManager.time.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture),
+                location = loc
+            };
+            
+            Debug.Log(JsonConvert.SerializeObject(
+                rq,
+                Formatting.Indented,
+                new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Ignore}
+            ));
             return APICall.Call<PlanResponse>(
-                URL + "/plan",
+                URL + "/games/" + GameManager.Instance.ID + "/agents/" + agentId + "/plans",
                 JsonConvert.SerializeObject(
                     rq,
                     Formatting.Indented,
@@ -116,15 +126,16 @@ namespace BackendService
         
             InteractionRequest rq = new InteractionRequest()
             {
-                game_id = uuid.ToString(),
+                //game_id = gameId.ToString(),
                 initializing_agent = initalizingAgent.ToString(), 
                 target_agent = targetAgentId.ToString(),
                 surroundings = new JArray(),
-                location = location
+                location = location,
+                //time = TimeManager.time.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture)
             };
         
             return APICall.Call<InteractionResponse>(
-                URL + "/interaction", 
+                URL + "/games/" + GameManager.Instance.ID + "/interactions", 
                 JsonConvert.SerializeObject(
                     rq, 
                     Formatting.Indented, 
@@ -181,6 +192,7 @@ namespace BackendService
         {
             JObject agentObj = new JObject();
             var state = agent.getAgentState();
+            
             //agentObj["id"] = state.agentId.ToString();
             AddAgentRequest rq = new AddAgentRequest
             {
@@ -189,6 +201,7 @@ namespace BackendService
                 age = state.agentAge,
                 description = state.agentDescription,
                 lifestyle = state.agentLifestyle
+                
             };
             return APICall.Call<AddAgentResponse>(
                 URL + "/games/" + GameManager.Instance.ID/*.ToString().Replace("-", string.Empty)*/ + "/agents",
