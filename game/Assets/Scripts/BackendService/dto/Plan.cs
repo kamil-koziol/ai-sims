@@ -1,22 +1,21 @@
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
 namespace BackendService.dto {
     [Serializable]
-    public struct PlanRequest
-    {
-        public String game_id;
-        public String agent_id;
-        public JObject location;
+    public struct PlanNode {
+        public String time { get; set; }
+        public String location { get; set; }
     }
     
     [Serializable]
-    public struct PlanNode {
-        public String time;
-        public String location;
+    public struct PlanRequest {
+        public String time { get; set; }
     }
-    [Serializable]
-    public struct PlanResponse {
+    
+    public struct PlanResponse
+    {
         public PlanNode[] plan;
     }
 

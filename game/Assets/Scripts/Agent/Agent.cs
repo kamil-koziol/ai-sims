@@ -13,7 +13,7 @@ public class Agent : MonoBehaviour {
     public Guid ID;
     private bool update = true;
     
-    private Queue<PlanTask> plan;
+    [SerializeField] private Queue<PlanTask> plan;
     private PlanTask currentTask; 
     
     [SerializeField] private int age;
@@ -73,6 +73,11 @@ public class Agent : MonoBehaviour {
         return ID;
     }
 
+    public void setId(Guid id)
+    {
+        ID = id;
+    }
+
     public void changeSprite(String spriteName)
     {
         const String miniProfilesPath = "MiniProfiles/";
@@ -83,14 +88,34 @@ public class Agent : MonoBehaviour {
         
         sprite = Resources.Load<Sprite>( profilesPath + spriteName);
     }
+
+    public void loadRandomSprite()
+    {
+        UnityEngine.Object[] assets = Resources.LoadAll("MiniProfiles", typeof(UnityEngine.Object));
+
+        if (assets.Length == 0)
+        {
+            Debug.LogWarning("No assets found in Resources/MyAssets!");
+            return;
+        }
+        
+        int randomIndex = UnityEngine.Random.Range(0, assets.Length);
+        string randomFileName = assets[randomIndex].name;
+        Debug.Log(randomFileName);
+        changeSprite(randomFileName);
+    }
     
-    public void setFieldsAgent(int age, String description, String lifestyle, String agentName, String spriteName)
+    public void setFieldsAgent(int age, String description, String lifestyle, String agentName, String spriteName, String id = null)
     {
         this.age = age;
         this.description = description;
         this.lifestyle = lifestyle;
         this.agentName = agentName;
         changeSprite(spriteName);
+        if (id != null)
+        {
+            ID = Guid.Parse(id);
+        }
     }
     
     public AgentState getAgentState()

@@ -14,7 +14,7 @@ namespace BackendService
         {
             GameResponse gameResponse = new GameResponse()
             {
-                id = Guid.NewGuid().ToString(),
+                //id = Guid.NewGuid().ToString(),
             };
 
             cb?.Invoke(gameResponse);
@@ -38,8 +38,8 @@ namespace BackendService
         {
             ConversationResponse conversationResponse = new ConversationResponse()
             {
-                agent1_conversation = new string[] {"Hello", "I'm fine how are you", "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."},
-                agent2_conversation = new string[] {"Hi", "I'm fine too", "This is a very long long long long long text"}
+                initialising_agent_conversation = new string[] {"Hello", "I'm fine how are you", "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."},
+                target_agent_conversation = new string[] {"Hi", "I'm fine too", "This is a very long long long long long text"}
             };
             
             cb?.Invoke(conversationResponse);
@@ -89,10 +89,24 @@ namespace BackendService
             
             AddAgentResponse addAgentResponse = new AddAgentResponse()
             {
-                game_id = agent.getId().ToString()
             };
             
             cb?.Invoke(addAgentResponse);
+            yield return null;
+        }
+        
+        public IEnumerator GetGame(Guid gameId, Action<GameResponse> cb = null)
+        {
+            yield return null;
+        }
+        
+        public IEnumerator GameYaml(Action<GameResponse> cb = null)
+        {
+            yield return null;
+        }
+        
+        public IEnumerator GetGameYaml(Action<string> cb = null)
+        {
             yield return null;
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using UnityEngine;
 
 public class TimeChangedEventArgs : EventArgs
@@ -18,7 +19,7 @@ public class TimeChangedEventArgs : EventArgs
 public class TimeManager : MonoBehaviour
 {
     private DateTime previousTime;
-    public static DateTime startingDate = new DateTime(2024, 1,1,8,0,0);
+    public static DateTime startingDate = new DateTime(2024, 10,28,9,30,0);
     public static DateTime time = startingDate;
     private bool update = true;
 
@@ -54,6 +55,11 @@ public class TimeManager : MonoBehaviour
             IncrementTime();
             timer = 0f;
         }
+    }
+
+    public static String getTimeISO()
+    {
+        return time.ToUniversalTime().ToString("s", CultureInfo.InvariantCulture);
     }
 
     private void IncrementTime()

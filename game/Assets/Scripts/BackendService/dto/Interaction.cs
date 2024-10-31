@@ -1,15 +1,16 @@
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
 namespace BackendService.dto {
     [Serializable]
     public struct InteractionRequest
     {
-        public String game_id;
-        public String initializing_agent;
-        public String target_agent;
-        public JArray surroundings;
-        public JObject location;
+        public String initializing_agent_id;
+        public String target_agent_id;
+        public List<String> surroundings;
+        public Location location;
+        public String time;
     }
     
     [Serializable]

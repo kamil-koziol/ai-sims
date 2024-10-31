@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using BackendService;
 using BackendService.dto;
 using DefaultNamespace;
@@ -38,6 +39,7 @@ public class GameManager : MonoBehaviour {
     // Singletons
 
     private BackendService.BackendService backendService;
+    public BackendService.BackendService BackendService => backendService;
     
     private TimeManager timeManager;
 
@@ -79,13 +81,14 @@ public class GameManager : MonoBehaviour {
         GenerateAgentsPlan(); 
     }
 
-    private void GenerateAgentsPlan()
+    public void GenerateAgentsPlan()
     {
           foreach (var agent in agents) {
               coroutineQueue.Enqueue(backendService.Plan(agent.ID, response =>
               {
                   var plan = PlanMapper.Map(response);
                   agent.AssignPlan(plan);
+                  SetGameState(GameState.PLAYING);
               }));
 
           }
@@ -102,6 +105,7 @@ public class GameManager : MonoBehaviour {
         
         coroutineQueue.Enqueue(backendService.AddAgent(agent, response =>
         {
+            agent.setId(Guid.Parse(response.agent.id));
             AddAgentToGame(agent);
 
             coroutineQueue.Enqueue(backendService.Plan(agent.getId(), response =>
@@ -114,38 +118,30 @@ public class GameManager : MonoBehaviour {
         
     }
     
-    private void AddAgentToGame(Agent agent)
+    //This shouldnt be public
+    public void AddAgentToGame(Agent agent)
     {
         agents.Add(agent);
     }
 
     private void Start()
     {
-        
-
         if (useApi)
         {
-
           coroutineQueue = new CoroutineQueue(this);
           coroutineQueue.Enqueue(backendService.Game(response =>
           {
-              ID = Guid.Parse(response.id);
-              Debug.Log(response.id);
+              ID = Guid.Parse(response.game.id.ToString());
+              Debug.Log(response.game.id.ToString());
           }));
-
-
         }
-
-        agents[0].changeSprite("Other_F_A");
-        agents[1].changeSprite("Other_F_E");
-
     }
 
     public void SetGameState(GameState gameState) {
         this.gameState = gameState;
         OnGameStateChange?.Invoke(gameState);
     }
-
+    
     private void Update() {
     }
 
@@ -166,6 +162,11 @@ public class GameManager : MonoBehaviour {
     public BackendService.BackendService getBackendService()
     {
         return backendService;
+    }
+
+    public void restartGame()
+    {
+        agents = new List<Agent>();
     }
     
     public Agent GetAgentById(Guid id) {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -15,6 +16,7 @@ namespace DefaultNamespace {
                     case UnityWebRequest.Result.ProtocolError:
                     case UnityWebRequest.Result.ConnectionError:
                     case UnityWebRequest.Result.DataProcessingError:
+                        Debug.LogError(request.downloadHandler.text);
                         Debug.LogError(request.error);
                         break;
                     case UnityWebRequest.Result.Success:
@@ -22,8 +24,20 @@ namespace DefaultNamespace {
                         string text = request.downloadHandler.text;
                         if (callback != null)
                         {
-                            T t = JsonUtility.FromJson<T>(text);
-                            callback(t);
+                            if (request.GetRequestHeader("Content-Type") == "application/json")
+                            {
+                                T t = JsonConvert.DeserializeObject<T>(text);
+                                callback(t);
+                            }
+                            else 
+                            {
+                                Action<string> callbackString = callback as Action<string>;
+                                if (typeof(T) == typeof(string) && callbackString != null)
+                                {
+                                    callbackString(text);
+                                }
+                            }
+                            Debug.Log(text);
                         }
                         break;
                 }
@@ -40,15 +54,29 @@ namespace DefaultNamespace {
                     case UnityWebRequest.Result.ProtocolError:
                     case UnityWebRequest.Result.ConnectionError:
                     case UnityWebRequest.Result.DataProcessingError:
+                        Debug.LogError(request.downloadHandler.text);
                         Debug.LogError(request.error);
                         break;
                     case UnityWebRequest.Result.Success:
                         GameManager.Instance.SetGameState(previousGameState);
                         string text = request.downloadHandler.text;
+                        
                         if (callback != null)
                         {
-                            T t = JsonUtility.FromJson<T>(text);
-                            callback(t);
+                            //if (contentType == "application/json")
+                           // {
+                                T t = JsonConvert.DeserializeObject<T>(text);
+                                callback(t);
+                           // }
+                            // else if (contentType == "application/yaml")
+                            // {
+                            //     Action<string> callbackString = callback as Action<string>;
+                            //     if (typeof(T) == typeof(string) && callbackString != null)
+                            //     {
+                            //         callbackString(text);
+                            //     }
+                            // }
+                            Debug.Log(text);
                         }
 
                         break;

@@ -1,44 +1,40 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using BackendService.dto;
 using DefaultNamespace;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using UnityEngine;
-using UnityEngine.Networking;
-using UnityEngine.UI;
-using BackendService;
 
 namespace BackendService
 {
     public class DefaultBackendService: BackendService {
-    
-        private Guid uuid;
+        
         private string URL = "http://127.0.0.1:80";
         String contentTypeJson = "application/json";
-
-
-        public DefaultBackendService()
-        {
-            uuid = Guid.NewGuid();
-        }
+        String contentTypeYaml = "application/yaml";
+        private String path = Path.Combine(Application.persistentDataPath, "config.yaml");
+        
         public IEnumerator Conversation(Guid initalizingAgent, Guid targetAgentId, Action<ConversationResponse> cb = null)
         {
-            var location = new JObject();
-            location["name"] = GameManager.Instance.GetAgentById(initalizingAgent).getLocation();
+            Location loc = new Location();
+            loc.name = GameManager.Instance.GetAgentById(initalizingAgent).getLocation();
         
             ConversationRequest rq = new ConversationRequest
             {
-                game_id = uuid.ToString(),
-                initializing_agent = initalizingAgent.ToString(), 
-                target_agent = targetAgentId.ToString(),
-                surroundings = new JArray(),
-                location = location
+                time = TimeManager.getTimeISO(),
+                initializing_agent_id = initalizingAgent.ToString(), 
+                target_agent_id = targetAgentId.ToString(),
+                surroundings = new List<String>(),
+                location = loc
             };
         
             return APICall.Call<ConversationResponse>(
-                URL + "/conversation", 
+                URL + "/games/" + GameManager.Instance.ID +  "/conversations", 
                 JsonConvert.SerializeObject(
                     rq, 
                     Formatting.Indented, 
@@ -50,19 +46,18 @@ namespace BackendService
         }
 
         public IEnumerator Plan(Guid agentId, Action<PlanResponse> cb = null) {
-            var agent = GameManager.Instance.GetAgentById(agentId);
-            var location = new JObject();
-            location["name"] = agent.getLocation();
-
-            // TODO: This is quick fix kacper fix pls
-            if (agent.getLocation() == null) {
-                location["name"] = "starting_position";
-            }
             PlanRequest rq = new PlanRequest
-                { game_id = uuid.ToString(), agent_id = agent.ID.ToString(), location = location };
-
+            { 
+                time = TimeManager.getTimeISO()
+            };
+            
+            Debug.Log(JsonConvert.SerializeObject(
+                rq,
+                Formatting.Indented,
+                new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Ignore}
+            ));
             return APICall.Call<PlanResponse>(
-                URL + "/plan",
+                URL + "/games/" + GameManager.Instance.ID + "/agents/" + agentId + "/plans",
                 JsonConvert.SerializeObject(
                     rq,
                     Formatting.Indented,
@@ -73,23 +68,72 @@ namespace BackendService
         }
 
 
+        public IEnumerator GetGame(Guid gameId, Action<GameResponse> cb = null)
+        {
+            return APICall.Call<GameResponse>(
+                URL + "/games/" + gameId,
+                response => {
+                    if(cb != null) cb(response);
+                });
+        }
+        
+        public IEnumerator GameYaml(Action<GameResponse> cb = null)
+        {
+            Debug.Log(path);
+            string yamlContent = "";
+            if (File.Exists(path))
+            {
+                // Load from persistent path
+                yamlContent = File.ReadAllText(path);
+                Debug.Log("Loaded YAML from persistent path:\n" + yamlContent);
+            }
+            else
+            {
+                Debug.LogError("No YAML file found at " + path + "!");
+                return null;
+            }
+            
+            return APICall.Call<GameResponse>(
+                URL + "/games/yaml",
+                yamlContent,
+                contentTypeYaml,
+                response => {
+                    if(cb != null) cb(response);
+                });
+        }
+        
+        public IEnumerator GetGameYaml(Action<string> cb = null)
+        {
+            Debug.Log(path);
+            return APICall.Call<string>(
+                URL + "/games/" + GameManager.Instance.ID + "/yaml",
+                response => {
+                    File.WriteAllText(path, response);
+                    if(cb != null) cb(response);
+                });
+        }
+
         public IEnumerator Interaction(Guid initalizingAgent, Guid targetAgentId, Action<InteractionResponse> cb = null)
         {
-        
-            var location = new JObject();
-            location["name"] = GameManager.Instance.GetAgentById(initalizingAgent).getLocation();
+            Location loc = new Location();
+            loc.name = GameManager.Instance.GetAgentById(initalizingAgent).getLocation();
         
             InteractionRequest rq = new InteractionRequest()
             {
-                game_id = uuid.ToString(),
-                initializing_agent = initalizingAgent.ToString(), 
-                target_agent = targetAgentId.ToString(),
-                surroundings = new JArray(),
-                location = location
+                initializing_agent_id = initalizingAgent.ToString(), 
+                target_agent_id = targetAgentId.ToString(),
+                surroundings = new List<string>(),
+                location = loc,
+                time = TimeManager.getTimeISO()
             };
         
+            Debug.Log(JsonConvert.SerializeObject(
+                rq, 
+                Formatting.Indented, 
+                new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }
+            ));
             return APICall.Call<InteractionResponse>(
-                URL + "/interaction", 
+                URL + "/games/" + GameManager.Instance.ID + "/interactions", 
                 JsonConvert.SerializeObject(
                     rq, 
                     Formatting.Indented, 
@@ -128,12 +172,11 @@ namespace BackendService
         
             GameRequest snapshot = new GameRequest
             {
-                id = uuid.ToString(),
                 locations = locations,
                 agents = agentsJson
             };
             return APICall.Call<GameResponse>(
-                URL + "/game",
+                URL + "/games",
                 JsonConvert.SerializeObject(
                     snapshot,
                     Formatting.Indented,
@@ -148,19 +191,16 @@ namespace BackendService
             JObject agentObj = new JObject();
             var state = agent.getAgentState();
             
-            agentObj["id"] = state.agentId.ToString();
-            agentObj["name"] = state.agentName;
-            agentObj["age"] = state.agentAge;
-            agentObj["description"] = state.agentDescription;
-            agentObj["lifestyle"] = state.agentLifestyle;
             AddAgentRequest rq = new AddAgentRequest
             {
-                game_id = uuid.ToString(),
-                agent = agentObj
+                name = state.agentName,
+                age = state.agentAge,
+                description = state.agentDescription,
+                lifestyle = state.agentLifestyle
+                
             };
-            
             return APICall.Call<AddAgentResponse>(
-                URL + "/game/add_agent",
+                URL + "/games/" + GameManager.Instance.ID + "/agents",
                 JsonConvert.SerializeObject(
                     rq,
                     Formatting.Indented,
@@ -169,6 +209,5 @@ namespace BackendService
                     if(cb != null) cb(response);
                 });
         }
-
     }
 }
