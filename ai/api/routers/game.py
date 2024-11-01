@@ -21,6 +21,7 @@ from ..errors import (
     GameExistsErr,
     GameNotFoundErr,
     InvalidDateFormatErr,
+    UnprocessableEntityErr,
 )
 from ..mappers import AgentMapper, GameMapper
 from ..schemas import Agent, Game, Location
@@ -350,3 +351,48 @@ async def create_agent_memory(
 
     agent.inject_memory(req.memory)
     return
+
+
+class CreateAgentInterviewRequest(BaseModel):
+    question: str
+    location: Location
+    time: str
+
+
+class CreateAgentInterviewResponse(BaseModel):
+    response: str
+
+
+@router.post(
+    "/{game_id}/agents/{agent_id}/interviews",
+    response_model=CreateAgentInterviewResponse,
+)
+async def create_agent_interview(
+    game_id: Annotated[str, Path(title="Game id")],
+    agent_id: Annotated[str, Path(title="Agent id")],
+    req: CreateAgentInterviewRequest,
+    state: State = Depends(get_state),
+):
+    try:
+        time = datetime.fromisoformat(req.time)
+    except Exception:
+        raise InvalidDateFormatErr
+
+    if req.question == "":
+        raise UnprocessableEntityErr
+
+    game = state.games.get(game_id)
+    if not game:
+        raise GameNotFoundErr
+
+    game = GameManager().games[UUID(game_id)]
+    assert game is not None
+
+    agent = game.get_agent(UUID(agent_id))
+    assert agent is not None
+
+    agent.stm.curr_location = LocationMapper.request_to_location(req.location)
+    agent.stm.curr_time = time
+
+    response = agent.answer_interview_question(req.question)
+    return CreateAgentInterviewResponse(response=response)
