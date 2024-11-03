@@ -272,9 +272,7 @@ async def create_interaction(
     )
     initializing_agent.stm.curr_time = time
 
-    status = (
-        initializing_agent.should_converse([(Objects.AGENT, target_agent)]) is not None
-    )
+    status = initializing_agent.should_converse([(Objects.AGENT, target_agent)])
     return CreateInteractionResponse(status=status)
 
 
