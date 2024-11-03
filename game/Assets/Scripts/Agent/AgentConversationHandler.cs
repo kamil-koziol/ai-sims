@@ -29,22 +29,22 @@ namespace DefaultNamespace.Agent
         }
 
         void AddConversationCooldown(global::Agent initializingAgent, global::Agent targetAgent) {
-            
             agentIdToLastConversationTime[initializingAgent.getId()] = Time.time + UnityEngine.Random.Range(minTimeBetweenConversations, maxTimeBetweenConversations);
             agentIdToLastConversationTime[targetAgent.getId()] = Time.time + UnityEngine.Random.Range(minTimeBetweenConversations, maxTimeBetweenConversations);
             Debug.Log("Time: " + Time.time + " Time to next convo: Initializing agent: " + agentIdToLastConversationTime[agent.getId()] + " Target agent: " + agentIdToLastConversationTime[targetAgent.getId()]);
         }
 
         void Interact(global::Agent targetAgent, Action<bool> _cb) {
+            AddInteractionCooldown();
             GameManager.Instance.registerCoroutine(
                 GameManager.Instance.getBackendService().Interaction(agent.getId(), targetAgent.getId(), cb => {
                     _cb(cb.status);
-                    AddInteractionCooldown();
                 })
                 );
         }
 
         void Converse(global::Agent targetAgent) {
+            AddConversationCooldown(agent, targetAgent); 
             Debug.Log("Conversation started! Initializing agent: " + agent.getId() + " Target agent: " + targetAgent.getId());
             GameManager.Instance.registerCoroutine(
                 GameManager.Instance.getBackendService().Conversation(agent.getId(), targetAgent.getId(),
@@ -52,7 +52,6 @@ namespace DefaultNamespace.Agent
                     {
                         Dialog.Dialog dialog = DialogMapper.Map(agent.getId(), targetAgent.getId(), response);
                         DialogManager.Instance.OpenDialog(dialog);
-                        AddConversationCooldown(agent, targetAgent); 
                     })
             );
 
@@ -60,7 +59,6 @@ namespace DefaultNamespace.Agent
 
         void Update()
         {
-
             if (GameManager.Instance.GameState != GameState.PLAYING) return;
             
             global::Agent closestAgent = fieldOfView.GetClosestTarget();
