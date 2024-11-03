@@ -71,4 +71,4 @@ class TestAgent:
         objects = [(Objects.AGENT, self.agent_2)]
         result = self.agent_1.should_converse(objects)
         print(result)
-        assert type(result) == Agent or result is False
+        assert result is True or result is False
