@@ -89,7 +89,7 @@ class Agent:
 
     def should_converse(
         self, objects: list[Tuple[Objects, Any]]
-    ) -> Agent | bool:
+    ) -> bool:
         """
         Check if the agent should converse with someone.
 
@@ -102,7 +102,7 @@ class Agent:
         for object_type, agent_or_object in objects:
             if object_type == Objects.AGENT:
                 if decide_to_converse(self, agent_or_object):
-                    return agent_or_object
+                    return True
         return False
 
     def inject_memory(self, description: str) -> None:
