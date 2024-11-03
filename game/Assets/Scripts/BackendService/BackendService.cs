@@ -13,6 +13,8 @@ namespace BackendService {
 
         public IEnumerator Interaction(Guid initalizingAgentId, Guid targetAgentId, Action<InteractionResponse> cb = null);
         public IEnumerator Conversation(Guid initalizingAgentId, Guid targetAgentId, Action<ConversationResponse> cb = null);
+        public IEnumerator Interview(Guid agentId, String question, Action<InterviewResponse> cb = null);
+        public IEnumerator Injection(Guid agentId, String memory, Action<InjectionResponse> cb = null);
         public IEnumerator AddAgent(Agent agent, Action<AddAgentResponse> cb = null);
         public IEnumerator Plan(Guid agentId, Action<PlanResponse> cb = null);
     }

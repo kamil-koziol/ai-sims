@@ -45,6 +45,45 @@ namespace BackendService
                 });
         }
 
+        public IEnumerator Interview(Guid agentId, String question, Action<InterviewResponse> cb = null)
+        {
+            InterviewRequest rq = new InterviewRequest
+            {
+                question = question,
+                location = new Location() { name = GameManager.Instance.GetAgentById(agentId).getLocation() },
+                time = TimeManager.getTimeISO()
+            };
+            
+            return APICall.Call<InterviewResponse>(
+                URL + "/games/" + GameManager.Instance.ID +  "/agents/" + agentId + "/interviews", 
+                JsonConvert.SerializeObject(
+                    rq, 
+                    Formatting.Indented, 
+                    new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }
+                ), contentTypeJson, response => {
+                    if(cb != null) cb(response);
+
+                });
+        }
+
+        public IEnumerator Injection(Guid agentId, String memory, Action<InjectionResponse> cb = null)
+        {
+            InjectionRequest rq = new InjectionRequest
+            {
+                memory = memory
+            };
+            
+            return APICall.Call<InjectionResponse>(
+                URL + "/games/" + GameManager.Instance.ID +  "/agents/" + agentId + "/memories", 
+                JsonConvert.SerializeObject(
+                    rq, 
+                    Formatting.Indented, 
+                    new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }
+                ), contentTypeJson, response => {
+                    if(cb != null) cb(response);
+                });
+        }
+
         public IEnumerator Plan(Guid agentId, Action<PlanResponse> cb = null) {
             PlanRequest rq = new PlanRequest
             { 

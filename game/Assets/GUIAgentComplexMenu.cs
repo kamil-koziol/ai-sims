@@ -1,4 +1,5 @@
 ﻿using System;
+using Dialog;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,6 +18,7 @@ namespace DefaultNamespace
         private global::Agent selectedAgent = null;
         private void Start()
         {
+            submitButton.onClick.AddListener(() => OnSubmitButtonClick());
         }
 
         private void Update()
@@ -34,6 +36,37 @@ namespace DefaultNamespace
                     charButton.onClick.AddListener(() => OnCharacterSelected(ag));
                 }
                 visual.SetActive(true);
+            }
+        }
+        
+        void OnSubmitButtonClick()
+        {
+            if (selectedAgent != null)
+            {
+                if (checkbox.isOn)
+                {
+                    GameManager.Instance.registerCoroutine(GameManager.Instance.BackendService.Injection(selectedAgent.getAgentState().agentId, textField.text));
+                }
+                else
+                {
+                    global::Agent.AgentState state = selectedAgent.getAgentState();
+                    GameManager.Instance.registerCoroutine(GameManager.Instance.BackendService.Interview(selectedAgent.getAgentState().agentId, textField.text,
+                        response =>
+                        {
+                            Dialog.Dialog.Builder builder = new Dialog.Dialog.Builder();
+                            Actor actor = new Actor()
+                            {
+                                id = 0, 
+                                sprite = state.agentSprite,
+                                name = state.agentName
+                            };
+                            builder.AddActor(actor);
+                            builder.AddMessage(new Message() { message = response.response });
+                            DialogManager.Instance.OpenDialog(builder.Build());
+                        }));
+                }
+                visual.SetActive(false);
+                GameManager.Instance.SetGameState(GameState.PLAYING);
             }
         }
         

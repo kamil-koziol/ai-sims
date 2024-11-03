@@ -46,6 +46,16 @@ namespace BackendService
             yield return null;
         }
 
+        public IEnumerator Interview(Guid agentId, string question, Action<InterviewResponse> cb = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerator Injection(Guid agentId, string memory, Action<InjectionResponse> cb = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerator Plan(Guid agentId, Action<PlanResponse> cb = null)
         {
             
