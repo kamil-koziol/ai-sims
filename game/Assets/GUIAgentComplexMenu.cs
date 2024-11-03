@@ -23,9 +23,14 @@ namespace DefaultNamespace
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.F3))
+            if (Input.GetKeyDown(KeyCode.F3) && GameManager.Instance.GameState == GameState.PLAYING)
             {
                 GameManager.Instance.SetGameState(GameState.WAITING_FOR_RESULTS);
+                foreach (Transform toDelete in contentPanel.transform)
+                {
+                    Destroy(toDelete.gameObject);
+                }
+                
                 foreach (global::Agent ag in GameManager.Instance.GetAgents())
                 {
                     GameObject go = Instantiate(characterItemPrefab, contentPanel);
@@ -36,6 +41,11 @@ namespace DefaultNamespace
                     charButton.onClick.AddListener(() => OnCharacterSelected(ag));
                 }
                 visual.SetActive(true);
+            }
+            else if (Input.GetKeyDown(KeyCode.F3))
+            {
+                visual.SetActive(false);
+                GameManager.Instance.SetGameState(GameState.PLAYING);
             }
         }
         
@@ -65,6 +75,8 @@ namespace DefaultNamespace
                             DialogManager.Instance.OpenDialog(builder.Build());
                         }));
                 }
+                
+                resetUi();
                 visual.SetActive(false);
                 GameManager.Instance.SetGameState(GameState.PLAYING);
             }
@@ -74,6 +86,12 @@ namespace DefaultNamespace
         {
             Debug.Log("Selected character: " + ag.getAgentState().agentName);
             selectedAgent = ag;
+        }
+
+        void resetUi()
+        {
+            textField.text = "";
+            selectedAgent = null;
         }
     }
 }

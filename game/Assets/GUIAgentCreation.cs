@@ -40,16 +40,30 @@ namespace DefaultNamespace
                     selectedSpriteName
                 );
                 visual.SetActive(false);
+                resetUi();
                 GameManager.Instance.SetGameState(GameState.PLAYING);
             });
         }
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+            if (Input.GetKeyDown(KeyCode.UpArrow) && GameManager.Instance.GameState == GameState.PLAYING)
             {
                 GameManager.Instance.SetGameState(GameState.WAITING_FOR_RESULTS);
                 visual.SetActive(!visual.activeSelf);
+            } else if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                GameManager.Instance.SetGameState(GameState.PLAYING);
+                visual.SetActive(false);
             }
+        }
+        
+        void resetUi()
+        {
+            nameField.text = "";
+            ageField.text = "";
+            descriptionField.text = "";
+            lifestyleField.text = "";
+            selectedSpriteName = "";
         }
     }
 }
