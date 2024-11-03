@@ -60,22 +60,18 @@ namespace DefaultNamespace {
                     case UnityWebRequest.Result.Success:
                         GameManager.Instance.SetGameState(previousGameState);
                         string text = request.downloadHandler.text;
+
+                        if (text == "")
+                        {
+                            Debug.Log("No text response from server");
+                            break;
+                        }
                         
                         if (callback != null)
                         {
-                            //if (contentType == "application/json")
-                           // {
-                                T t = JsonConvert.DeserializeObject<T>(text);
-                                callback(t);
-                           // }
-                            // else if (contentType == "application/yaml")
-                            // {
-                            //     Action<string> callbackString = callback as Action<string>;
-                            //     if (typeof(T) == typeof(string) && callbackString != null)
-                            //     {
-                            //         callbackString(text);
-                            //     }
-                            // }
+                            T t = JsonConvert.DeserializeObject<T>(text);
+                            callback(t);
+
                             Debug.Log(text);
                         }
 
