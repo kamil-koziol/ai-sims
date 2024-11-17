@@ -97,7 +97,7 @@ def converse(init_agent: Agent, target_agent: Agent) -> Dict[UUID, List]:
     )
 
     insert_convo_into_mem_stream(init_agent, convo, convo_summary, target_agent.stm.name)
-    insert_convo_into_mem_stream(target_agent, convo, convo_summary, target_agent.stm.name)
+    insert_convo_into_mem_stream(target_agent, convo, convo_summary, init_agent.stm.name)
     if not MOCK_MODELS:
         split_dialogs = _split_conversation(
             init_agent=init_agent, target_agent=target_agent, conversation=convo
