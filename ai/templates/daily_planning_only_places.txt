@@ -1,17 +1,20 @@
 !<INPUT 0>! -- Description
 !<INPUT 1>! -- Lifestyle
-!<INPUT 2>! -- Date time now
-!<INPUT 3>! -- Persona name
-!<INPUT 4>! -- List of places that agent can go to.
-!<INPUT 5>! -- Age
+!<IMPUT 2>! -- Memories
+!<INPUT 3>! -- Date time now
+!<INPUT 4>! -- Persona name
+!<INPUT 5>! -- List of places that agent can go to.
+!<INPUT 6>! -- Age
 
 <commentblockmarker>###</commentblockmarker>
-Create plan for one day for !<INPUT 3>! using only listed places. The plan must take into account their character traits and personality.
+Create plan for one day for !<INPUT 4>! using only listed places. The plan must take into account their character traits, personality and memories.
 Use format "Go to [place] at [hour am/pm]". Generate at least 6 points in the plan. Do not give any explanation, just "Go to [place] at [hour am/pm]".
 
-!<INPUT 3>! is !<INPUT 5>! years old. !<INPUT 0>!
+!<INPUT 4>! is !<INPUT 6>! years old. !<INPUT 0>!
 In general, !<INPUT 1>!
+Memories are:
+!<INPUT 2>!
 
-Today is !<INPUT 2>!. Here is !<INPUT 3>!'s plan to visit various places. List of available places: !<INPUT 4>!. 
+Today is !<INPUT 3>!. Here is !<INPUT 4>!'s plan to visit various places. List of available places: !<INPUT 5>!. 
 The wake-up time is 8:00 am. Plan for today:
 Go to
