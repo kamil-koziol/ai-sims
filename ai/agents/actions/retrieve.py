@@ -77,14 +77,14 @@ def _calculate_overall_compare_score(node: MemoryNode, perceived: str) -> float:
     weights = [
         config.agent.RELEVANCE_WEIGHT,
         config.agent.IMPORTANCE_WEIGHT,
-        config.agent.RELEVANCE_WEIGHT
+        config.agent.RECENCY_WEIGHT
     ]
     date_to_compere = datetime.now()
 
     relevance_score = weights[0] * _calculate_relevance_score(node, perceived)
     # TODO: Fix importance
-    importance_score = weights[1] * 4
-    # importance_score = weights[1] * node.attributes.importance
+    # importance_score = weights[1] * 4
+    importance_score = weights[1] * node.attributes.importance
     recency_score = weights[2] * _calculate_recency_score(node, date_to_compere)
 
     overall_score = importance_score + relevance_score + recency_score
