@@ -10,5 +10,5 @@ logging.basicConfig(
     format="%(levelname)s: %(message)s",
 )
 api = App()
-api.run("0.0.0.0", 80)
+api.run("0.0.0.0", 8080)
 logging.info("Application started")

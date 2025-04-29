@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import List, TYPE_CHECKING
 from dataclasses import dataclass
 
+from agents.actions.retrieve import get_string_memories
 from config.model import MOCK_MODELS
 from llm_model import ModelService
 from datetime import datetime
@@ -20,6 +21,7 @@ class DailyPlanVariables:
 
     persona_description: str
     persona_life_style: str
+    persona_memories: str
     datetime_now: str
     persona_name: str
     list_of_places: str
@@ -37,11 +39,15 @@ def create_daily_plan(agent: Agent, list_of_places: List) -> List[PlanNode]:
     template_file = "daily_planning_only_places.txt"
 
     current_time = agent.stm.curr_time
+    current_time_str = current_time.strftime("%m/%d/%Y, %H:%M:%S")
+
+    memories = get_string_memories(agent, f"Plan for {current_time_str}")
 
     daily_plan_variables = DailyPlanVariables(
         persona_description=agent.stm.description,
         persona_life_style=agent.stm.life_style,
-        datetime_now=current_time.strftime("%m/%d/%Y, %H:%M:%S"),
+        persona_memories=memories,
+        datetime_now=current_time_str,
         persona_name=agent.stm.name,
         list_of_places=str(list_of_places).strip("[").strip("]"),
         persona_age=str(agent.stm.age)
